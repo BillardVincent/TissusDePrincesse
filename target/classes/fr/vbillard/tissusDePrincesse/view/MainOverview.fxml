@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1600.0" stylesheets="@theme.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.vbillard.tissusDePrincesse.view.MainOverviewController">
+   <children>
+      <SplitPane dividerPositions="0.23717146433041303, 0.7941176470588235" layoutY="79.0" prefHeight="800.0" prefWidth="1600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <TabPane prefHeight="798.0" prefWidth="376.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <tabs>
+                      <Tab text="Tissus">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <SplitPane dividerPositions="0.5202086049543677" orientation="VERTICAL" prefHeight="798.0" prefWidth="376.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <items>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="406.0" prefWidth="374.0">
+                                             <children>
+                                                <TableView fx:id="tissuTable" layoutY="33.0" prefHeight="369.0" prefWidth="376.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="33.0">
+                                                  <columns>
+                                                      <TableColumn fx:id="referenceColonne" prefWidth="80.99996948242188" text="Reference" />
+                                                    <TableColumn fx:id="descriptionColonne" prefWidth="155.0" text="Description" />
+                                                    <TableColumn fx:id="matiereColonne" prefWidth="137.0" text="Matiere" />
+                                                  </columns>
+                                                </TableView>
+                                                <Label layoutX="7.0" layoutY="6.0" text="Filtrer:" />
+                                                <TextField fx:id="filtreTissuTxt" layoutX="44.0" layoutY="2.0" prefHeight="25.0" prefWidth="188.0" />
+                                                <Button layoutX="291.0" layoutY="2.0" mnemonicParsing="false" onAction="#handleAdvancedFilterTissu" text="Filtre avancé" />
+                                                <Button fx:id="filtreTissuButton" layoutX="239.0" layoutY="2.0" mnemonicParsing="false" onAction="#handleFilterTissu" />
+                                                <Button fx:id="filtreResetTissuButton" layoutX="265.0" layoutY="2.0" mnemonicParsing="false" onAction="#handleFilterResetTissu" />
+                                             </children>
+                                          </AnchorPane>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="348.0" prefWidth="374.0">
+                                             <children>
+                                                <GridPane layoutX="34.0" layoutY="48.0" prefHeight="289.0" prefWidth="284.0">
+                                                  <columnConstraints>
+                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                  </columnConstraints>
+                                                  <rowConstraints>
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                  </rowConstraints>
+                                                   <children>
+                                                      <Label text="Laize" GridPane.rowIndex="3" />
+                                                      <Label text="Longueur" GridPane.rowIndex="1" />
+                                                      <Label text="Description" GridPane.rowIndex="4" />
+                                                      <Label text="Type" GridPane.rowIndex="6" />
+                                                      <Label fx:id="matiereLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                      <Label text="Matiere" GridPane.rowIndex="5" />
+                                                      <Label text="Poids" GridPane.rowIndex="7" />
+                                                      <Label fx:id="typeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                                      <Label text="Lieu d'achat" GridPane.rowIndex="8" />
+                                                      <Label text="Décati" GridPane.rowIndex="9" />
+                                                      <Label fx:id="lieuDachatLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                                                      <Label fx:id="decatiLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                                                      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                                         <children>
+                                                            <Label fx:id="poidsLabel" prefHeight="29.0" prefWidth="37.0" text="Label" />
+                                                            <Label fx:id="unitePoidsLabel" prefHeight="29.0" prefWidth="60.0" text="Label">
+                                                               <padding>
+                                                                  <Insets left="10.0" />
+                                                               </padding>
+                                                            </Label>
+                                                         </children>
+                                                      </HBox>
+                                                      <Label fx:id="descriptionLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                         <children>
+                                                            <Label fx:id="longueurLabel" prefHeight="38.0" prefWidth="28.0" text="Label" />
+                                                            <Label prefHeight="28.0" prefWidth="43.0" text="cm">
+                                                               <padding>
+                                                                  <Insets left="10.0" />
+                                                               </padding>
+                                                            </Label>
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                         <children>
+                                                            <Label fx:id="laizeLabel" prefHeight="36.0" prefWidth="28.0" text="Label" />
+                                                            <Label prefHeight="30.0" prefWidth="51.0" text="cm">
+                                                               <HBox.margin>
+                                                                  <Insets left="10.0" />
+                                                               </HBox.margin>
+                                                            </Label>
+                                                         </children>
+                                                      </HBox>
+                                                      <Label text="Tissage" GridPane.rowIndex="10" />
+                                                      <Label text="Coupon" GridPane.rowIndex="11" />
+                                                      <Label fx:id="tissageLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                                                      <Label fx:id="chuteLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                                                      <Label text="Référence" />
+                                                      <Label fx:id="referenceLabel" text="Label" GridPane.columnIndex="1" />
+                                                      <Label text="Restant " GridPane.rowIndex="2">
+                                                         <padding>
+                                                            <Insets left="15.0" />
+                                                         </padding>
+                                                      </Label>
+                                                      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                         <children>
+                                                            <Label fx:id="restantLabel" prefHeight="36.0" prefWidth="28.0" text="Label" />
+                                                            <Label prefHeight="30.0" prefWidth="51.0" text="cm">
+                                                               <HBox.margin>
+                                                                  <Insets left="10.0" />
+                                                               </HBox.margin>
+                                                            </Label>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </GridPane>
+                                              <Button fx:id="addTissuButton" layoutX="20.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleNewTissu" prefWidth="25.0" />
+                                                <Button fx:id="deleteTissuButton" layoutX="334.0" layoutY="10.0" minWidth="26.0" mnemonicParsing="false" onAction="#handleDeleteTissu" prefHeight="25.0" />
+                                                <Button fx:id="editTissuButton" layoutX="99.0" layoutY="10.0" minWidth="27.0" mnemonicParsing="false" onAction="#handleEditTissu" prefHeight="25.0" />
+                                                <Button fx:id="generateCouponButton" layoutX="135.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleGenerateCoupon" prefHeight="25.0" prefWidth="25.0" />
+                                                <Button fx:id="searchPatronButton" layoutX="212.0" layoutY="10.0" mnemonicParsing="false" prefWidth="30.0" />
+                                                <Button fx:id="addInProjectButton" layoutX="252.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleAddInProject" prefWidth="25.0" />
+                                                <Button fx:id="archiveTissuButton" layoutX="305.0" layoutY="10.0" minWidth="26.0" mnemonicParsing="false" onAction="#handleArchiveTissu" prefHeight="25.0" />
+                                             </children>
+                                          </AnchorPane>
+                                      </items>
+                                    </SplitPane>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                      <Tab text="Fournitures">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                        </content>
+                      </Tab>
+                        <Tab fx:id="testTab" text="Untitled Tab">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </Tab>
+                    </tabs>
+                  </TabPane>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="798.0" prefWidth="813.0">
+               <children>
+                  <SplitPane dividerPositions="0.6457286432160804" layoutX="254.0" layoutY="109.0" orientation="VERTICAL" prefHeight="798.0" prefWidth="866.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <Label layoutX="425.0" layoutY="21.0" text="Projet" />
+                              <Label layoutX="116.0" layoutY="121.0" text="Fourniture fournie" />
+                              <Label layoutX="115.0" layoutY="101.0" text="fourniture requise:" />
+                              <Label layoutX="572.0" layoutY="113.0" text="Descrption" />
+                              <Label layoutX="572.0" layoutY="298.0" text="Modele" />
+                              <Label layoutX="572.0" layoutY="253.0" text="Marque" />
+                              <Label layoutX="572.0" layoutY="213.0" text="Patron :" />
+                              <Label layoutX="116.0" layoutY="179.0" text="Fourniture fournie" />
+                              <Label layoutX="115.0" layoutY="159.0" text="fourniture requise:" />
+                              <Label layoutX="116.0" layoutY="233.0" text="Fourniture fournie" />
+                              <Label layoutX="115.0" layoutY="213.0" text="fourniture requise:" />
+                              <Label layoutX="116.0" layoutY="293.0" text="Fourniture fournie" />
+                              <Label layoutX="115.0" layoutY="273.0" text="fourniture requise:" />
+                              <Label layoutX="115.0" layoutY="336.0" text="fourniture requise:" />
+                              <Label layoutX="123.0" layoutY="396.0" text="fourniture requise:" />
+                              <Button layoutX="225.0" layoutY="341.0" mnemonicParsing="false" text="ajouter" />
+                              <Button layoutX="225.0" layoutY="401.0" mnemonicParsing="false" text="ajouter" />
+                              <Button layoutX="221.0" layoutY="289.0" mnemonicParsing="false" text="modifier" />
+                              <Button layoutX="221.0" layoutY="229.0" mnemonicParsing="false" text="modifier" />
+                              <Button layoutX="221.0" layoutY="174.0" mnemonicParsing="false" text="modifier" />
+                              <Button layoutX="221.0" layoutY="106.0" mnemonicParsing="false" text="modifier" />
+                              <Label fx:id="descriptionProjetLabel" layoutX="584.0" layoutY="138.0" prefHeight="57.0" prefWidth="202.0" text="blabla blab bla bla bal bbam,a laibla " />
+                              <Label fx:id="marqueProjetLabel" layoutX="631.0" layoutY="253.0" text="blabla" />
+                              <Label fx:id="ModelProjetLabel" layoutX="631.0" layoutY="298.0" text="bla" />
+                              <ImageView fx:id="robeImage" fitHeight="411.0" fitWidth="284.0" layoutX="288.0" layoutY="74.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="file:/C:/Users/Admin%20stagiaire.DESKTOP-8967908/Documents/Code_Perso/LesTissusDePrincesse/LesTissusDePrincesse-H2/resources/images/depositphotos_111281678-stock-illustration-dummy-dress-hand-drawing-illustration.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <Button fx:id="saveAllBtn" layoutX="53.0" layoutY="16.0" mnemonicParsing="false" onAction="#saveAll" text="SAUVEGARDER" />
+                              <Button layoutX="81.0" layoutY="62.0" mnemonicParsing="false" onAction="#reloadAll" text="Recharger" />
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="798.0" prefWidth="796.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <TableView fx:id="patronTable" prefHeight="395.0" prefWidth="794.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <columns>
+                                    <TableColumn fx:id="referencePatronColonne" prefWidth="75.0" text="Reference" />
+                                  <TableColumn fx:id="marqueColonne" prefWidth="128.0" text="Marque" />
+                                  <TableColumn fx:id="modeleColonne" prefWidth="118.0" text="Model" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="401.0" prefWidth="604.0">
+                           <children>
+                              <GridPane layoutX="18.0" layoutY="90.0" prefHeight="245.0" prefWidth="306.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="Référence" />
+                                    <Label fx:id="referencePatronLabel" text="Label" GridPane.columnIndex="1" />
+                                    <Label text="Marque" GridPane.rowIndex="1" />
+                                    <Label />
+                                    <Label fx:id="longueurTissuPatronLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <Label text="Longueur totale Tissu " GridPane.rowIndex="5" />
+                                    <Label fx:id="typeTissuPatronLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <Label text="Type de tissu" GridPane.rowIndex="4" />
+                                    <Label fx:id="typeVetementPatronLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Label text="Type de vetement" GridPane.rowIndex="3" />
+                                    <Label fx:id="modelPatronLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Label text="Modele" GridPane.rowIndex="2" />
+                                    <Label fx:id="marquePatronLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                 </children>
+                              </GridPane>
+                              <Button layoutX="144.0" layoutY="348.0" mnemonicParsing="false" onAction="#handleNewTissu" text="Creer Projet" />
+                              <Button fx:id="addPatronButton" layoutX="50.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleNewPatron" text="Ajouter" />
+                              <Button fx:id="editPatronButton" layoutX="145.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleEditPatron" text="Editer" />
+                              <Button fx:id="deletePAtronButton" layoutX="223.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleDeletePatron" text="Supprimer" />
+                              <Button fx:id="createProjectButton" layoutX="52.0" layoutY="45.0" mnemonicParsing="false" onAction="#handleNewProject" text="Button" />
+                           </children></AnchorPane>
+                    </items>
+                  </SplitPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
