@@ -14,13 +14,14 @@ import org.apache.commons.logging.LogFactory;
 import fr.vbillard.tissusDePrincesse.exception.GestionTissusException;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
 import fr.vbillard.tissusDePrincesse.model.TypeTissu;
+import fr.vbillard.tissusDePrincesse.utils.Constants;
 
 
 
 public class TissuDao {
 
 	private static final Log log = LogFactory.getLog(TissuDao.class);
-	private final String persistenceUnit = "persistUnit";
+	private final String persistenceUnit = Constants.PERSISTENCE_UNIT;
 	private EntityManagerFactory emf = null;
 	private EntityManager em = null;
 	private EntityTransaction transaction = null;
@@ -33,7 +34,7 @@ public class TissuDao {
 			em = emf.createEntityManager();
 			// tissus = em.createQuery("select tissu from Tissu tissu",
 			// Tissu.class).getResultList();
-			tissus = em.createQuery("SELECT tissu FROM Tissu tissu WHERE tissu.archived = false").getResultList();
+			tissus = em.createQuery("SELECT t FROM Tissu t ").getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
 

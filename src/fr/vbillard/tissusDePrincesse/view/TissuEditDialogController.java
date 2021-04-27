@@ -27,6 +27,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -105,18 +106,34 @@ public class TissuEditDialogController {
     	addTissageButton.setGraphic(closeCircle);
     	addTypeButton.setGraphic(closeCircle1);
     	addMatiereButton.setGraphic(closeCircle2);
-    	MaterialDesignIconView redoIcon = new MaterialDesignIconView(MaterialDesignIcon.REDO);
-    	generateReferenceButton.setGraphic(redoIcon);
-    	
-    	
+    	FontAwesomeIconView magicIcon = new FontAwesomeIconView(FontAwesomeIcon.MAGIC);
+    	generateReferenceButton.setGraphic(magicIcon);
+    	generateReferenceButton.setTooltip(new Tooltip("Générer une référence automatiquement"));
 
-    	
     	longueurField.valueProperty().addListener((obs, oldValue, newValue) -> {
         longueur = newValue;});
+    	longueurField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+    		  if (!newValue) {
+    			  longueurField.increment(0); // won't change value, but will commit editor
+    			  longueur = longueurField.getValue();
+    		  }
+    		});
     	laizeField.valueProperty().addListener((obs, oldValue, newValue) -> 
     	laize = newValue);
+    	laizeField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+  		  if (!newValue) {
+  			laizeField.increment(0); // won't change value, but will commit editor
+  			laize = laizeField.getValue();
+  		  }
+  		});
     	poidsField.valueProperty().addListener((obs, oldValue, newValue) -> 
     	poids = newValue);
+    	poidsField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+  		  if (!newValue) {
+  			poidsField.increment(0); // won't change value, but will commit editor
+  			poids = poidsField.getValue();
+  		  }
+  		});
     }
 
     /**

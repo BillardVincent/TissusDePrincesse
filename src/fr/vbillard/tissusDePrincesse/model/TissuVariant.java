@@ -1,8 +1,6 @@
 package fr.vbillard.tissusDePrincesse.model;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,24 +14,24 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class TissuRequis {
+public class TissuVariant {
 	
-
+	@Override
+	public String toString() {
+		return "matiere : "+matiere+", type : "+typeTissu+", tissage : "+tissage;
+	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@ManyToOne
-	private Patron patron;
-	private int longueur;
-	private int laize;
-	@Enumerated(EnumType.STRING)
-	private GammePoids gammePoids;
-
+	private TissuRequis tissuRequis;
+	@ManyToOne
+	private TypeTissu typeTissu;
+	@ManyToOne
+	private Matiere matiere;
+	@ManyToOne
+	private Tissage tissage;
 	
 	
 
-	//private Patron patron;
-	
-	
-	
 }

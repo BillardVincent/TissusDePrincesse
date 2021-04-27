@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.vbillard.tissusDePrincesse.model.FounitureRequise;
+import fr.vbillard.tissusDePrincesse.model.GammePoids;
 import fr.vbillard.tissusDePrincesse.model.TissuRequis;
+import fr.vbillard.tissusDePrincesse.model.UnitePoids;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -21,10 +23,11 @@ public class PatronDto {
 	private StringProperty marque;
 	private StringProperty modele;
 	private StringProperty typeVetement;
-	private StringProperty  typeTissu;
-	private IntegerProperty longueurTissuTotale;
-	private ListProperty<TissuRequis> tissusRequis;
-	private ListProperty<FounitureRequise> fournituresRequises;
+	private StringProperty description;
+	//private StringProperty gammePoids;
+	//------------ Construit à partir d'autres données
+
+	private ListProperty<TissuRequisDto> tissusRequis;
 	
 	
 	public PatronDto() {
@@ -33,10 +36,9 @@ public class PatronDto {
 		this.marque = new SimpleStringProperty();
 		this.modele = new SimpleStringProperty();
 		this.typeVetement = new SimpleStringProperty();
-		this.typeTissu = new SimpleStringProperty();
-		this.longueurTissuTotale = new SimpleIntegerProperty();
-		this.tissusRequis = new SimpleListProperty<TissuRequis>();
-		this.fournituresRequises = new SimpleListProperty<FounitureRequise>();
+		
+
+		this.tissusRequis = new SimpleListProperty<TissuRequisDto>();
 	}
 	
 	public int getId() {
@@ -94,48 +96,42 @@ public class PatronDto {
 		this.typeVetement.set(typeVetement);
 	}
 	
-	public String getTypeTissu() {
-		return typeTissu.get();
+	public String getDescription() {
+		return description.get();
 	}
-	public StringProperty getTypeTissuProperty() {
-		return typeTissu;
-	}
-
-	public void setTypeTissu(String typeTissu) {
-		this.typeTissu.set(typeTissu);
-	}
-	
-	public int getLongueurTissuTotale() {
-		return longueurTissuTotale.get();
-	}
-	
-	public IntegerProperty getLongueurTissuTotaleProperty() {
-		return longueurTissuTotale;
+	public StringProperty getDescriptionProperty() {
+		return description;
 	}
 
-	public void setLongueurTissuTotale(int longueurTissuTotale) {
-		this.longueurTissuTotale.set(longueurTissuTotale);
+	public void setDescription(String description) {
+		this.description.set(description);
+	}
+	/*
+	public void setGammePoids(GammePoids gammePoids) {
+		this.gammePoids.set(gammePoids.label);
+	}
+	public void setGammePoids(String label) {
+		this.gammePoids.set(label);		
 	}
 	
-	public List<TissuRequis> getTissusRequis() {
+	public String getGammePoids() {
+		return gammePoids.get();
+	}
+	public StringProperty getGammePoidsProperty() {
+		return gammePoids;
+	}
+	*/
+	
+	public List<TissuRequisDto> getTissusRequis() {
 		return tissusRequis.get();
 	}
-	public ListProperty<TissuRequis> getTissusRequisProperty() {
+	public ListProperty<TissuRequisDto> getTissusRequisProperty() {
 		return tissusRequis;
 	}
 
-	public void setTissusRequis(List<TissuRequis> tissusRequis) {
+	public void setTissusRequis(List<TissuRequisDto> tissusRequis) {
 		this.tissusRequis.set(FXCollections.observableArrayList(tissusRequis));
 	}
 	
-	public List<FounitureRequise> getFounitureRequise() {
-		return fournituresRequises.get();
-	}
-	public ListProperty<FounitureRequise> getFounitureRequiseProperty() {
-		return fournituresRequises;
-	}
-
-	public void setFounitureRequise(List<FounitureRequise> fournituresRequises) {
-		this.fournituresRequises.set(FXCollections.observableArrayList(fournituresRequises));
-	}
+	
 }

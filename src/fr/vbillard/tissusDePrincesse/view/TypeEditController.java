@@ -65,7 +65,7 @@ public class TypeEditController {
 	public void setData(MainApp mainApp, TypeTissuService typeTissuService) {
 		this.typeTissuService = typeTissuService;
 		this.mainApp = mainApp;
-		allTypeTissus = typeTissuService.getAllObs();
+		allTypeTissus = typeTissuService.allTypeTissusValues;
 		listTypeTissus.setItems(allTypeTissus);
 		
 	}

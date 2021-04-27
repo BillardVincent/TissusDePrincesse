@@ -7,16 +7,20 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import fr.vbillard.tissusDePrincesse.dao.JPAHelper;
+import fr.vbillard.tissusDePrincesse.dtosFx.PatronDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
 import fr.vbillard.tissusDePrincesse.services.InitDataService;
 import fr.vbillard.tissusDePrincesse.services.MatiereService;
 import fr.vbillard.tissusDePrincesse.services.PatronService;
 import fr.vbillard.tissusDePrincesse.services.Serializer;
 import fr.vbillard.tissusDePrincesse.services.TissageService;
+import fr.vbillard.tissusDePrincesse.services.TissuRequisService;
 import fr.vbillard.tissusDePrincesse.services.TissuService;
 import fr.vbillard.tissusDePrincesse.services.TypeTissuService;
 import fr.vbillard.tissusDePrincesse.view.ChargementController;
 import fr.vbillard.tissusDePrincesse.view.MatiereEditController;
+import fr.vbillard.tissusDePrincesse.view.PatronEditDialogController;
 import fr.vbillard.tissusDePrincesse.view.RootLayoutController;
 import fr.vbillard.tissusDePrincesse.view.TissageEditController;
 import fr.vbillard.tissusDePrincesse.view.TissuEditDialogController;
@@ -43,6 +47,7 @@ public class MainApp extends Application {
     private TypeTissuService typeTissuService;
     private MatiereService matiereService;
     private TissageService tissageService;
+    private TissuRequisService tissuRequisService;
     private MainOverviewController tissuOverviewController;
     private ChargementController chargementController;
     private AnchorPane tissuOverview;
@@ -61,6 +66,8 @@ public class MainApp extends Application {
         tissageService = new TissageService();
 
         tissuService = new TissuService();
+        
+        tissuRequisService = new TissuRequisService();
 
         patronService = new PatronService();
 
@@ -200,6 +207,37 @@ public class MainApp extends Application {
         }
     }
     
+    public boolean showPatronEditDialog(PatronDto patron) {
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("view/PatronEditDialog.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Modification de patron");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Set the person into the controller.
+            PatronEditDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            //System.out.println("showPersonEditDialog : " + tissu.toString());
+            controller.setPatron(patron, this, patronService, tissuRequisService, typeTissuService, tissageService, matiereService);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+            return controller.isOkClicked();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
     public boolean showMatiereEditDialog() {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
@@ -302,6 +340,7 @@ public class MainApp extends Application {
         launch(args);
     }
     
+
     
     public static void testConfigurationJpaHibernate() {
 		EntityManagerFactory emf = null;

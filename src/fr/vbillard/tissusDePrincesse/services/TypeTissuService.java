@@ -3,8 +3,10 @@ package fr.vbillard.tissusDePrincesse.services;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import fr.vbillard.tissusDePrincesse.dao.TypeTissuDao;
+import fr.vbillard.tissusDePrincesse.model.Matiere;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
 import fr.vbillard.tissusDePrincesse.model.TypeTissu;
 import javafx.collections.FXCollections;
@@ -15,6 +17,10 @@ public class TypeTissuService {
 	
 	public TypeTissuService(){
 		this.typeTissuDao = new TypeTissuDao();
+		allTypeTissus = FXCollections.observableArrayList(typeTissuDao.findAll());
+		List<TypeTissu> lst = typeTissuDao.findAll();
+		allTypeTissus = FXCollections.observableArrayList(lst);
+		allTypeTissusValues = FXCollections.observableArrayList(lst.stream().map(m -> m.getType()).collect(Collectors.toList()));
 	}
 	public static ObservableList<TypeTissu> allTypeTissus = FXCollections.observableArrayList();
 	public static ObservableList<String> allTypeTissusValues = FXCollections.observableArrayList();
@@ -34,12 +40,14 @@ public class TypeTissuService {
 		*/
 		allTypeTissus = FXCollections.observableArrayList(typeTissuDao.findAll());
 		
+		/*
 		if (allTypeTissus.size() == 0 ) {
 			typeTissuDao.create(new TypeTissu(0, "Chaine et trame"));
 			typeTissuDao.create(new TypeTissu(0, "Maille"));
 			allTypeTissus = FXCollections.observableArrayList(typeTissuDao.findAll());
 
 		}
+		*/
 		
 				
 	}

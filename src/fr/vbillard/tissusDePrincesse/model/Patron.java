@@ -31,15 +31,8 @@ public class Patron {
 	private String marque;
 	private String modele;
 	private String typeVetement;
-	@ManyToOne
-	private TypeTissu typeTissu;
+	private String description;
 	
-	@ManyToMany
-	@JoinTable(
-		    name = "patron_tissusrequis",
-		            joinColumns = @JoinColumn(name = "patron_id") ,
-		            inverseJoinColumns = @JoinColumn(name = "tissurequis_id"))
-	private List<TissuRequis> tissusRequis;
 	@Transient
 	private List<FounitureRequise> fournituresRequises;
 	

@@ -1,191 +1,488 @@
 package fr.vbillard.tissusDePrincesse.view;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import fr.vbillard.tissusDePrincesse.MainApp;
+import fr.vbillard.tissusDePrincesse.dtosFx.PatronDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
+import fr.vbillard.tissusDePrincesse.dtosFx.TissuRequisDto;
+import fr.vbillard.tissusDePrincesse.dtosFx.TissuVariantDto;
+import fr.vbillard.tissusDePrincesse.mappers.PatronMapper;
+import fr.vbillard.tissusDePrincesse.model.GammePoids;
+import fr.vbillard.tissusDePrincesse.model.Patron;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
+import fr.vbillard.tissusDePrincesse.model.TissuVariant;
 import fr.vbillard.tissusDePrincesse.model.UnitePoids;
+import fr.vbillard.tissusDePrincesse.services.DevInProgressService;
+import fr.vbillard.tissusDePrincesse.services.MatiereService;
+import fr.vbillard.tissusDePrincesse.services.PatronService;
+import fr.vbillard.tissusDePrincesse.services.TissageService;
+import fr.vbillard.tissusDePrincesse.services.TissuRequisService;
+import fr.vbillard.tissusDePrincesse.services.TissuVariantService;
 import fr.vbillard.tissusDePrincesse.services.TypeTissuService;
+import fr.vbillard.tissusDePrincesse.utils.Constants;
 import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class PatronEditDialogController {
 
-    @FXML
-    private Spinner<Integer> longueurField;
-    @FXML
-    private Spinner<Integer> laizeField;
-    @FXML
-    private TextField matiereField;
-    @FXML
-    private TextField descriptionField;
-    @FXML
-    private Spinner<Integer> poidsField;
-    @FXML
-    private TextField typeField;
-    @FXML
-    private TextField lieuDachatField;
-    @FXML
-    private ToggleButton decatiField;
-    @FXML
-    private ChoiceBox<UnitePoids> unitePoidsField;
-    @FXML
-    private TextField tissageField;
-    @FXML
-    private ToggleButton chuteField;
-    
+	@FXML
+	private TextField marqueField;
+	@FXML
+	private TextField modeleField;
+	@FXML
+	private TextField typeVetementField;
+	@FXML
+	private Button addTissuButton;
+	@FXML
+	private Button addFournitureButton;
+	@FXML
+	private VBox rightContainer;
+	@FXML
+	private VBox tissusPatronListVbox;
+	@FXML
+	private Button generateReferenceButton;
+	@FXML
+	private TextField referenceField;
+
 	private Stage dialogStage;
-    private TissuDto tissu;
-    private boolean okClicked = false;
+	private PatronDto patron;
+	private TissuRequisDto tissuRequisDto;
+	private TissuRequisService tissuRequisService;
+	private TissuVariantService tissuVariantService;
+	private MatiereService matiereService;
+	private TissageService tissageService;
+	private TypeTissuService typeTissuService;
+	private boolean okClicked = false;
+	private MainApp mainApp;
+	private List<TissuRequisDto> listTissuRequis;
+	private boolean unregistredPatron;
+	private PatronService patronService;
+	private int longueur;
+	private int laize;
+	private HBox tissuRequisDisplayHbox;
+	private TissuVariantDto variantSelected;
 
-    /**
-     * Initializes the controller class. This method is automatically called
-     * after the fxml file has been loaded.
-     */
-    @FXML
-    private void initialize() {
-    }
+	/**
+	 * Initializes the controller class. This method is automatically called after
+	 * the fxml file has been loaded.
+	 */
+	@FXML
+	private void initialize() {
+		FontAwesomeIconView addIcon1 = new FontAwesomeIconView(FontAwesomeIcon.PLUS_CIRCLE);
+		addIcon1.setFill(Constants.colorAdd);
+		addTissuButton.setGraphic(addIcon1);
 
-    /**
-     * Sets the stage of this dialog.
-     *
-     * @param dialogStage
-     */
-    public void setDialogStage(Stage dialogStage) {
-        this.dialogStage = dialogStage;
-    }
+		FontAwesomeIconView addIcon2 = new FontAwesomeIconView(FontAwesomeIcon.PLUS_CIRCLE);
+		addIcon2.setFill(Constants.colorAdd);
+		addFournitureButton.setGraphic(addIcon2);
+
+		FontAwesomeIconView magicIcon = new FontAwesomeIconView(FontAwesomeIcon.MAGIC);
+		generateReferenceButton.setGraphic(magicIcon);
+		generateReferenceButton.setTooltip(new Tooltip("Générer une référence automatiquement"));
+	}
+
+	private void setDisabledButton() {
+		unregistredPatron = (patron == null || patron.getIdProperty() == null || patron.getId() == 0);
+		addTissuButton.setDisable(unregistredPatron);
+		addFournitureButton.setDisable(unregistredPatron);
+	}
+
+	/**
+	 * Sets the stage of this dialog.
+	 *
+	 * @param dialogStage
+	 */
+	public void setDialogStage(Stage dialogStage) {
+		this.dialogStage = dialogStage;
+	}
+
+	public void setPatron(PatronDto patron, MainApp mainApp, PatronService patronService,
+			TissuRequisService tissuRequisService, TypeTissuService typeTissuService, TissageService tissageService, MatiereService matiereService) {
+		this.patronService = patronService;
+		this.tissuRequisService = tissuRequisService;
+		this.typeTissuService = typeTissuService;
+    	this.tissageService = tissageService;
+    	this.matiereService = matiereService;
+		this.tissuVariantService = new TissuVariantService();
+
+		this.patron = patron;
+		this.mainApp = mainApp;
+
+		if (patron.getMarque() == null) {
+			patron = PatronMapper.map(new Patron(0, "", "", "", "", "", null));
+		}
+
+		setDisabledButton();
+
+		// patron.setTissusRequis(tissuRequisService.getAllTissuRequisByPatron(patron.getId()));
+
+		referenceField.setText(patron.getReferenceProperty() == null ? "" : patron.getReference());
+		marqueField.setText(patron.getMarqueProperty() == null ? "" : patron.getMarque());
+		modeleField.setText(patron.getModeleProperty() == null ? "" : patron.getModele());
+		typeVetementField.setText(patron.getTypeVetementProperty() == null ? "" : patron.getTypeVetement());
+		
+		loadTissuRequisForPatron();
+		
+	}
+
+	private void loadTissuRequisForPatron() {
+		tissusPatronListVbox.getChildren().clear();
+		
+		if (patron.getTissusRequisProperty() == null || patron.getTissusRequis() == null) {
+			patron.setTissusRequis(
+					TissuRequisService.listToFxCollection(tissuRequisService.getAllTissuRequisByPatron(patron.getId())));
+		}
+
+		if (patron.getTissusRequisProperty() != null && patron.getTissusRequis() != null) {
+
+			for (TissuRequisDto tissu : patron.getTissusRequis()) {
+
+				Button editButton = new Button();
+				FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.EDIT);
+				editButton.setGraphic(editIcon);
+				editButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent e) {
+						displayTissuRequis(tissu);
+					}
+				});
+
+				Button deleteButton = new Button();
+				FontAwesomeIconView suppressIcon = new FontAwesomeIconView(FontAwesomeIcon.TIMES_CIRCLE);
+				suppressIcon.setFill(Constants.colorDelete);
+				deleteButton.setGraphic(suppressIcon);
+				deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent e) {
+						deleteTissuRequis(tissu);
+					}
+				});
+				
+				
+		    	
+				HBox hbox = new HBox(new Label(tissu.toString()), editButton, deleteButton);
+				hbox.setSpacing(10);
+				hbox.setAlignment(Pos.CENTER_LEFT);
+				tissusPatronListVbox.getChildren().add(new HBox(hbox));
+			}
+		}
+	}
+
+	private void displayTissuRequis(TissuRequisDto tissu) {
+		variantSelected = new TissuVariantDto();
+		longueur = tissu.getLongueur();
+		laize = tissu.getLaize();
+		/*
+		 * if (tissu == null) { tissu = new TissuRequisDto(); }
+		 */
+		rightContainer.getChildren().clear();
+		
+		Label titre = new Label("Tissus recommendés : ");
+
+		GridPane grid = new GridPane();
+		grid.setVgap(10);
+		grid.setHgap(20);
+
+		grid.setPadding(new Insets(10, 0, 10, 0));
+		grid.add(new Label("Longeur"), 0, 0);
+		grid.add(new Label("Laize"), 0, 1);
+		grid.add(new Label("Gamme de poids"), 0, 2);
+
+		Spinner<Integer> longueurSpinner = new Spinner<Integer>();
+		longueurSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE,
+				tissu.getLongueurProperty() == null ? 0 : tissu.getLongueur()));
+		longueurSpinner.setEditable(true);
+		longueurSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+	        longueur = newValue;});
+		longueurSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
+	    		  if (!newValue) {
+	    			  longueurSpinner.increment(0); // won't change value, but will commit editor
+	    			  longueur = longueurSpinner.getValue();
+	    		  }
+	    		});
+	    	
+		grid.add(longueurSpinner, 1, 0);
+
+		Spinner<Integer> laizeSpinner = new Spinner<Integer>();
+		laizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE,
+				tissu.getLaizeProperty() == null ? 0 : tissu.getLaize()));
+		laizeSpinner.setEditable(true);
+		laizeSpinner.valueProperty().addListener((obs, oldValue, newValue) -> 
+    	laize = newValue);
+		laizeSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
+  		  if (!newValue) {
+  			laizeSpinner.increment(0); // won't change value, but will commit editor
+  			laize = laizeSpinner.getValue();
+  		  }
+  		});
+		grid.add(laizeSpinner, 1, 1);
+		
+		longueurSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+	        longueur = newValue;});
+		laizeSpinner.valueProperty().addListener((obs, oldValue, newValue) -> 
+	    	laize = newValue);
+
+		ChoiceBox<String> gammePoidsChBx = new ChoiceBox<String>();
+		gammePoidsChBx.setItems(FXCollections.observableArrayList(GammePoids.labels()));
+		gammePoidsChBx.setValue(tissu.getGammePoidsProperty() == null || tissu.getGammePoids() == null
+				|| tissu.getGammePoids().equals("") ? GammePoids.NON_RENSEIGNE.label : tissu.getGammePoids());
+		grid.add(gammePoidsChBx, 1, 2);
+
+		Button validateBtn = new Button("Valider");
+		validateBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+
+				tissu.setGammePoids(gammePoidsChBx.getValue());
+				tissu.setLaize(laize);
+				tissu.setLongueur(longueur);
+				tissu.setGammePoids(gammePoidsChBx.getValue());
+				saveTissuRequis(tissu);
+
+			}
+		});
+
+		Button cancelBtn = new Button("Annuler");
+		cancelBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				rightContainer.getChildren().clear();
+			}
+		});
+
+		Button deleteBtn = new Button("Supprimer");
+		deleteBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				deleteTissuRequis(tissu);
+			}
+		});
+
+		HBox hboxBtn = new HBox(validateBtn, cancelBtn, deleteBtn);
+		hboxBtn.setSpacing(10);
+		hboxBtn.setAlignment(Pos.CENTER);
+		hboxBtn.setPadding(new Insets(20, 20, 20, 20));
+
+		rightContainer.getChildren().addAll(titre, grid, hboxBtn);
+		List<TissuVariantDto> tvList = new ArrayList<TissuVariantDto>();
+
+		if (tissu != null) {
+			tvList = tissuVariantService.getVariantByTissuRequis(tissu);
+		}
+		
+		if (tvList != null && tvList.size() >0 ) {
+			rightContainer.getChildren().addAll(new Separator(Orientation.HORIZONTAL), new Label("Possibilités :"));
+			
+			for (int i = 0; i< tvList.size(); i++) {
+				TissuVariantDto tv = tvList.get(i);
+				Button editButton = new Button();
+				FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.EDIT);
+				editButton.setGraphic(editIcon);
+				editButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent e) {
+						DevInProgressService.notImplemented(mainApp);
+					}
+				});
+
+				Button deleteButton = new Button();
+				FontAwesomeIconView suppressIcon = new FontAwesomeIconView(FontAwesomeIcon.TIMES_CIRCLE);
+				suppressIcon.setFill(Constants.colorDelete);
+				deleteButton.setGraphic(suppressIcon);
+				deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent e) {
+						DevInProgressService.notImplemented(mainApp);
+					}
+				});
+				rightContainer.getChildren().addAll(new Label(tv.getTypeTissu() +" "+ tv.getMatiere() + " "+tv.getTissage()), editButton, deleteButton);
+				
+				if (i != tvList.size()-1) {
+					HBox hbox = new HBox(new Separator(Orientation.HORIZONTAL), new Label("OU"), new Separator(Orientation.HORIZONTAL));
+					hboxBtn.setSpacing(10);
+					hboxBtn.setAlignment(Pos.CENTER);
+					hboxBtn.setPadding(new Insets(20, 20, 20, 20));
+					rightContainer.getChildren().add(hbox);
+				}
+			}
+			
+		}
+		
+		ChoiceBox<String> typeField = new ChoiceBox<String>();
+    	typeField.setItems(FXCollections.observableArrayList(typeTissuService.getAll().stream().map(tt -> tt.getType()).collect(Collectors.toList())));
+    	typeField.setValue(variantSelected.getTypeTissuProperty() == null ? "": variantSelected.getTypeTissu());
+
+		ChoiceBox<String> matiereField = new ChoiceBox<String>();
+    	matiereField.setItems(FXCollections.observableArrayList(matiereService.getAll().stream().map(m -> m.getMatiere()).collect(Collectors.toList())));
+    	matiereField.setValue(variantSelected.getMatiereProperty() == null ? "": variantSelected.getMatiere());
+
+		ChoiceBox<String> tissageField = new ChoiceBox<String>();
+    	tissageField.setItems(FXCollections.observableArrayList(tissageService.getAll().stream().map(t -> t.getTissage()).collect(Collectors.toList())));
+    	tissageField.setValue(variantSelected.getTissageProperty() == null ? "": variantSelected.getTissage());
+		
+		Button addTvBtn = new Button("Add");
+		addTvBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				variantSelected.setMatiere(matiereField.getValue());
+				
+				tissuVariantService.saveOrUpdate(variantSelected);
+			}
+		});
+		HBox hboxTissuVariant= new HBox(typeField,matiereField, tissageField, addTvBtn);
+		hboxBtn.setSpacing(10);
+		hboxBtn.setAlignment(Pos.CENTER);
+		hboxBtn.setPadding(new Insets(20, 20, 20, 20));
+		rightContainer.getChildren().add(hboxTissuVariant);
+		
+		
+
+		// if (tissuget.)
+
+	}
+
+	public void saveTissuRequis(TissuRequisDto tissu) {
+		boolean edit = false;
+		if (tissu.getId() != 0) edit = true;
+		tissu = tissuRequisService.createOrUpdate(tissu, patron);
+		displayTissuRequis(tissu);
+		if (!edit) {
+				patron.getTissusRequis().add(tissu);
+			}
+		loadTissuRequisForPatron();
 
 
-    public void setTissu(TissuDto tissu) {
-        this.tissu = tissu;
-        
-        if (tissu.getChuteProperty() == null) {
-        	tissu = new TissuDto(new Tissu(0, "", 0, 0, "", null, TypeTissuService.allTypeTissus.get(0), 0, UnitePoids.GRAMME_M,false, "", null, false));
-        } 
+		//DevInProgressService.notImplemented(mainApp);
+	}
 
+	private void deleteTissuRequis(TissuRequisDto tissu) {
+		DevInProgressService.notImplemented(mainApp);
+	}
 
-        longueurField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, tissu.getLongueurProperty() == null ? 0: tissu.getLongueur()));
-     	laizeField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, tissu.getLaizeProperty() == null ? 0: tissu.getLaize()));
-    	poidsField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, tissu.getPoidseProperty() == null ? 0: tissu.getPoids()));
-    	matiereField.setText(tissu.getMatiereProperty() == null ? "": tissu.getMatiere());
-    	descriptionField.setText(tissu.getDescriptionProperty() == null ? "": tissu.getDescription());
-    	typeField.setText(tissu.getTypeProperty() == null ? "": tissu.getType());
-    	decatiField.setSelected(tissu.getDecatiProperty() == null ? false: tissu.isDecati());
-    	lieuDachatField.setText(tissu.getLieuAchatProperty() == null ? "": tissu.getLieuAchat());
-    	chuteField.setSelected(tissu.getChuteProperty() == null ? false: tissu.isChute());
-    	tissageField.setText(tissu.getTissageProperty() == null ? "": tissu.getTissage());
+	/**
+	 * Returns true if the user clicked OK, false otherwise.
+	 *
+	 * @return
+	 */
+	public boolean isOkClicked() {
+		return okClicked;
+	}
 
-    	
-    	unitePoidsField.setItems(FXCollections.observableArrayList(UnitePoids.values()));
-    	
-    	unitePoidsField.setValue( tissu.getUnitePoidsProperty() == null ? UnitePoids.GRAMME_M :UnitePoids.valueOf(tissu.getUnitePoids()));
-    }
+	/**
+	 * Called when the user clicks ok.
+	 */
+	@FXML
+	private void handleSavePatron() {
+		// if (isInputValid()) {
 
-    /**
-     * Returns true if the user clicked OK, false otherwise.
-     *
-     * @return
-     */
-    public boolean isOkClicked() {
-        return okClicked;
-    }
+		patron.setReference(referenceField.getText());
+		patron.setMarque(marqueField.getText());
+		patron.setModele(modeleField.getText());
+		patron.setTypeVetement(typeVetementField.getText());
 
-    /**
-     * Called when the user clicks ok.
-     */
-    @FXML
-    private void handleOk() {
-        //if (isInputValid()) {
-    	if (tissu.getDescriptionProperty() == null) {
-        	tissu = new TissuDto(new Tissu(0, "", 0, 0, "", null, TypeTissuService.allTypeTissus.get(0), 0, UnitePoids.GRAMME_M,false, "", null, false));
-        } 
-        	tissu.setLongueur(longueurField.getValue());
-        	tissu.setLaize(laizeField.getValue());
-        	tissu.setDescription(descriptionField.getText());
-        	tissu.setMatiere(matiereField.getText());
-        	tissu.setType(typeField.getText());
-    		tissu.setPoids(poidsField.getValue());
-    		tissu.setUnitePoids(unitePoidsField.getValue());
-    		tissu.setDecati(Boolean.parseBoolean(decatiField.getText()));
-    		tissu.setLieuAchat(lieuDachatField.getText());
-    		tissu.setChute(Boolean.parseBoolean(chuteField.getText()));
-        	tissu.setTissage(tissageField.getText());
+		patron = patronService.create(patron);
+		setDisabledButton();
 
-    		
-            okClicked = true;
-            dialogStage.close();
-        //}
-    }
+		okClicked = true;
+		// }
+	}
 
-    /**
-     * Called when the user clicks cancel.
-     */
-    @FXML
-    private void handleCancel() {
-        dialogStage.close();
-    }
+	@FXML
+	private void handleSaveAndQuitPatron() {
+		// if (isInputValid()) {
+		DevInProgressService.notImplemented(mainApp);
 
-    /**
-     * Validates the user input in the text fields.
-     *
-     * @return true if the input is valid
-     */
-    private boolean isInputValid() {
-        String errorMessage = "";
-/*
-        if (firstNameField.getText() == null || firstNameField.getText().length() == 0) {
-            errorMessage += "No valid first name!\n";
-        }
-        if (lastNameField.getText() == null || lastNameField.getText().length() == 0) {
-            errorMessage += "No valid last name!\n";
-        }
-        if (streetField.getText() == null || streetField.getText().length() == 0) {
-            errorMessage += "No valid street!\n";
-        }
+		okClicked = true;
+		dialogStage.close();
+		// }
+	}
 
-        if (postalCodeField.getText() == null || postalCodeField.getText().length() == 0) {
-            errorMessage += "No valid postal code!\n";
-        } else {
-            // try to parse the postal code into an int.
-            try {
-                Integer.parseInt(postalCodeField.getText());
-            } catch (NumberFormatException e) {
-                errorMessage += "No valid postal code (must be an integer)!\n";
-            }
-        }
+	/**
+	 * Called when the user clicks cancel.
+	 */
+	@FXML
+	private void handleCancel() {
+		dialogStage.close();
+	}
 
-        if (cityField.getText() == null || cityField.getText().length() == 0) {
-            errorMessage += "No valid city!\n";
-        }
+	@FXML
+	private void handleGenerateReference() {
+		StringBuilder sb = new StringBuilder();
+		String bla = marqueField.getText();
+		sb.append(marqueField.getText().trim().isEmpty() ? "X" : marqueField.getText().toUpperCase().charAt(0))
+				.append(modeleField.getText().trim().isEmpty() ? "X" : modeleField.getText().toUpperCase().charAt(0))
+				.append(typeVetementField.getText().trim().isEmpty() ? "X"
+						: typeVetementField.getText().toUpperCase().charAt(0))
+				.append("-");
+		boolean ref = true;
+		int refNb = 0;
+		while (ref) {
+			refNb++;
+			ref = patronService.existByReference(sb.toString() + refNb);
+		}
+		referenceField.setText(sb.append(refNb).toString());
+	}
 
-        if (birthdayField.getText() == null || birthdayField.getText().length() == 0) {
-            errorMessage += "No valid birthday!\n";
-        } else {
-            if (!DateUtil.validDate(birthdayField.getText())) {
-                errorMessage += "No valid birthday. Use the format dd.mm.yyyy!\n";
-            }
-        }
-*/
-        if (errorMessage.length() == 0) {
-            return true;
-        } else {
-            // Show the error message.
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.initOwner(dialogStage);
-            alert.setTitle("Invalid Fields");
-            alert.setHeaderText("Please correct invalid fields");
-            alert.setContentText(errorMessage);
+	@FXML
+	private void handleTissuListedit() {
 
-            alert.showAndWait();
+		displayTissuRequis(new TissuRequisDto());
+	}
 
-            return false;
-        }
-    }
+	@FXML
+	private void handleFournitureListedit() {
+		DevInProgressService.notImplemented(mainApp);
+
+	}
+
+	/**
+	 * Validates the user input in the text fields.
+	 *
+	 * @return true if the input is valid
+	 */
+	private boolean isInputValid() {
+		String errorMessage = "";
+
+		if (errorMessage.length() == 0) {
+			return true;
+		} else {
+			// Show the error message.
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.initOwner(dialogStage);
+			alert.setTitle("Invalid Fields");
+			alert.setHeaderText("Please correct invalid fields");
+			alert.setContentText(errorMessage);
+
+			alert.showAndWait();
+
+			return false;
+		}
+	}
 }
-

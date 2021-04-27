@@ -25,6 +25,8 @@ public class Constants {
 	// MYSQL 5 : com.mysql.jdbc.Driver
 	// MYSQL 8 : com.mysql.cj.jdbc.Driver
 	public static String JDBC_DRIVER = "org.h2.Driver";
+	
+	public final static String PERSISTENCE_UNIT = "persistUnit";
 
 	// Junit
 	public static String SQL_JUNIT_PATH_FILE = "script_test_junit_base_personnes.sql";

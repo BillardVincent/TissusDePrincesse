@@ -23,15 +23,22 @@ public class TissuService {
 	
 	
 	public TissuService() {
+
 		tissuDao = new TissuDao();
+		//List<Tissu> lst = tissuDao.findAll();
+		
+		tissuData = FXCollections.observableArrayList(tissuDao.findAll().stream().map(TissuMapper::map).collect(Collectors.toList()));
+
 	}
 	//public static List allTissus = new ArrayList() ;
 	
 	public void init() {
+		/*
 		TypeTissuService typeTissuService = new TypeTissuService();
 		typeTissuService.init();
 		PatronService patronService = new PatronService();
 		patronService.init();
+		*/
 		
 		/*
 		List<Tissu> tissus = Arrays.asList(
@@ -61,8 +68,6 @@ public class TissuService {
 		tissuDao.findAll().forEach(t -> System.out.println(t));;
 		
 		lastTissuId = 6;
-		
-		
 				
 	}
 	

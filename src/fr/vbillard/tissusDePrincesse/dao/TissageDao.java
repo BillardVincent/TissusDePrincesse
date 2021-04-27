@@ -12,10 +12,11 @@ import org.apache.commons.logging.LogFactory;
 
 import fr.vbillard.tissusDePrincesse.exception.GestionTissagesException;
 import fr.vbillard.tissusDePrincesse.model.Tissage;
+import fr.vbillard.tissusDePrincesse.utils.Constants;
 
 public class TissageDao {
 	private static final Log log = LogFactory.getLog(TissageDao.class);
-	private final String persistenceUnit = "persistUnit";
+	private final String persistenceUnit = Constants.PERSISTENCE_UNIT;
 	private EntityManagerFactory emf = null;
 	private EntityManager em = null;
 	private EntityTransaction transaction = null;

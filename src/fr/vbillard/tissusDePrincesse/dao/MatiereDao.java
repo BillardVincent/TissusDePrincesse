@@ -12,10 +12,11 @@ import org.apache.commons.logging.LogFactory;
 
 import fr.vbillard.tissusDePrincesse.exception.GestionMatieresException;
 import fr.vbillard.tissusDePrincesse.model.Matiere;
+import fr.vbillard.tissusDePrincesse.utils.Constants;
 
 public class MatiereDao {
 	private static final Log log = LogFactory.getLog(MatiereDao.class);
-	private final String persistenceUnit = "persistUnit";
+	private final String persistenceUnit = Constants.PERSISTENCE_UNIT;
 	private EntityManagerFactory emf = null;
 	private EntityManager em = null;
 	private EntityTransaction transaction = null;
