@@ -10,7 +10,7 @@ import fr.vbillard.tissusDePrincesse.MainApp;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
 import fr.vbillard.tissusDePrincesse.model.Matiere;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
-import fr.vbillard.tissusDePrincesse.model.UnitePoids;
+import fr.vbillard.tissusDePrincesse.model.enums.UnitePoids;
 import fr.vbillard.tissusDePrincesse.services.MatiereService;
 import fr.vbillard.tissusDePrincesse.services.TissageService;
 import fr.vbillard.tissusDePrincesse.services.TissuService;

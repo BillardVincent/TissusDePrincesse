@@ -44,6 +44,11 @@ public class TissuRequisService {
 		
 		return tissuRequisDao.findById(tissuRequisId);
 	}
+
+	public void delete(TissuRequisDto tissu) {
+		tissuRequisDao.delete(TissuRequisMapper.map(tissu));
+		
+	}
 	
 	
 }

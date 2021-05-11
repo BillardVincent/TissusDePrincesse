@@ -1,7 +1,7 @@
 package fr.vbillard.tissusDePrincesse.dtosFx;
 
 import fr.vbillard.tissusDePrincesse.model.Tissu;
-import fr.vbillard.tissusDePrincesse.model.UnitePoids;
+import fr.vbillard.tissusDePrincesse.model.enums.UnitePoids;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -39,6 +39,7 @@ public class TissuDto {
 	private IntegerProperty id;
 	private StringProperty  reference;
 	private IntegerProperty longueur;
+	private IntegerProperty longueurRestante;
 	private IntegerProperty laize;
 	private StringProperty  description;
 	private StringProperty  matiere;
@@ -72,6 +73,7 @@ public class TissuDto {
 		//this.unitePoidsDisplay = new SimpleStringProperty(tissu.getUnitePoids().label);
 		this.tissage = new SimpleStringProperty(tissu.getTissage() == null ? "" : tissu.getTissage().getTissage() );
 		this.chute = new SimpleBooleanProperty(tissu.isChute());
+		this.longueurRestante = new SimpleIntegerProperty();
 
 	}
 	
@@ -99,6 +101,18 @@ public class TissuDto {
 	public void setReference(String reference) {
 		this.reference.set(reference);
 	}
+	public int getLongueurRestante() {
+		return longueurRestante.get();
+	}
+	public IntegerProperty getLongueurRestanteProperty() {
+		return longueurRestante;
+	}
+
+
+	public void setLongueurRestante(int longueurRestante) {
+		this.longueurRestante.set(longueurRestante);
+	}
+
 	public int getLongueur() {
 		return longueur.get();
 	}
@@ -110,8 +124,7 @@ public class TissuDto {
 	public void setLongueur(int longueur) {
 		this.longueur.set(longueur);
 	}
-
-
+	
 	public int getLaize() {
 		return laize.get();
 	}

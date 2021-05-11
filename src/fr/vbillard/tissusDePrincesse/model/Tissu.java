@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import fr.vbillard.tissusDePrincesse.model.enums.UnitePoids;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

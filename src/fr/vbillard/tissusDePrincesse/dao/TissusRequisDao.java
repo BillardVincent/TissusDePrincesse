@@ -15,6 +15,7 @@ import fr.vbillard.tissusDePrincesse.exception.GestionTissagesException;
 import fr.vbillard.tissusDePrincesse.exception.GestionTissusException;
 import fr.vbillard.tissusDePrincesse.model.Patron;
 import fr.vbillard.tissusDePrincesse.model.Tissage;
+import fr.vbillard.tissusDePrincesse.model.Tissu;
 import fr.vbillard.tissusDePrincesse.model.TissuRequis;
 import fr.vbillard.tissusDePrincesse.model.TypeTissu;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
@@ -110,6 +111,33 @@ public class TissusRequisDao {
 			JPAHelper.closeEntityManagerResources(emf, em);
 		}
 		return tissu;
+	}
+	
+	public boolean delete(TissuRequis tissu) {
+		boolean isOk = false;
+		if (tissu != null) {
+			try {
+				emf = Persistence.createEntityManagerFactory(persistenceUnit);
+				em = emf.createEntityManager();
+				transaction = em.getTransaction();
+				transaction.begin();
+				tissu = em.find(TissuRequis.class, tissu.getId());
+				em.remove(tissu);
+				transaction.commit();
+				isOk = em.find(Tissu.class, tissu.getId()) == null;
+			} catch (Exception e) {
+				e.printStackTrace();
+				if (transaction != null && transaction.isActive()) {
+					transaction.rollback();
+				}
+				throw new GestionTissusException(
+						"Une erreur s'est produite lors de la création de la Tissu : [id = " + tissu.getId() +"]");
+
+			} finally {
+				JPAHelper.closeEntityManagerResources(emf, em);
+			}
+		}
+		return isOk;
 	}
 
 }

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.vbillard.tissusDePrincesse.model.FounitureRequise;
-import fr.vbillard.tissusDePrincesse.model.GammePoids;
 import fr.vbillard.tissusDePrincesse.model.TissuRequis;
-import fr.vbillard.tissusDePrincesse.model.UnitePoids;
+import fr.vbillard.tissusDePrincesse.model.enums.GammePoids;
+import fr.vbillard.tissusDePrincesse.model.enums.UnitePoids;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -39,6 +39,7 @@ public class PatronDto {
 		
 
 		this.tissusRequis = new SimpleListProperty<TissuRequisDto>();
+		setTissusRequis(new ArrayList<TissuRequisDto>());
 	}
 	
 	public int getId() {

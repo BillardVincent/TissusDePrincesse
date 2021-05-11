@@ -1,11 +1,14 @@
 package fr.vbillard.tissusDePrincesse.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import fr.vbillard.tissusDePrincesse.model.enums.ProjectStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +27,9 @@ public class Projet {
 	
 	@ManyToOne
 	private Patron patron;
+	
+	@Enumerated(EnumType.STRING)
+	private ProjectStatus status;
 	
 	/*
 	@OneToMany

@@ -63,8 +63,16 @@ public class PatronService {
 	}
 
 	public PatronDto create(PatronDto patron) {
-		PatronDto dto = PatronMapper.map(patronDao.create(PatronMapper.map(patron)));
-		patronData.add(dto);
+		Patron p = PatronMapper.map(patron);
+		PatronDto dto = new PatronDto();
+		if (p.getId() == 0) {
+			dto = PatronMapper.map(patronDao.create(p ));
+			patronData.add(dto);
+		}
+		else {
+			dto = PatronMapper.map(patronDao.update(p ));
+			patronData = FXCollections.observableArrayList(patronDao.findAll().stream().map(PatronMapper::map).collect(Collectors.toList()));
+		}
 		return dto;
 	}
 

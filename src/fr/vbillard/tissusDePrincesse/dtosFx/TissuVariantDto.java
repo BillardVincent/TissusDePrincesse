@@ -23,6 +23,11 @@ public class TissuVariantDto {
 		this.typeTissu = new SimpleStringProperty();
 		this.tissage = new SimpleStringProperty();
 	}
+	
+	@Override
+	public String toString() {
+		return getMatiere()+", "+getTypeTissu()+", "+getTissage();
+	}
 		
 	
 	public int getId() {

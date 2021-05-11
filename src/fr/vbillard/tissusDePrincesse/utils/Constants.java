@@ -27,6 +27,7 @@ public class Constants {
 	public static String JDBC_DRIVER = "org.h2.Driver";
 	
 	public final static String PERSISTENCE_UNIT = "persistUnit";
+	public static final String NON_ENREGISTRE = "non enregistré";
 
 	// Junit
 	public static String SQL_JUNIT_PATH_FILE = "script_test_junit_base_personnes.sql";
@@ -35,5 +36,7 @@ public class Constants {
 	
 	public static Paint colorAdd = Color.GREEN;
 	public static Paint colorDelete = Color.RED;
+	public static Paint colorAccent = Color.BLUE;
+	public static Paint colorWarning = Color.ORANGE;
 
 }

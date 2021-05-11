@@ -12,6 +12,7 @@ import fr.vbillard.tissusDePrincesse.exception.GestionPatronsException;
 import fr.vbillard.tissusDePrincesse.exception.GestionTissusException;
 import fr.vbillard.tissusDePrincesse.exception.GestionTypeTissusException;
 import fr.vbillard.tissusDePrincesse.model.Patron;
+import fr.vbillard.tissusDePrincesse.model.TissuRequis;
 import fr.vbillard.tissusDePrincesse.model.TypeTissu;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
 
@@ -75,6 +76,30 @@ public class PatronDao {
 			JPAHelper.closeEntityManagerResources(emf, em);
 		}
 		return patrons;
+	}
+	
+	public Patron update(Patron patron) {
+		if (patron != null) {
+			try {
+				emf = Persistence.createEntityManagerFactory(persistenceUnit);
+				em = emf.createEntityManager();
+				transaction = em.getTransaction();
+				transaction.begin();
+				patron = em.merge(patron);
+				transaction.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+				if (transaction != null && transaction.isActive()) {
+					transaction.rollback();
+				}
+				throw new GestionTissusException(
+						"Une erreur s'est produite lors de la création du patron : [id = " + patron.getId() +"]");
+			} finally {
+				JPAHelper.closeEntityManagerResources(emf, em);
+			}
+		}
+		return patron;
+		
 	}
 
 	

@@ -1,30 +1,35 @@
 package fr.vbillard.tissusDePrincesse;
 
-import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import fr.vbillard.tissusDePrincesse.dao.JPAHelper;
 import fr.vbillard.tissusDePrincesse.dtosFx.PatronDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
+import fr.vbillard.tissusDePrincesse.model.enums.ProjectStatus;
+import fr.vbillard.tissusDePrincesse.services.DevInProgressService;
 import fr.vbillard.tissusDePrincesse.services.InitDataService;
 import fr.vbillard.tissusDePrincesse.services.MatiereService;
 import fr.vbillard.tissusDePrincesse.services.PatronService;
-import fr.vbillard.tissusDePrincesse.services.Serializer;
+import fr.vbillard.tissusDePrincesse.services.ProjetService;
 import fr.vbillard.tissusDePrincesse.services.TissageService;
 import fr.vbillard.tissusDePrincesse.services.TissuRequisService;
 import fr.vbillard.tissusDePrincesse.services.TissuService;
 import fr.vbillard.tissusDePrincesse.services.TypeTissuService;
 import fr.vbillard.tissusDePrincesse.view.ChargementController;
+import fr.vbillard.tissusDePrincesse.view.GenericTextEditController;
+import fr.vbillard.tissusDePrincesse.view.MainOverviewController;
 import fr.vbillard.tissusDePrincesse.view.MatiereEditController;
+import fr.vbillard.tissusDePrincesse.view.GenericChoiceBoxEditController;
 import fr.vbillard.tissusDePrincesse.view.PatronEditDialogController;
 import fr.vbillard.tissusDePrincesse.view.RootLayoutController;
+import fr.vbillard.tissusDePrincesse.view.SetLongueurDialogController;
 import fr.vbillard.tissusDePrincesse.view.TissageEditController;
 import fr.vbillard.tissusDePrincesse.view.TissuEditDialogController;
-import fr.vbillard.tissusDePrincesse.view.MainOverviewController;
 import fr.vbillard.tissusDePrincesse.view.TypeEditController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -34,7 +39,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class MainApp extends Application {
 
@@ -48,18 +52,21 @@ public class MainApp extends Application {
     private MatiereService matiereService;
     private TissageService tissageService;
     private TissuRequisService tissuRequisService;
+    private ProjetService projetService;
     private MainOverviewController tissuOverviewController;
     private ChargementController chargementController;
     private AnchorPane tissuOverview;
     private InitDataService initDataService;
     
     //------------------- test h2 -----------------
-	private static final String persistenceUnit = "persistUnit";
+	//private static final String persistenceUnit = "persistUnit";
+	private Image icon = new Image("file:resources/images/cut-cloth-red.png");
 
     @Override
     public void start(Stage primaryStage) {
     	//  AquaFx.style();
         this.primaryStage = primaryStage;
+        //primaryStage.setFullScreen(true);
         //chargement();
         
         this.primaryStage.setTitle("Les Tissus de Princesse");
@@ -75,6 +82,7 @@ public class MainApp extends Application {
         initDataService = new InitDataService();
 
         matiereService = new MatiereService();
+        projetService = new ProjetService();
         //chargementController.setMessage("Chargement en cours : Init");
 
         //chargementController.setMessage("Chargement en cours : Matieres");
@@ -90,7 +98,7 @@ public class MainApp extends Application {
         //chargementController.setMessage("Chargement en cours : Init OK !");
 
 
-        this.primaryStage.getIcons().add(new Image("file:resources/images/cut-cloth-red.png"));
+        this.primaryStage.getIcons().add(icon);
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("view/MainOverview.fxml"));
@@ -103,18 +111,13 @@ public class MainApp extends Application {
         
         // Give the controller access to the main app.
         tissuOverviewController = loader.getController();
-        tissuOverviewController.setMainApp(tissuService, patronService, this);
+        tissuOverviewController.setMainApp(tissuService, patronService, projetService, this);
         
         //chargementStage.close();
         initRootLayout();
 
         rootLayout.setCenter(tissuOverview);
 
-
-       // testConfigurationJpaHibernate();
-        
-        
-        
     }
     /*
     private void chargement() {
@@ -155,6 +158,7 @@ public class MainApp extends Application {
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
+           
 
             // Give the controller access to the main app.
             RootLayoutController controller = loader.getController();
@@ -164,14 +168,6 @@ public class MainApp extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // Try to load last opened person file.
-    	/*
-        File file = Serializer.getFilePath();
-        if (file != null) {
-            Serializer.Deserialize(file);
-        }
-        */
     }
     
 
@@ -186,6 +182,8 @@ public class MainApp extends Application {
             // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Modification Tissu");
+            dialogStage.getIcons().add(icon);
+
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
@@ -217,6 +215,8 @@ public class MainApp extends Application {
             // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Modification de patron");
+            dialogStage.getIcons().add(icon);
+
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
@@ -248,6 +248,8 @@ public class MainApp extends Application {
             // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Matieres");
+            dialogStage.getIcons().add(icon);
+
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
@@ -278,6 +280,8 @@ public class MainApp extends Application {
             // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Types de tissu");
+            dialogStage.getIcons().add(icon);
+
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
@@ -308,6 +312,8 @@ public class MainApp extends Application {
             // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Tissages");
+            dialogStage.getIcons().add(icon);
+
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
@@ -328,10 +334,73 @@ public class MainApp extends Application {
         }
     }
     
-	/**
-	 * Returns the main stage.
-	 * @return
-	 */
+    public String showTextEditDialog(String value, String fieldName) {
+		try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("view/GenericTextEdit.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Modification : "+fieldName);
+            dialogStage.getIcons().add(icon);
+
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Set the person into the controller.
+            GenericTextEditController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setData(this, value);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+            return controller.result();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Error";
+        }
+    }
+    
+    public <T extends Enum>  String showChoiceBoxEditDialog(String value, Class<T> class1) {
+		try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("view/GenericChoiceBoxEdit.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+            
+            String s = class1.getSimpleName();
+           System.out.println(s);
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+			Class<?>[] parameterType = new Class[] {};
+            dialogStage.setTitle("Modification : "+ (String) class1.getMethod("displayClassName", parameterType).invoke(null, new Object[] {}));
+            dialogStage.getIcons().add(icon);
+
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Set the person into the controller.
+            GenericChoiceBoxEditController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setData(this, value, class1);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+            return controller.result();
+        } catch (IOException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+            e.printStackTrace();
+            return "Error";
+        }
+    }
+
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}
@@ -339,48 +408,36 @@ public class MainApp extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
 
-    
-    public static void testConfigurationJpaHibernate() {
-		EntityManagerFactory emf = null;
-		EntityManager em = null;
+	public int showSetLongueurDialog(int required, int  available) {
 		try {
-			emf = Persistence.createEntityManagerFactory(persistenceUnit);
-			System.out.println("CREATION EntityManagerFactory AVEC SUCCES");
-			em = emf.createEntityManager();
-			System.out.println("CREATION EntityManager AVEC SUCCES");
-			System.out.println("BEGIN TRANSACTION");
-			em.getTransaction().begin();
-			System.out.println("COMMIT TRANSACTION");
-			em.getTransaction().commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-			try {
-				// RollBack
-				em.getTransaction().rollback();
-			} catch (Exception exRollBack) {
-				System.out.println("Une erreur s'est produite lors du RollBack, Exception : " + exRollBack.getMessage()
-						+ " , Exception : " + exRollBack);
-			}
-			System.out.println("Une erreur s'est produite lors de l'execution la methode, Exception : " + e.getMessage()
-					+ " , Exception : " + e);
-		} finally {
-			// libération ressources
-			try {
-				if (em != null) {
-					em.close();
-				}
-				if (emf != null) {
-					emf.close();
-				}
-			} catch (Exception e) {
-				System.out.println("Une erreur s'est produite lors de l'execution la methode, Exception : " + e.getMessage()
-						+ " , Exception : " + e);
-			}
-			System.out.println("FINALEMENT APRES LES CLOSES");
-		}
-	}
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("view/SetLongueurDialog.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
 
-	
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Longueur de tissu allouée");
+            dialogStage.getIcons().add(icon);
+
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Set the person into the controller.
+            SetLongueurDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setData(this, required, available);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+            return controller.result();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1;
+        }
+	}
 }

@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="733.0" stylesheets="@theme.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.vbillard.tissusDePrincesse.view.PatronEditDialogController">
+<AnchorPane prefHeight="500.0" prefWidth="733.0" stylesheets="@theme.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.vbillard.tissusDePrincesse.view.PatronEditDialogController">
    <children>
       <SplitPane dividerPositions="0.5376196990424077" prefHeight="400.0" prefWidth="733.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -74,7 +74,15 @@
                               <Insets top="5.0" />
                            </padding>
                         </HBox>
-                        <VBox fx:id="tissusPatronListVbox" prefHeight="24.0" prefWidth="335.0" />
+                        <GridPane fx:id="tissusPatronListGrid">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="263.0" minWidth="10.0" prefWidth="237.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="98.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                        </GridPane>
                         <Separator prefWidth="200.0">
                            <padding>
                               <Insets top="5.0" />
@@ -93,12 +101,20 @@
                               <Insets top="5.0" />
                            </padding>
                         </HBox>
-                        <VBox prefHeight="24.0" prefWidth="335.0" />
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="244.0" minWidth="10.0" prefWidth="244.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="91.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                        </GridPane>
                      </children>
                   </VBox>
-                  <Button layoutX="28.0" layoutY="328.0" mnemonicParsing="false" onAction="#handleSavePatron" prefHeight="25.0" prefWidth="69.0" text="Sauver" />
-                <Button layoutX="134.0" layoutY="328.0" mnemonicParsing="false" onAction="#handleSaveAndQuitPatron" text="Sauver &amp; quitter" />
-                  <Button layoutX="270.0" layoutY="328.0" mnemonicParsing="false" onAction="#handleCancel" text="Annuler" />
+                  <Button layoutX="53.0" layoutY="447.0" mnemonicParsing="false" onAction="#handleSavePatron" prefHeight="25.0" prefWidth="69.0" text="Sauver" />
+                <Button layoutX="159.0" layoutY="447.0" mnemonicParsing="false" onAction="#handleSaveAndQuitPatron" text="Sauver &amp; quitter" />
+                  <Button layoutX="295.0" layoutY="447.0" mnemonicParsing="false" onAction="#handleCancel" text="Annuler" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">

@@ -3,8 +3,8 @@ package fr.vbillard.tissusDePrincesse.dtosFx;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import fr.vbillard.tissusDePrincesse.model.GammePoids;
 import fr.vbillard.tissusDePrincesse.model.TissuVariant;
+import fr.vbillard.tissusDePrincesse.model.enums.GammePoids;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -68,7 +68,7 @@ public class TissuRequisDto {
 		return laize;
 	}
 
-	public void setVariant(List<TissuVariant> variants) {
+	public void setVariant(List<TissuVariantDto> variants) {
 		this.variants.set(FXCollections.observableArrayList(variants.stream().map(v-> v.toString()).collect(Collectors.toList())));
 	}
 	

@@ -11,7 +11,7 @@ import fr.vbillard.tissusDePrincesse.dtosFx.DataHolder;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
 import fr.vbillard.tissusDePrincesse.mappers.TissuMapper;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
-import fr.vbillard.tissusDePrincesse.model.UnitePoids;
+import fr.vbillard.tissusDePrincesse.model.enums.UnitePoids;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -150,6 +150,13 @@ public class TissuService {
 
 	public boolean existByReference(String string) {
 		return tissuDao.existByReference(string);
+		
+	}
+
+	public void archive(TissuDto dto) {
+		Tissu t = TissuMapper.map(dto);
+		t.setArchived(true);
+		tissuDao.update(t);
 		
 	}
 	

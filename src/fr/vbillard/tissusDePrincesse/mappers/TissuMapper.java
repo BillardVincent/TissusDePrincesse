@@ -2,9 +2,11 @@ package fr.vbillard.tissusDePrincesse.mappers;
 
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
-import fr.vbillard.tissusDePrincesse.model.UnitePoids;
+import fr.vbillard.tissusDePrincesse.model.TissuUsed;
+import fr.vbillard.tissusDePrincesse.model.enums.UnitePoids;
 import fr.vbillard.tissusDePrincesse.services.MatiereService;
 import fr.vbillard.tissusDePrincesse.services.TissageService;
+import fr.vbillard.tissusDePrincesse.services.TissuUsedService;
 import fr.vbillard.tissusDePrincesse.services.TypeTissuService;
 
 public class TissuMapper {
@@ -31,6 +33,17 @@ public class TissuMapper {
 	}
 	
 	public static  TissuDto map(Tissu t) {
-	 return new TissuDto(t);
+	TissuUsedService tUsedService = new TissuUsedService(); 
+	 TissuDto dto =  new TissuDto(t);
+	 int longueurRestante = dto.getLongueur();
+	 
+	 
+	 for (TissuUsed tu : tUsedService.getByTissu(t)) {
+		 longueurRestante -= tu.getLongueur();
+		}
+	 
+	 dto.setLongueurRestante(longueurRestante);
+	 
+	 return dto;
 	}
 }

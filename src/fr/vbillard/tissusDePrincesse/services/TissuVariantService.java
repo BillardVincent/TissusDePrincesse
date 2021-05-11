@@ -21,8 +21,7 @@ public class TissuVariantService {
 	}
 
 	public TissuVariantDto saveOrUpdate(TissuVariantDto variantSelected) {
-		if (variantSelected.getId() == 0)
-		return VariantMapper.map(tissuVariantDao.create(VariantMapper.map(variantSelected)));
+		if (variantSelected.getId() == 0) return VariantMapper.map(tissuVariantDao.create(VariantMapper.map(variantSelected)));
 		else return VariantMapper.map(tissuVariantDao.update(VariantMapper.map(variantSelected)));
 	}
 
