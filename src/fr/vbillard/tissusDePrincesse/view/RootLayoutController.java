@@ -1,15 +1,11 @@
 package fr.vbillard.tissusDePrincesse.view;
-import java.io.File;
-
 import fr.vbillard.tissusDePrincesse.MainApp;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
 import fr.vbillard.tissusDePrincesse.services.PatronService;
-import fr.vbillard.tissusDePrincesse.services.Serializer;
 import fr.vbillard.tissusDePrincesse.services.TissuService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.FileChooser;
 
 /**
  * The controller for the root layout. The root layout provides the basic
@@ -44,12 +40,14 @@ public class RootLayoutController {
    
     @FXML
     private void handleSave() {
+    	/*
         File tissuFile = Serializer.getFilePath();
         if (tissuFile != null) {
             Serializer.serialize(tissuFile);
         } else {
             handleSaveAs();
         }
+        */
     }
 
     /**
@@ -57,6 +55,7 @@ public class RootLayoutController {
      */
     @FXML
     private void handleSaveAs() {
+    	/*
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
@@ -74,10 +73,12 @@ public class RootLayoutController {
 			}
 			Serializer.serialize(file);
 		}
+		*/
 	}
     
     @FXML
     private void handleOpen() {
+    	/*
         FileChooser fileChooser = new FileChooser();
 
         // Set extension filter
@@ -92,6 +93,7 @@ public class RootLayoutController {
            Serializer.Deserialize(file);
            tissuOverviewController.refreshList();
         }
+        */
     }
 
     /**

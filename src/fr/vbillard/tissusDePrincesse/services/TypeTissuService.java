@@ -17,37 +17,16 @@ public class TypeTissuService {
 	
 	public TypeTissuService(){
 		this.typeTissuDao = new TypeTissuDao();
-		allTypeTissus = FXCollections.observableArrayList(typeTissuDao.findAll());
+		init();
+		}
+	public static ObservableList<TypeTissu> allTypeTissus = FXCollections.observableArrayList();
+	public static ObservableList<String> allTypeTissusValues = FXCollections.observableArrayList();	
+	
+	public void init() {
+
 		List<TypeTissu> lst = typeTissuDao.findAll();
 		allTypeTissus = FXCollections.observableArrayList(lst);
 		allTypeTissusValues = FXCollections.observableArrayList(lst.stream().map(m -> m.getType()).collect(Collectors.toList()));
-	}
-	public static ObservableList<TypeTissu> allTypeTissus = FXCollections.observableArrayList();
-	public static ObservableList<String> allTypeTissusValues = FXCollections.observableArrayList();
-
-	public static int lastTypeTissuId;
-	
-	//public static List allTissus = new ArrayList() ;
-	
-	public void init() {
-		/*
-		allTypeTissus = FXCollections.observableArrayList(Arrays.asList(
-				new TypeTissu(0, "Chaine et trame"),
-				new TypeTissu(0, "Maille")
-				));
-		
-		lastTypeTissuId = 2;
-		*/
-		allTypeTissus = FXCollections.observableArrayList(typeTissuDao.findAll());
-		
-		/*
-		if (allTypeTissus.size() == 0 ) {
-			typeTissuDao.create(new TypeTissu(0, "Chaine et trame"));
-			typeTissuDao.create(new TypeTissu(0, "Maille"));
-			allTypeTissus = FXCollections.observableArrayList(typeTissuDao.findAll());
-
-		}
-		*/
 		
 				
 	}
@@ -67,8 +46,7 @@ public TypeTissu findTypeTissu(String typeTissu) {
 
 	public void create(TypeTissu typeTissu) {
 		TypeTissu tt = typeTissuDao.create(typeTissu);
-		allTypeTissus.add(tt);
-		allTypeTissusValues.add(tt.getType());
+		init();
 	}
 
 	public boolean validate(String text) {

@@ -22,19 +22,9 @@ public class MatiereService {
 	}
 	public static ObservableList<Matiere> allMatieres = FXCollections.observableArrayList();
 	public static ObservableList<String> allMatieresValues = FXCollections.observableArrayList();
-	public static int lastTypeTissuId;
-	
-	//public static List allTissus = new ArrayList() ;
 	
 	public void init() {
-		/*
-		allTypeTissus = FXCollections.observableArrayList(Arrays.asList(
-				new TypeTissu(0, "Chaine et trame"),
-				new TypeTissu(0, "Maille")
-				));
-		
-		lastTypeTissuId = 2;
-		*/
+
 		List<Matiere> lst = matiereDao.findAll();
 		allMatieres = FXCollections.observableArrayList(lst);
 		allMatieresValues = FXCollections.observableArrayList(lst.stream().map(m -> m.getMatiere()).collect(Collectors.toList()));
@@ -56,8 +46,7 @@ public class MatiereService {
 
 	public void create(Matiere matiere) {
 		Matiere m = matiereDao.create(matiere);
-		allMatieres.add(m);
-		allMatieresValues.add(m.getMatiere());
+		init();
 	}
 	
 	public void edit(Matiere matiere) {
@@ -66,14 +55,13 @@ public class MatiereService {
 }
 
 	public boolean validate(String text) {
-		return ! allMatieresValues.contains(text) ;		
+		return !allMatieresValues.contains(text) ;		
 	}
 
 	public void delete(String editMatiere) {
 		Matiere m = allMatieres.stream().filter(t-> t.getMatiere().equals(editMatiere)).findFirst().orElse(null);
 		matiereDao.delete(m);
-		allMatieres.remove(m);
-		allMatieresValues.remove(m.getMatiere());
+		init();
 		
 	}
 	

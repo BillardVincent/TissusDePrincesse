@@ -1,24 +1,17 @@
 package fr.vbillard.tissusDePrincesse.view;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import fr.vbillard.tissusDePrincesse.MainApp;
 import fr.vbillard.tissusDePrincesse.dtosFx.PatronDto;
-import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuRequisDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuVariantDto;
 import fr.vbillard.tissusDePrincesse.mappers.PatronMapper;
 import fr.vbillard.tissusDePrincesse.model.Patron;
-import fr.vbillard.tissusDePrincesse.model.Tissu;
-import fr.vbillard.tissusDePrincesse.model.TissuVariant;
 import fr.vbillard.tissusDePrincesse.model.enums.GammePoids;
-import fr.vbillard.tissusDePrincesse.model.enums.UnitePoids;
 import fr.vbillard.tissusDePrincesse.services.DevInProgressService;
 import fr.vbillard.tissusDePrincesse.services.MatiereService;
 import fr.vbillard.tissusDePrincesse.services.PatronService;
@@ -48,7 +41,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -94,7 +86,6 @@ public class PatronEditDialogController {
 	private ObservableList<TissuVariantDto> tvList;
 	private VBox bottomRightVbox;
 
-
 	/**
 	 * Initializes the controller class. This method is automatically called after
 	 * the fxml file has been loaded.
@@ -130,8 +121,8 @@ public class PatronEditDialogController {
 	}
 
 	/**
-	 * Initialise les services nécéssaire
-	 * carge le patron à éditer (null si création)
+	 * Initialise les services nécéssaire carge le patron à éditer (null si
+	 * création)
 	 * 
 	 * @param patron
 	 * @param mainApp
@@ -172,22 +163,20 @@ public class PatronEditDialogController {
 	}
 
 	/**
-	 * Charge les tissusRequis, en fonction du patron sélectionné
-	 * grille sous le patron :  tissusRequis.toString() - boutons
+	 * Charge les tissusRequis, en fonction du patron sélectionné grille sous le
+	 * patron : tissusRequis.toString() - boutons
 	 */
 	private void loadTissuRequisForPatron() {
 		tissusPatronListGrid.getChildren().clear();
-		patron.setTissusRequis(TissuRequisService
-				.listToFxCollection(tissuRequisService.getAllTissuRequisByPatron(patron.getId())));
+		patron.setTissusRequis(
+				TissuRequisService.listToFxCollection(tissuRequisService.getAllTissuRequisByPatron(patron.getId())));
 
 		if (patron.getTissusRequisProperty() != null && patron.getTissusRequis() != null) {
 
-			
-			
-			for ( int i = 0 ; i < patron.getTissusRequis().size(); i++) {
-				
+			for (int i = 0; i < patron.getTissusRequis().size(); i++) {
+
 				TissuRequisDto tissu = patron.getTissusRequis().get(i);
-				
+
 				Button editButton = new Button();
 				FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.EDIT);
 				editButton.setGraphic(editIcon);
@@ -216,11 +205,11 @@ public class PatronEditDialogController {
 				tissusPatronListGrid.add(hbox, 1, i);
 			}
 		}
-		
 	}
 
 	/**
 	 * Détails d'un tissu requis, pour édition
+	 * 
 	 * @param tissu
 	 */
 	private void displayTissuRequis(TissuRequisDto tissu) {
@@ -233,7 +222,7 @@ public class PatronEditDialogController {
 		rightContainer.getChildren().clear();
 		tvList = FXCollections.observableArrayList(new ArrayList<TissuVariantDto>());
 		bottomRightVbox = new VBox();
-		
+
 		Label titre = new Label("Tissus recommendés : ");
 
 		GridPane topGrid = new GridPane();
@@ -250,34 +239,34 @@ public class PatronEditDialogController {
 				tissu.getLongueurProperty() == null ? 0 : tissu.getLongueur()));
 		longueurSpinner.setEditable(true);
 		longueurSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-	        longueur = newValue;});
+			longueur = newValue;
+		});
 		longueurSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
-	    		  if (!newValue) {
-	    			  longueurSpinner.increment(0); // won't change value, but will commit editor
-	    			  longueur = longueurSpinner.getValue();
-	    		  }
-	    		});
-	    	
+			if (!newValue) {
+				longueurSpinner.increment(0); // won't change value, but will commit editor
+				longueur = longueurSpinner.getValue();
+			}
+		});
+
 		topGrid.add(longueurSpinner, 1, 0);
 
 		Spinner<Integer> laizeSpinner = new Spinner<Integer>();
 		laizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE,
 				tissu.getLaizeProperty() == null ? 0 : tissu.getLaize()));
 		laizeSpinner.setEditable(true);
-		laizeSpinner.valueProperty().addListener((obs, oldValue, newValue) -> 
-    	laize = newValue);
+		laizeSpinner.valueProperty().addListener((obs, oldValue, newValue) -> laize = newValue);
 		laizeSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
-  		  if (!newValue) {
-  			laizeSpinner.increment(0); // won't change value, but will commit editor
-  			laize = laizeSpinner.getValue();
-  		  }
-  		});
+			if (!newValue) {
+				laizeSpinner.increment(0); // won't change value, but will commit editor
+				laize = laizeSpinner.getValue();
+			}
+		});
 		topGrid.add(laizeSpinner, 1, 1);
-		
+
 		longueurSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-	        longueur = newValue;});
-		laizeSpinner.valueProperty().addListener((obs, oldValue, newValue) -> 
-	    	laize = newValue);
+			longueur = newValue;
+		});
+		laizeSpinner.valueProperty().addListener((obs, oldValue, newValue) -> laize = newValue);
 
 		ChoiceBox<String> gammePoidsChBx = new ChoiceBox<String>();
 		gammePoidsChBx.setItems(FXCollections.observableArrayList(GammePoids.labels()));
@@ -321,13 +310,12 @@ public class PatronEditDialogController {
 		hboxBtn.setPadding(new Insets(20, 20, 20, 20));
 
 		rightContainer.getChildren().addAll(titre, topGrid, hboxBtn, bottomRightVbox);
-		
+
 		if (tissu != null) {
 			tvList = FXCollections.observableArrayList(tissuVariantService.getVariantByTissuRequis(tissu));
 		}
 
 		loadBottomRightVbox(tissu);
-		
 
 		// if (tissuget.)
 
@@ -335,18 +323,17 @@ public class PatronEditDialogController {
 
 	private void loadBottomRightVbox(TissuRequisDto tissu) {
 		bottomRightVbox.getChildren().clear();
-		
+
 		bottomRightVbox.getChildren().addAll(new Separator(Orientation.HORIZONTAL), new Label("Possibilités :"));
-	
-		
-		if (tvList != null && tvList.size() >0 ) {
+
+		if (tvList != null && tvList.size() > 0) {
 			GridPane bottomGrid = new GridPane();
-			bottomGrid.setPadding(new Insets(5,0,5,0));
+			bottomGrid.setPadding(new Insets(5, 0, 5, 0));
 			bottomRightVbox.getChildren().add(bottomGrid);
-			//bottomGrid.setGridLinesVisible( true );
-			bottomGrid.getColumnConstraints().addAll( new ColumnConstraints( 200 ), new ColumnConstraints( 100 ));
-			
-			for (int i = 0; i< tvList.size(); i++) {
+			// bottomGrid.setGridLinesVisible( true );
+			bottomGrid.getColumnConstraints().addAll(new ColumnConstraints(300), new ColumnConstraints(100));
+
+			for (int i = 0; i < tvList.size(); i++) {
 				TissuVariantDto tv = tvList.get(i);
 				Button editButton = new Button();
 				FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.EDIT);
@@ -369,65 +356,65 @@ public class PatronEditDialogController {
 						DevInProgressService.notImplemented(mainApp);
 					}
 				});
-				HBox btns = new HBox (editButton, deleteButton);
+				HBox btns = new HBox(editButton, deleteButton);
 				btns.setAlignment(Pos.CENTER_RIGHT);
 				btns.setSpacing(10);
 
-				bottomGrid.add(new Label(tv.getTypeTissu() +" "+ tv.getMatiere() + " "+tv.getTissage()), 0,i*2);
-				bottomGrid.add(btns, 1,i*2);
+				bottomGrid.add(new Label(tv.getTypeTissu() + " " + tv.getMatiere() + " " + tv.getTissage()), 0, i * 2);
+				bottomGrid.add(btns, 1, i * 2);
 
-				
-				if (i != tvList.size()-1) {
+				if (i != tvList.size() - 1) {
 					HBox hbox = new HBox(new Label("-------------   OU   --------------  "));
 					hbox.setAlignment(Pos.CENTER);
-					bottomGrid.add(hbox, 0, i*2+1, 2, 1);
-					//displayTissuRequis(tissu);
+					bottomGrid.add(hbox, 0, i * 2 + 1, 2, 1);
+					// displayTissuRequis(tissu);
 				}
 			}
-			
 		}
-		
+
 		if (tissu != null && tissu.getId() != 0) {
-			
-		
-		ChoiceBox<String> typeField = new ChoiceBox<String>();
-    	typeField.setItems(FXCollections.observableArrayList(typeTissuService.getAll().stream().map(tt -> tt.getType()).collect(Collectors.toList())));
-    	typeField.setValue(variantSelected.getTypeTissuProperty() == null ? "": variantSelected.getTypeTissu());
 
-		ChoiceBox<String> matiereField = new ChoiceBox<String>();
-    	matiereField.setItems(FXCollections.observableArrayList(matiereService.getAll().stream().map(m -> m.getMatiere()).collect(Collectors.toList())));
-    	matiereField.setValue(variantSelected.getMatiereProperty() == null ? "": variantSelected.getMatiere());
+			ChoiceBox<String> typeField = new ChoiceBox<String>();
+			typeField.setItems(FXCollections.observableArrayList(
+					typeTissuService.getAll().stream().map(tt -> tt.getType()).collect(Collectors.toList())));
+			typeField.setValue(variantSelected.getTypeTissuProperty() == null ? "" : variantSelected.getTypeTissu());
 
-		ChoiceBox<String> tissageField = new ChoiceBox<String>();
-    	tissageField.setItems(FXCollections.observableArrayList(tissageService.getAll().stream().map(t -> t.getTissage()).collect(Collectors.toList())));
-    	tissageField.setValue(variantSelected.getTissageProperty() == null ? "": variantSelected.getTissage());
-		
-		Button addTvBtn = new Button();
-		FontAwesomeIconView addIcon = new FontAwesomeIconView(FontAwesomeIcon.PLUS_CIRCLE);
-		addIcon.setFill(Constants.colorAdd);
-		addTvBtn.setGraphic(addIcon);
-		addTvBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				variantSelected.setMatiere(matiereField.getValue());
-				variantSelected.setTissage(tissageField.getValue());
-				variantSelected.setType(typeField.getValue());
-				variantSelected.setTissuRequisId(tissu.getId());
-				variantSelected = tissuVariantService.saveOrUpdate(variantSelected);
-				if (variantSelected.getId() == 0) {
-					tvList.add(variantSelected);
+			ChoiceBox<String> matiereField = new ChoiceBox<String>();
+			matiereField.setItems(FXCollections.observableArrayList(
+					matiereService.getAll().stream().map(m -> m.getMatiere()).collect(Collectors.toList())));
+			matiereField.setValue(variantSelected.getMatiereProperty() == null ? "" : variantSelected.getMatiere());
+
+			ChoiceBox<String> tissageField = new ChoiceBox<String>();
+			tissageField.setItems(FXCollections.observableArrayList(
+					tissageService.getAll().stream().map(t -> t.getTissage()).collect(Collectors.toList())));
+			tissageField.setValue(variantSelected.getTissageProperty() == null ? "" : variantSelected.getTissage());
+
+			Button addTvBtn = new Button();
+			FontAwesomeIconView addIcon = new FontAwesomeIconView(FontAwesomeIcon.PLUS_CIRCLE);
+			addIcon.setFill(Constants.colorAdd);
+			addTvBtn.setGraphic(addIcon);
+			addTvBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent e) {
+					variantSelected.setMatiere(matiereField.getValue());
+					variantSelected.setTissage(tissageField.getValue());
+					variantSelected.setType(typeField.getValue());
+					variantSelected.setTissuRequisId(tissu.getId());
+					variantSelected = tissuVariantService.saveOrUpdate(variantSelected);
+					if (variantSelected.getId() == 0) {
+						tvList.add(variantSelected);
+					}
+					editingVariant = false;
+					loadTissuRequisForPatron();
+					displayTissuRequis(tissu);
 				}
-				editingVariant =false;
-				loadBottomRightVbox(tissu);
-			}
-		});
-		HBox hboxTissuVariant= new HBox(typeField,matiereField, tissageField, addTvBtn);
-		hboxTissuVariant.setSpacing(10);
-		hboxTissuVariant.setAlignment(Pos.CENTER);
-		hboxTissuVariant.setPadding(new Insets(20, 20, 20, 20));
-		bottomRightVbox.getChildren().addAll(new Separator(Orientation.HORIZONTAL), hboxTissuVariant);
-		
-		}	
+			});
+			HBox hboxTissuVariant = new HBox(typeField, matiereField, tissageField, addTvBtn);
+			hboxTissuVariant.setSpacing(10);
+			hboxTissuVariant.setAlignment(Pos.CENTER);
+			hboxTissuVariant.setPadding(new Insets(20, 20, 20, 20));
+			bottomRightVbox.getChildren().addAll(new Separator(Orientation.HORIZONTAL), hboxTissuVariant);
+		}
 	}
 
 	public void saveTissuRequis(TissuRequisDto tissu) {
@@ -440,7 +427,6 @@ public class PatronEditDialogController {
 		}
 		loadTissuRequisForPatron();
 		displayTissuRequis(tissuReturned);
-
 
 		// DevInProgressService.notImplemented(mainApp);
 	}
@@ -480,10 +466,7 @@ public class PatronEditDialogController {
 
 	@FXML
 	private void handleSaveAndQuitPatron() {
-		// if (isInputValid()) {
-		DevInProgressService.notImplemented(mainApp);
-
-		okClicked = true;
+		handleSavePatron();
 		dialogStage.close();
 		// }
 	}

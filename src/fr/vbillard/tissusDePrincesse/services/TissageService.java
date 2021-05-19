@@ -21,24 +21,12 @@ public class TissageService {
 	}
 	public static ObservableList<Tissage> allTissages = FXCollections.observableArrayList();
 	public static ObservableList<String> allTissagesValues = FXCollections.observableArrayList();
-	public static int lastTypeTissuId;
-	
-	//public static List allTissus = new ArrayList() ;
-	
+
 	public void init() {
-		/*
-		allTypeTissus = FXCollections.observableArrayList(Arrays.asList(
-				new TypeTissu(0, "Chaine et trame"),
-				new TypeTissu(0, "Maille")
-				));
-		
-		lastTypeTissuId = 2;
-		*/
+
 		List<Tissage> lst = tissageDao.findAll();
 		allTissages = FXCollections.observableArrayList(lst);
-		allTissagesValues = FXCollections.observableArrayList(lst.stream().map(t -> t.getTissage()).collect(Collectors.toList()));
-		
-				
+		allTissagesValues = FXCollections.observableArrayList(lst.stream().map(t -> t.getTissage()).collect(Collectors.toList()));	
 	}
 
 	public Tissage findTissage(String tissage) {
@@ -56,8 +44,7 @@ public class TissageService {
 
 	public void create(Tissage tissage) {
 		Tissage m = tissageDao.create(tissage);
-		allTissages.add(m);
-		allTissagesValues.add(m.getTissage());
+		init();
 	}
 
 	public boolean validate(String text) {

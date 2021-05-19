@@ -1,21 +1,15 @@
 package fr.vbillard.tissusDePrincesse.view;
 
-import java.util.List;
-
 import fr.vbillard.tissusDePrincesse.MainApp;
-import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
 import fr.vbillard.tissusDePrincesse.model.Matiere;
-import fr.vbillard.tissusDePrincesse.model.TypeTissu;
 import fr.vbillard.tissusDePrincesse.services.MatiereService;
-import fr.vbillard.tissusDePrincesse.services.TypeTissuService;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 public class MatiereEditController {

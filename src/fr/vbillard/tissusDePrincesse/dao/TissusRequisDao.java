@@ -121,6 +121,9 @@ public class TissusRequisDao {
 				em = emf.createEntityManager();
 				transaction = em.getTransaction();
 				transaction.begin();
+				for (TissuVariant tv : em.createQuery("SELECT tr FROM TissuRequis tr WHERE tr.tissuRequis.id =:id", TissuRequis.class).setParameter("id", tissu.getId()).getResultList()) {
+					em.remove(tv);
+				}
 				tissu = em.find(TissuRequis.class, tissu.getId());
 				em.remove(tissu);
 				transaction.commit();

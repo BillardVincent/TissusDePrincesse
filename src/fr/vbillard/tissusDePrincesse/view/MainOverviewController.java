@@ -1,7 +1,8 @@
 package fr.vbillard.tissusDePrincesse.view;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -13,6 +14,7 @@ import fr.vbillard.tissusDePrincesse.dtosFx.ProjetDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuRequisDto;
 import fr.vbillard.tissusDePrincesse.fxCustomElements.TissuRequisToggleButton;
+import fr.vbillard.tissusDePrincesse.mappers.TissuMapper;
 import fr.vbillard.tissusDePrincesse.model.Projet;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
 import fr.vbillard.tissusDePrincesse.model.TissuUsed;
@@ -21,7 +23,6 @@ import fr.vbillard.tissusDePrincesse.model.enums.UnitePoids;
 import fr.vbillard.tissusDePrincesse.services.DevInProgressService;
 import fr.vbillard.tissusDePrincesse.services.PatronService;
 import fr.vbillard.tissusDePrincesse.services.ProjetService;
-import fr.vbillard.tissusDePrincesse.services.Serializer;
 import fr.vbillard.tissusDePrincesse.services.TissuService;
 import fr.vbillard.tissusDePrincesse.services.TissuUsedService;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
@@ -44,6 +45,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
@@ -388,6 +390,7 @@ public class MainOverviewController {
 		warningUnregistredLabel.setGraphic(warningIcone);
 		setButtons();
 
+		robeImage.setImage(new Image(getClass().getResourceAsStream("/images/depositphotos_111281678-stock-illustration-dummy-dress-hand-drawing-illustration.png")));
 	}
 
 	private void showProjetPanDetails(ProjetDto projetDto) {
@@ -503,13 +506,13 @@ public class MainOverviewController {
 
 	@FXML
 	private void saveAll() {
-		Serializer.Serialize();
+		DevInProgressService.notImplemented(mainApp);
 	}
 
 	@FXML
 	private void reloadAll() {
-		tissuService.reload();
-		tissuTable.setItems(tissuService.getTissuData());
+		DevInProgressService.notImplemented(mainApp);
+
 	}
 
 	@FXML
@@ -553,9 +556,9 @@ public class MainOverviewController {
 				new Tissu(0, "", 0, 0, "", null, null, 0, UnitePoids.NON_RENSEIGNE, false, "", null, false));
 		boolean okClicked = mainApp.showTissuEditDialog(tempTissu);
 		if (okClicked) {
+			tissuTable.setItems(TissuService.tissuData);
 		}
 		setButtons();
-
 	}
 
 	/**
@@ -601,15 +604,13 @@ public class MainOverviewController {
 
 	@FXML
 	private void handleAddInProject() {
-		// TODO pop up pour choisir la longueur (base = tissu requis)
-
 		int longueurRequiseRestante = tissuRequisSelected.getLongueur();
-
-			for (int id : projetSelected.getTissuUsed().get(tissuRequisSelected)) {
-				longueurRequiseRestante -= tissuUsedService.getTissuUsedById(id).getLongueur();
-			}
-
-		
+if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tissuRequisSelected)!=null) {
+	for (int id : projetSelected.getTissuUsed().get(tissuRequisSelected)) {
+		longueurRequiseRestante -= tissuUsedService.getTissuUsedById(id).getLongueur();
+	}
+}
+			
 		int longueur = mainApp.showSetLongueurDialog(longueurRequiseRestante, tissuSelected.getLongueur());
 
 		// TissuUsedService.create( newTissuUsed(......));
@@ -655,7 +656,6 @@ public class MainOverviewController {
 			patronTable.setItems(patronService.getPatronData());
 		}
 		setButtons();
-
 	}
 
 	@FXML
@@ -833,13 +833,9 @@ public class MainOverviewController {
 	@FXML
 	private void handleEditProjectStatus() {
 		String newData = mainApp.showChoiceBoxEditDialog(projetStatusLabel.getText(), ProjectStatus.class);
-		projetSelected.setProjectStatus(newData);
-		if (!newData.equals(Constants.NON_ENREGISTRE)) {
-			projetSelected = projetService.create(projetSelected);
-			warningUnregistredLabel.setVisible(false);
-		}
+		
 
-		if (newData.equals(ProjectStatus.EN_COURS.label) || newData.equals(ProjectStatus.TERMINE)) {
+		if (newData.equals(ProjectStatus.EN_COURS.label)) {
 			if (!istissuUsedValid()) {
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.initOwner(mainApp.getPrimaryStage());
@@ -851,16 +847,43 @@ public class MainOverviewController {
 
 				if (option.get() != null && option.get() == ButtonType.OK) {
 					projetStatusLabel.setText(newData);
+					projetSelected.setProjectStatus(newData);
+					projetSelected = projetService.create(projetSelected);
+					warningUnregistredLabel.setVisible(false);
 					setButtons();
 				}
 			}
+		}else if(newData.equals(ProjectStatus.TERMINE.label)) {
+			System.out.println("ici");
+			Map<TissuDto, Integer> tissusToChange = new HashMap<TissuDto, Integer>();
+
+			projetSelected.getTissuUsed().values().forEach(lst -> {
+				lst.forEach(val -> {
+				TissuUsed tu = tissuUsedService.getTissuUsedById(val);
+				Tissu tissu = tu.getTissu();
+				int oldValue = tissu.getLongueur();
+				tissu.setLongueur(tissu.getLongueur() - tu.getLongueur());
+				tissusToChange.put(TissuMapper.map(tissu), oldValue);
+				});
+			});
+			mainApp.showTissuEditDialog(tissusToChange);
+			
+		}
+		if (!newData.equals(Constants.NON_ENREGISTRE)) {
+				warningUnregistredLabel.setVisible(false);
+			projetStatusLabel.setText(newData);
+			projetSelected.setProjectStatus(newData);
+			projetSelected = projetService.create(projetSelected);
+			setButtons();
+
 		}
 	}
+
+
 
 	@FXML
 	private void handleDeselectProjet() {
 		showProjetDetails(null);
-
 	}
 
 	@FXML

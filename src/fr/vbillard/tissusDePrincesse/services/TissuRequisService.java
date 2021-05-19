@@ -16,8 +16,6 @@ import javafx.collections.ObservableList;
 
 public class TissuRequisService {
 
-	
-	
 	private TissusRequisDao tissuRequisDao;
 	
 	public TissuRequisService(){

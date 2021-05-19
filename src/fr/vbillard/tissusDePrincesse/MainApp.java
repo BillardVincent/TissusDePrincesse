@@ -1,18 +1,11 @@
 package fr.vbillard.tissusDePrincesse;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.util.Map;
 
 import fr.vbillard.tissusDePrincesse.dtosFx.PatronDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
-import fr.vbillard.tissusDePrincesse.model.enums.ProjectStatus;
-import fr.vbillard.tissusDePrincesse.services.DevInProgressService;
-import fr.vbillard.tissusDePrincesse.services.InitDataService;
 import fr.vbillard.tissusDePrincesse.services.MatiereService;
 import fr.vbillard.tissusDePrincesse.services.PatronService;
 import fr.vbillard.tissusDePrincesse.services.ProjetService;
@@ -21,10 +14,10 @@ import fr.vbillard.tissusDePrincesse.services.TissuRequisService;
 import fr.vbillard.tissusDePrincesse.services.TissuService;
 import fr.vbillard.tissusDePrincesse.services.TypeTissuService;
 import fr.vbillard.tissusDePrincesse.view.ChargementController;
+import fr.vbillard.tissusDePrincesse.view.GenericChoiceBoxEditController;
 import fr.vbillard.tissusDePrincesse.view.GenericTextEditController;
 import fr.vbillard.tissusDePrincesse.view.MainOverviewController;
 import fr.vbillard.tissusDePrincesse.view.MatiereEditController;
-import fr.vbillard.tissusDePrincesse.view.GenericChoiceBoxEditController;
 import fr.vbillard.tissusDePrincesse.view.PatronEditDialogController;
 import fr.vbillard.tissusDePrincesse.view.RootLayoutController;
 import fr.vbillard.tissusDePrincesse.view.SetLongueurDialogController;
@@ -39,6 +32,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import jfxtras.styles.jmetro.JMetro;
+import jfxtras.styles.jmetro.Style;
 
 public class MainApp extends Application {
 
@@ -56,7 +51,6 @@ public class MainApp extends Application {
     private MainOverviewController tissuOverviewController;
     private ChargementController chargementController;
     private AnchorPane tissuOverview;
-    private InitDataService initDataService;
     
     //------------------- test h2 -----------------
 	//private static final String persistenceUnit = "persistUnit";
@@ -64,8 +58,9 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-    	//  AquaFx.style();
+    	//AquaFx.style();
         this.primaryStage = primaryStage;
+
         //primaryStage.setFullScreen(true);
         //chargement();
         
@@ -79,7 +74,6 @@ public class MainApp extends Application {
         patronService = new PatronService();
 
         typeTissuService = new TypeTissuService();
-        initDataService = new InitDataService();
 
         matiereService = new MatiereService();
         projetService = new ProjetService();
@@ -99,6 +93,7 @@ public class MainApp extends Application {
 
 
         this.primaryStage.getIcons().add(icon);
+        this.primaryStage.setMaximized(true);
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("view/MainOverview.fxml"));
@@ -117,6 +112,7 @@ public class MainApp extends Application {
         initRootLayout();
 
         rootLayout.setCenter(tissuOverview);
+        
 
     }
     /*
@@ -157,8 +153,11 @@ public class MainApp extends Application {
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
+            
+            JMetro jMetro = new JMetro(Style.LIGHT);
+            jMetro.setScene(scene);
+            
             primaryStage.setScene(scene);
-           
 
             // Give the controller access to the main app.
             RootLayoutController controller = loader.getController();
@@ -187,13 +186,52 @@ public class MainApp extends Application {
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
+            JMetro jMetro = new JMetro(Style.LIGHT);
+            jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
             // Set the person into the controller.
             TissuEditDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
             //System.out.println("showPersonEditDialog : " + tissu.toString());
+            if (tissu != null)
             controller.setTissu(tissu, tissuService, typeTissuService, matiereService, tissageService, this);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+            return controller.isOkClicked();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean showTissuEditDialog(Map<TissuDto, Integer> mapTissu) {
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("view/TissuEditDialog.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Validation de fin de projet");
+            dialogStage.getIcons().add(icon);
+
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            JMetro jMetro = new JMetro(Style.LIGHT);
+            jMetro.setScene(scene);
+            dialogStage.setScene(scene);
+
+            // Set the person into the controller.
+            TissuEditDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            //System.out.println("showPersonEditDialog : " + tissu.toString());
+           
+            if (mapTissu != null)
+                controller.setMapTissu(mapTissu, tissuService, typeTissuService, matiereService, tissageService, this);
 
             // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
@@ -220,6 +258,8 @@ public class MainApp extends Application {
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
+            JMetro jMetro = new JMetro(Style.LIGHT);
+            jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
             // Set the person into the controller.
@@ -253,6 +293,8 @@ public class MainApp extends Application {
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
+            JMetro jMetro = new JMetro(Style.LIGHT);
+            jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
             // Set the person into the controller.
@@ -285,6 +327,8 @@ public class MainApp extends Application {
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
+            JMetro jMetro = new JMetro(Style.LIGHT);
+            jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
             // Set the person into the controller.
@@ -317,6 +361,8 @@ public class MainApp extends Application {
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
+            JMetro jMetro = new JMetro(Style.LIGHT);
+            jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
             // Set the person into the controller.
@@ -349,6 +395,8 @@ public class MainApp extends Application {
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
+            JMetro jMetro = new JMetro(Style.LIGHT);
+            jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
             // Set the person into the controller.
@@ -384,6 +432,8 @@ public class MainApp extends Application {
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
+            JMetro jMetro = new JMetro(Style.LIGHT);
+            jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
             // Set the person into the controller.
@@ -424,6 +474,8 @@ public class MainApp extends Application {
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
+            JMetro jMetro = new JMetro(Style.LIGHT);
+            jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
             // Set the person into the controller.
