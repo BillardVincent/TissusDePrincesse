@@ -21,8 +21,6 @@
 		<junit.version>4.13.1</junit.version>
 	</properties>
 	<dependencies>
-
-	
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
