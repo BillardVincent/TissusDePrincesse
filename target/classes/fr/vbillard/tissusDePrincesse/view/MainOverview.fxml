@@ -31,7 +31,7 @@
 									<content>
 										<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
 											<children>
-												<SplitPane dividerPositions="0.5423728813559322" orientation="VERTICAL" prefHeight="798.0" prefWidth="376.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+												<SplitPane dividerPositions="0.5112509534706331" orientation="VERTICAL" prefHeight="798.0" prefWidth="376.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 													<items>
 														<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="406.0" prefWidth="374.0">
 															<children>
@@ -88,7 +88,7 @@
 																		<Label fx:id="decatiLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="10" />
 																		<HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
 																			<children>
-																				<Label fx:id="poidsLabel" prefHeight="29.0" prefWidth="37.0" text="Label" />
+																				<Label fx:id="poidsLabel" prefHeight="30.0" prefWidth="75.0" text="Label" />
 																				<Label fx:id="unitePoidsLabel" prefHeight="29.0" prefWidth="60.0" text="Label">
 																					<padding>
 																						<Insets left="10.0" />
@@ -99,7 +99,7 @@
 																		<Label fx:id="descriptionLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="8" />
 																		<HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
 																			<children>
-																				<Label fx:id="longueurLabel" prefHeight="38.0" prefWidth="28.0" text="Label" />
+																				<Label fx:id="longueurLabel" prefHeight="34.0" prefWidth="75.0" text="Label" />
 																				<Label prefHeight="28.0" prefWidth="43.0" text="cm">
 																					<padding>
 																						<Insets left="10.0" />
@@ -109,7 +109,7 @@
 																		</HBox>
 																		<HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
 																			<children>
-																				<Label fx:id="laizeLabel" prefHeight="36.0" prefWidth="28.0" text="Label" />
+																				<Label fx:id="laizeLabel" prefHeight="34.0" prefWidth="75.0" text="Label" />
 																				<Label prefHeight="30.0" prefWidth="51.0" text="cm">
 																					<HBox.margin>
 																						<Insets left="10.0" />
@@ -130,7 +130,7 @@
 																		</Label>
 																		<HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
 																			<children>
-																				<Label fx:id="longueurRestanteLabel" prefHeight="36.0" prefWidth="28.0" text="Label" />
+																				<Label fx:id="longueurRestanteLabel" prefHeight="34.0" prefWidth="75.0" text="Label" />
       																				<Label prefHeight="30.0" prefWidth="51.0" text="cm">
                                                                <padding>
                                                                   <Insets left="10.0" />
