@@ -12,6 +12,7 @@ import fr.vbillard.tissusDePrincesse.exception.GestionPatronsException;
 import fr.vbillard.tissusDePrincesse.exception.GestionTissusException;
 import fr.vbillard.tissusDePrincesse.exception.GestionTypeTissusException;
 import fr.vbillard.tissusDePrincesse.model.Patron;
+import fr.vbillard.tissusDePrincesse.model.Tissu;
 import fr.vbillard.tissusDePrincesse.model.TissuRequis;
 import fr.vbillard.tissusDePrincesse.model.TypeTissu;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
@@ -100,6 +101,32 @@ public class PatronDao {
 		}
 		return patron;
 		
+	}
+
+	public boolean delete(Patron patron) {
+		boolean isOk = false;
+		if (patron != null) {
+			try {
+				emf = Persistence.createEntityManagerFactory(persistenceUnit);
+				em = emf.createEntityManager();
+				transaction = em.getTransaction();
+				transaction.begin();
+				patron = em.find(Patron.class, patron.getId());
+				em.remove(em.merge(patron));
+				transaction.commit();
+				isOk = em.find(Patron.class, patron.getId()) == null;
+			} catch (Exception e) {
+				if (transaction != null && transaction.isActive()) {
+					transaction.rollback();
+				}
+				e.printStackTrace();
+				throw new GestionTissusException(
+						"Une erreur s'est produite lors de la suppression du patron : [id = " + patron.getId() +"]");
+			} finally {
+				JPAHelper.closeEntityManagerResources(emf, em);
+			}
+		}
+		return isOk;
 	}
 
 	

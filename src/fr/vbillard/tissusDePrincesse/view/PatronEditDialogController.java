@@ -450,7 +450,7 @@ public class PatronEditDialogController {
 	 */
 	@FXML
 	private void handleSavePatron() {
-		// if (isInputValid()) {
+		if (isInputValid()) {
 
 		patron.setReference(referenceField.getText());
 		patron.setMarque(marqueField.getText());
@@ -461,14 +461,16 @@ public class PatronEditDialogController {
 		setDisabledButton();
 
 		okClicked = true;
-		// }
+		}
 	}
 
 	@FXML
 	private void handleSaveAndQuitPatron() {
+		if (isInputValid()) {
+
 		handleSavePatron();
 		dialogStage.close();
-		// }
+		}
 	}
 
 	/**
@@ -516,6 +518,19 @@ public class PatronEditDialogController {
 	 */
 	private boolean isInputValid() {
 		String errorMessage = "";
+		
+		if (referenceField.getText() == null || referenceField.getText().length() == 0) {
+			errorMessage += "Référence non renseignée.\n";
+		}
+		if (marqueField.getText() == null || marqueField.getText().length() == 0) {
+			errorMessage += "Marque non renseignée.\n";
+		}
+		if (modeleField.getText() == null || modeleField.getText().length() == 0) {
+			errorMessage += "Modèle non renseigné.\n";
+		}
+		if (typeVetementField.getText() == null || typeVetementField.getText().length() == 0) {
+			errorMessage += "Type non renseigné.\n";
+		}
 
 		if (errorMessage.length() == 0) {
 			return true;
@@ -523,8 +538,8 @@ public class PatronEditDialogController {
 			// Show the error message.
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.initOwner(dialogStage);
-			alert.setTitle("Invalid Fields");
-			alert.setHeaderText("Please correct invalid fields");
+			alert.setTitle("Champ(s) invalide(s)");
+			alert.setHeaderText("Merci de corriger :");
 			alert.setContentText(errorMessage);
 
 			alert.showAndWait();

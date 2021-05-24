@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import fr.vbillard.tissusDePrincesse.dao.PatronDao;
+import fr.vbillard.tissusDePrincesse.dao.TissusRequisDao;
 import fr.vbillard.tissusDePrincesse.dtosFx.PatronDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
 import fr.vbillard.tissusDePrincesse.mappers.PatronMapper;
@@ -22,15 +23,15 @@ public class PatronService {
 	
 	public PatronService() {
 		patronDao = new PatronDao();
-		patronData = FXCollections.observableArrayList(patronDao.findAll().stream().map(PatronMapper::map).collect(Collectors.toList()));
+		init();
 	}
 
 	public static ObservableList<PatronDto> patronData = FXCollections.observableArrayList();
 	public static int lastPatronId;
 	
 	public void init() {
-		
-		
+		patronData = FXCollections.observableArrayList(patronDao.findAll().stream().map(PatronMapper::map).collect(Collectors.toList()));
+
 	}
 	
 	public ObservableList<PatronDto> getPatronData() {
@@ -43,16 +44,25 @@ public class PatronService {
 		PatronDto dto = new PatronDto();
 		if (p.getId() == 0) {
 			dto = PatronMapper.map(patronDao.create(p ));
-			patronData.add(dto);
 		}
 		else {
 			dto = PatronMapper.map(patronDao.update(p ));
-			patronData = FXCollections.observableArrayList(patronDao.findAll().stream().map(PatronMapper::map).collect(Collectors.toList()));
 		}
+		init();
 		return dto;
 	}
 
 	public boolean existByReference(String string) {
 		return patronDao.existByReference(string);
+	}
+
+	public void delete(PatronDto selected) {
+		TissusRequisDao tissuRequisDao = new TissusRequisDao();
+		TissuRequisService tissuRequisService = new TissuRequisService();
+		for (TissuRequis tr : tissuRequisDao.getAllTissuRequisByPatron(selected.getId())) {
+			tissuRequisService.delete(tr);
+		}
+		patronDao.delete(PatronMapper.map(selected));
+		init();
 	}
 }

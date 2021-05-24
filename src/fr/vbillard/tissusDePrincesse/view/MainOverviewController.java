@@ -390,7 +390,7 @@ public class MainOverviewController {
 		warningUnregistredLabel.setGraphic(warningIcone);
 		setButtons();
 
-		robeImage.setImage(new Image(getClass().getResourceAsStream("/images/depositphotos_111281678-stock-illustration-dummy-dress-hand-drawing-illustration.png")));
+		//robeImage.setImage(new Image(getClass().getResourceAsStream("/images/depositphotos_111281678-stock-illustration-dummy-dress-hand-drawing-illustration.png")));
 	}
 
 	private void showProjetPanDetails(ProjetDto projetDto) {
@@ -685,7 +685,36 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 
 	@FXML
 	private void handleDeletePatron() {
-		DevInProgressService.notImplemented(mainApp);
+		if (patronTable.getSelectionModel() != null && patronTable.getSelectionModel().getSelectedItem() != null
+				&& patronTable.getSelectionModel().getSelectedItem().getId() >= 0) {
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.initOwner(mainApp.getPrimaryStage());
+			alert.setTitle("Suppression");
+			alert.setHeaderText("Voulez vous vraiment supprimer");
+			alert.setContentText("Supprimer le patron :" + patronTable.getSelectionModel().getSelectedItem());
+
+			Optional<ButtonType> option = alert.showAndWait();
+
+			if (option.get() == ButtonType.OK) {
+				PatronDto selected = patronTable.getSelectionModel().getSelectedItem();
+				patronService.delete(selected);
+				patronTable.setItems(patronService.getPatronData());
+			} else if (option.get() == ButtonType.CANCEL) {
+
+			}
+
+		} else {
+			// Nothing selected.
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.initOwner(mainApp.getPrimaryStage());
+			alert.setTitle("Pas de selection");
+			alert.setHeaderText("Pas de tissu selectionné");
+			alert.setContentText("Selectionnez un tissu dans la table");
+
+			alert.showAndWait();
+		}
+		setButtons();
+
 	}
 
 	@FXML

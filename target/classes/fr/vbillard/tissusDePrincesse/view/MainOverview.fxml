@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1080.0" prefWidth="1920.0" stylesheets="@theme.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.vbillard.tissusDePrincesse.view.MainOverviewController">
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0" stylesheets="@theme.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="fr.vbillard.tissusDePrincesse.view.MainOverviewController">
 	<children>
 		<SplitPane dividerPositions="0.24030037546933666, 0.776595744680851" layoutY="79.0" prefHeight="800.0" prefWidth="1600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<items>

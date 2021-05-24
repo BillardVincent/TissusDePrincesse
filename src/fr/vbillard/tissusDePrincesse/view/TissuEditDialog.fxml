@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="511.0" prefWidth="620.0" stylesheets="@theme.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.vbillard.tissusDePrincesse.view.TissuEditDialogController">
+<AnchorPane prefHeight="511.0" prefWidth="620.0" stylesheets="@theme.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="fr.vbillard.tissusDePrincesse.view.TissuEditDialogController">
    <children>
       <GridPane layoutX="54.0" layoutY="14.0" prefHeight="444.0" prefWidth="483.0">
         <columnConstraints>

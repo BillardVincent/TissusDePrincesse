@@ -133,6 +133,13 @@ public class PatronDto {
 	public void setTissusRequis(List<TissuRequisDto> tissusRequis) {
 		this.tissusRequis.set(FXCollections.observableArrayList(tissusRequis));
 	}
+
+	@Override
+	public String toString() {
+		return " " + modele.getValue()+" ("+typeVetement.getValue() + ") de la marque "+marque.getValue()+" (ref. " + reference.getValue() + ").";
+	}
+	
+	
 	
 	
 }

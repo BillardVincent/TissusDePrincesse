@@ -47,6 +47,10 @@ public class TissuRequisService {
 		tissuRequisDao.delete(TissuRequisMapper.map(tissu));
 		
 	}
+	public void delete(TissuRequis tissu) {
+		tissuRequisDao.delete(tissu);
+		
+	}
 	
 	
 }
