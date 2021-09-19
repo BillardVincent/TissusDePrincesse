@@ -1,11 +1,18 @@
 package fr.vbillard.tissusDePrincesse;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.swing.filechooser.FileSystemView;
 
 import fr.vbillard.tissusDePrincesse.dtosFx.PatronDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
+import fr.vbillard.tissusDePrincesse.model.enums.ImageFormat;
 import fr.vbillard.tissusDePrincesse.services.MatiereService;
 import fr.vbillard.tissusDePrincesse.services.PatronService;
 import fr.vbillard.tissusDePrincesse.services.ProjetService;
@@ -30,6 +37,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import jfxtras.styles.jmetro.JMetro;
@@ -492,4 +502,22 @@ public class MainApp extends Application {
             return -1;
         }
 	}
+	
+	
+	public File directoryChooser() {
+		FileChooser fileChooser = new FileChooser();
+		String path = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+		fileChooser.setInitialDirectory(new File(path));
+		
+		ImageFormat[] values = ImageFormat.values();
+		String[] extensions = new String[values.length];
+		for (int i = 0; i< values.length; i++) {
+			extensions[i] = values[i].getExtension();
+		}
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("Images ("+String.join(", ", extensions)+")", extensions));
+	    
+		return fileChooser.showOpenDialog(primaryStage);
+	}
+	
+	
 }

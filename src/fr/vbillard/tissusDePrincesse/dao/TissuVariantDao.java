@@ -7,8 +7,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
-import fr.vbillard.tissusDePrincesse.exception.GestionTissagesException;
-import fr.vbillard.tissusDePrincesse.exception.GestionTissusException;
+import fr.vbillard.tissusDePrincesse.exception.PersistanceException;
 import fr.vbillard.tissusDePrincesse.model.TissuVariant;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
 
@@ -19,7 +18,6 @@ public class TissuVariantDao {
 	private EntityManagerFactory emf = null;
 	private EntityManager em = null;
 	private EntityTransaction transaction = null;
-	
 	
 
 	public TissuVariant create(TissuVariant tissu) {
@@ -36,7 +34,7 @@ public class TissuVariantDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionTissusException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création de la Tissu : [id = " + tissu.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
@@ -59,7 +57,7 @@ public class TissuVariantDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionTissusException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création de la Tissu : [id = " + tissu.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
@@ -76,7 +74,7 @@ public class TissuVariantDao {
 			em = emf.createEntityManager();
 			tissu = em.find(TissuVariant.class, id);
 		} catch (Exception e) {
-			throw new GestionTissagesException(
+			throw new PersistanceException(
 					"Une erreur s'est produite lors de la création du TissuVariant : [id = " + tissu.getId() +"]");
 
 		} finally {
@@ -97,7 +95,7 @@ public class TissuVariantDao {
 			e.printStackTrace();
 
 			
-			throw new GestionTissagesException("Une erreur s'est produite lors de la recupération des TissuVariant.");
+			throw new PersistanceException("Une erreur s'est produite lors de la recupération des TissuVariant.");
 		} finally {
 			JPAHelper.closeEntityManagerResources(emf, em);
 		}

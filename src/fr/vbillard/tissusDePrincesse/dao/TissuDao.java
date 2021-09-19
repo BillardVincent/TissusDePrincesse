@@ -11,7 +11,7 @@ import javax.persistence.TypedQuery;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import fr.vbillard.tissusDePrincesse.exception.GestionTissusException;
+import fr.vbillard.tissusDePrincesse.exception.PersistanceException;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
 import fr.vbillard.tissusDePrincesse.model.TypeTissu;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
@@ -39,7 +39,7 @@ public class TissuDao {
 			e.printStackTrace();
 
 			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new GestionTissusException("Une erreur s'est produite lors de la recupération des Tissus.");
+			throw new PersistanceException("Une erreur s'est produite lors de la recupération des Tissus.");
 		} finally {
 			JPAHelper.closeEntityManagerResources(emf, em);
 		}
@@ -65,7 +65,7 @@ public class TissuDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionTissusException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création de la Tissu : [id = " + tissu.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
@@ -90,7 +90,7 @@ public class TissuDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionTissusException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création de la Tissu : [id = " + tissu.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
@@ -117,7 +117,7 @@ public class TissuDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionTissusException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création de la Tissu : [id = " + tissu.getId() +"]");
 
 			} finally {
@@ -136,7 +136,7 @@ public class TissuDao {
 			tissu = em.find(Tissu.class, id);
 		} catch (Exception e) {
 			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new GestionTissusException(
+			throw new PersistanceException(
 					"Une erreur s'est produite lors de la création de la Tissu : [id = " + tissu.getId() +"]");
 
 		} finally {
@@ -155,7 +155,7 @@ public class TissuDao {
 			TypedQuery<Boolean> booleanQuery = em.createQuery(query, Boolean.class).setParameter("ref", ref);
 			exists = booleanQuery.getSingleResult();		} catch (Exception e) {
 			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new GestionTissusException(
+			throw new PersistanceException(
 					"Une erreur s'est produite lors de la recherche de référence");
 
 		} finally {

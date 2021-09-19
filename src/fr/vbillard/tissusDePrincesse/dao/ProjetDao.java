@@ -8,9 +8,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
-import fr.vbillard.tissusDePrincesse.exception.GestionProjetsException;
-import fr.vbillard.tissusDePrincesse.exception.GestionTissusException;
-import fr.vbillard.tissusDePrincesse.exception.GestionTypeTissusException;
+import fr.vbillard.tissusDePrincesse.exception.PersistanceException;
 import fr.vbillard.tissusDePrincesse.model.Projet;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
 
@@ -34,7 +32,7 @@ public class ProjetDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionProjetsException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création du Projet : [id = " + projet.getId() + "]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
@@ -54,7 +52,7 @@ public class ProjetDao {
 			projets = em.createQuery("SELECT p FROM Projet p") .getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new GestionTypeTissusException("Une erreur s'est produite lors de la recupération des projets.");
+			throw new PersistanceException("Une erreur s'est produite lors de la recupération des projets.");
 		} finally {
 			JPAHelper.closeEntityManagerResources(emf, em);
 		}
@@ -75,7 +73,7 @@ public class ProjetDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionTissusException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création du projet : [id = " + projet.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);

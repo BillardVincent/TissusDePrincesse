@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1080.0" prefWidth="1920.0" stylesheets="@theme.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="fr.vbillard.tissusDePrincesse.view.MainOverviewController">
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0" stylesheets="@theme.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.vbillard.tissusDePrincesse.view.MainOverviewController">
 	<children>
 		<SplitPane dividerPositions="0.24030037546933666, 0.776595744680851" layoutY="79.0" prefHeight="800.0" prefWidth="1600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<items>
@@ -141,12 +141,13 @@
 																	</children>
 																</GridPane>
 																<Button fx:id="addTissuButton" layoutX="20.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleNewTissu" prefWidth="25.0" />
-																<Button fx:id="deleteTissuButton" layoutX="363.0" layoutY="10.0" minWidth="26.0" mnemonicParsing="false" onAction="#handleDeleteTissu" prefHeight="25.0" />
+																<Button fx:id="deleteTissuButton" layoutX="394.0" layoutY="10.0" minWidth="26.0" mnemonicParsing="false" onAction="#handleDeleteTissu" prefHeight="25.0" />
 																<Button fx:id="editTissuButton" layoutX="99.0" layoutY="10.0" minWidth="27.0" mnemonicParsing="false" onAction="#handleEditTissu" prefHeight="25.0" />
 																<Button fx:id="generateCouponButton" layoutX="142.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleGenerateCoupon" prefHeight="25.0" prefWidth="25.0" />
 																<Button fx:id="searchPatronButton" layoutX="200.0" layoutY="10.0" mnemonicParsing="false" prefWidth="30.0" />
 																<Button fx:id="addInProjectButton" layoutX="256.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleAddInProject" prefWidth="25.0" />
-																<Button fx:id="archiveTissuButton" layoutX="309.0" layoutY="10.0" minWidth="26.0" mnemonicParsing="false" onAction="#handleArchiveTissu" prefHeight="25.0" />
+																<Button fx:id="archiveTissuButton" layoutX="349.0" layoutY="10.0" minWidth="26.0" mnemonicParsing="false" onAction="#handleArchiveTissu" prefHeight="25.0" />
+                                                <Button fx:id="addTissuPictureButton" layoutX="300.0" layoutY="10.0" minWidth="26.0" mnemonicParsing="false" onAction="#handleAddTissuPicture" prefHeight="25.0" />
 															</children>
 														</AnchorPane>
 													</items>
@@ -236,7 +237,19 @@
 										</Pane>
 									</children>
 								</AnchorPane>
-								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <Pane fx:id="imagePanel" prefHeight="377.0" prefWidth="1019.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Button fx:id="deletePicture" layoutX="204.0" layoutY="291.0" mnemonicParsing="false" onAction="#deletePicture" />
+                                    <Button fx:id="expendPicture" layoutX="788.0" layoutY="291.0" mnemonicParsing="false" onAction="#expendPicture" />
+                                    <Button fx:id="addPicture" layoutX="887.0" layoutY="197.0" mnemonicParsing="false" onAction="#addPicture" />
+                                    <Button fx:id="previousPicture" layoutX="84.0" layoutY="136.0" mnemonicParsing="false" onAction="#previousPicture" />
+                                    <ImageView fx:id="imageView" fitHeight="377.0" fitWidth="557.0" layoutX="231.0" pickOnBounds="true" preserveRatio="true" />
+                                    <Button fx:id="nextPicture" layoutX="887.0" layoutY="136.0" mnemonicParsing="false" onAction="#nextPicture" />
+                                 </children>
+                              </Pane>
+                           </children></AnchorPane>
 							</items>
 						</SplitPane>
 					</children>

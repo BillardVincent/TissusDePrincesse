@@ -11,8 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuRequisDto;
-import fr.vbillard.tissusDePrincesse.exception.GestionTissagesException;
-import fr.vbillard.tissusDePrincesse.exception.GestionTissusException;
+import fr.vbillard.tissusDePrincesse.exception.PersistanceException;
 import fr.vbillard.tissusDePrincesse.model.Patron;
 import fr.vbillard.tissusDePrincesse.model.Tissage;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
@@ -40,7 +39,7 @@ public class TissusRequisDao {
 			e.printStackTrace();
 
 			
-			throw new GestionTissagesException("Une erreur s'est produite lors de la recupération des Tissages.");
+			throw new PersistanceException("Une erreur s'est produite lors de la recupération des Tissages.");
 		} finally {
 			JPAHelper.closeEntityManagerResources(emf, em);
 		}
@@ -63,7 +62,7 @@ public class TissusRequisDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionTissusException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création de la Tissu : [id = " + tissu.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
@@ -88,7 +87,7 @@ public class TissusRequisDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionTissusException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création de la Tissu : [id = " + tissu.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
@@ -105,7 +104,7 @@ public class TissusRequisDao {
 			em = emf.createEntityManager();
 			tissu = em.find(TissuRequis.class, id);
 		} catch (Exception e) {
-			throw new GestionTissagesException(
+			throw new PersistanceException(
 					"Une erreur s'est produite lors de la création de la Tissage : [id = " + tissu.getId() +"]");
 
 		} finally {
@@ -134,7 +133,7 @@ public class TissusRequisDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionTissusException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création de la Tissu : [id = " + tissu.getId() +"]");
 
 			} finally {

@@ -8,13 +8,9 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
-import fr.vbillard.tissusDePrincesse.exception.GestionPatronsException;
-import fr.vbillard.tissusDePrincesse.exception.GestionTissusException;
-import fr.vbillard.tissusDePrincesse.exception.GestionTypeTissusException;
+
+import fr.vbillard.tissusDePrincesse.exception.PersistanceException;
 import fr.vbillard.tissusDePrincesse.model.Patron;
-import fr.vbillard.tissusDePrincesse.model.Tissu;
-import fr.vbillard.tissusDePrincesse.model.TissuRequis;
-import fr.vbillard.tissusDePrincesse.model.TypeTissu;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
 
 public class PatronDao {
@@ -37,7 +33,7 @@ public class PatronDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionPatronsException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création du Patron : [id = " + patron.getId() + "]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
@@ -54,7 +50,7 @@ public class PatronDao {
 			String query = "select case when (count(*) > 0) then true else false end from Patron p where p.reference=:ref";
 			TypedQuery<Boolean> booleanQuery = em.createQuery(query, Boolean.class).setParameter("ref", ref);
 			exists = booleanQuery.getSingleResult();		} catch (Exception e) {
-			throw new GestionTissusException(
+			throw new PersistanceException(
 					"Une erreur s'est produite lors de la recherche de référence");
 
 		} finally {
@@ -72,7 +68,7 @@ public class PatronDao {
 			patrons = em.createQuery("SELECT p FROM Patron p") .getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new GestionTypeTissusException("Une erreur s'est produite lors de la recupération des patrons.");
+			throw new PersistanceException("Une erreur s'est produite lors de la recupération des patrons.");
 		} finally {
 			JPAHelper.closeEntityManagerResources(emf, em);
 		}
@@ -93,7 +89,7 @@ public class PatronDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionTissusException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création du patron : [id = " + patron.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
@@ -120,7 +116,7 @@ public class PatronDao {
 					transaction.rollback();
 				}
 				e.printStackTrace();
-				throw new GestionTissusException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la suppression du patron : [id = " + patron.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);

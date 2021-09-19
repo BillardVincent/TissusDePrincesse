@@ -10,7 +10,7 @@ import javax.persistence.Persistence;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import fr.vbillard.tissusDePrincesse.exception.GestionMatieresException;
+import fr.vbillard.tissusDePrincesse.exception.PersistanceException;
 import fr.vbillard.tissusDePrincesse.model.Matiere;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
 
@@ -34,7 +34,7 @@ public class MatiereDao {
 			e.printStackTrace();
 
 			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new GestionMatieresException("Une erreur s'est produite lors de la recupération des Matieres.");
+			throw new PersistanceException("Une erreur s'est produite lors de la recupération des Matieres.");
 		} finally {
 			JPAHelper.closeEntityManagerResources(emf, em);
 		}
@@ -58,7 +58,7 @@ public class MatiereDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionMatieresException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création de la Matiere : [id = " + matiere.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
@@ -82,7 +82,7 @@ public class MatiereDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionMatieresException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création de la Matiere : [id = " + matiere.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
@@ -109,7 +109,7 @@ public class MatiereDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionMatieresException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création de la Matiere : [id = " + matiere.getId() +"]");
 
 			} finally {
@@ -128,7 +128,7 @@ public class MatiereDao {
 			matiere = em.find(Matiere.class, id);
 		} catch (Exception e) {
 			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new GestionMatieresException(
+			throw new PersistanceException(
 					"Une erreur s'est produite lors de la création de la Matiere : [id = " + matiere.getId() +"]");
 
 		} finally {
@@ -146,7 +146,7 @@ public class MatiereDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new GestionMatieresException(
+			throw new PersistanceException(
 					"Ca a pas compté....");
 
 		} finally {

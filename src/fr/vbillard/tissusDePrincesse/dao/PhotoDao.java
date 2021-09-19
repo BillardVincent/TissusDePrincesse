@@ -11,57 +11,47 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import fr.vbillard.tissusDePrincesse.exception.PersistanceException;
-import fr.vbillard.tissusDePrincesse.model.Projet;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
-import fr.vbillard.tissusDePrincesse.model.TissuRequis;
-import fr.vbillard.tissusDePrincesse.model.TissuUsed;
+import fr.vbillard.tissusDePrincesse.model.images.Photo;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
 
-
-public class TissuUsedDao {
-
-	private static final Log log = LogFactory.getLog(TissuUsedDao.class);
+public class PhotoDao {
+	private static final Log log = LogFactory.getLog(PhotoDao.class);
 	private final String persistenceUnit = Constants.PERSISTENCE_UNIT;
 	private EntityManagerFactory emf = null;
 	private EntityManager em = null;
 	private EntityTransaction transaction = null;
 
 	
-	public List<TissuUsed> findAll() {
-		List<TissuUsed> tissuUseds = null;
+	public List<Photo> findAll() {
+		List<Photo> photos = null;
 		try {
 			emf = Persistence.createEntityManagerFactory(persistenceUnit);
 			em = emf.createEntityManager();
-			// tissuUseds = em.createQuery("select tissuUsed from TissuUsed tissuUsed",
-			// TissuUsed.class).getResultList();
-			tissuUseds = em.createQuery("SELECT t FROM TissuUsed t ").getResultList();
+			// photos = em.createQuery("select photo from photo photo",
+			// photo.class).getResultList();
+			photos = em.createQuery("SELECT photo FROM photo photo") .getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
 
 			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new PersistanceException("Une erreur s'est produite lors de la recupération des TissuUseds.");
+			throw new PersistanceException("Une erreur s'est produite lors de la recupération des photos.");
 		} finally {
 			JPAHelper.closeEntityManagerResources(emf, em);
 		}
-		log.debug("tissuUseds : " + tissuUseds);
-		return tissuUseds;
+		log.debug("photos : " + photos);
+		return photos;
 	}
 
 
-	public TissuUsed create(TissuUsed tissuUsed) {
-		if (tissuUsed != null) {
+	public Photo create(Photo photo) {
+		if (photo != null) {
 			try {
 				emf = Persistence.createEntityManagerFactory(persistenceUnit);
 				em = emf.createEntityManager();
 				transaction = em.getTransaction();
 				transaction.begin();
-				Projet p = em.createQuery("SELECT p FROM Projet p WHERE p.id =:id", Projet.class).setParameter("id", tissuUsed.getProjet().getId()).getSingleResult();
-				tissuUsed.setProjet(p);
-				Tissu t = em.createQuery("SELECT t FROM Tissu t WHERE t.id =:id", Tissu.class).setParameter("id", tissuUsed.getTissu().getId()).getSingleResult();
-				tissuUsed.setProjet(p);
-				TissuRequis tr = em.createQuery("SELECT tr FROM TissuRequis tr WHERE tr.id =:id", TissuRequis.class).setParameter("id", tissuUsed.getTissuRequis().getId()).getSingleResult();
-				tissuUsed.setProjet(p);
-				em.persist(tissuUsed);
+				em.persist(photo);
 				transaction.commit();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -70,59 +60,58 @@ public class TissuUsedDao {
 					transaction.rollback();
 				}
 				throw new PersistanceException(
-						"Une erreur s'est produite lors de la création de la TissuUsed : [id = " + tissuUsed.getId() +"]");
+						"Une erreur s'est produite lors de la création de la photo : [id = " + photo.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
 			}
 		}
-		return tissuUsed;
+		return photo;
 	}
 
 
-	public TissuUsed update(TissuUsed tissuUsed) {
-		if (tissuUsed != null) {
+	public Photo update(Photo photo) {
+		if (photo != null) {
 			try {
 				emf = Persistence.createEntityManagerFactory(persistenceUnit);
 				em = emf.createEntityManager();
 				transaction = em.getTransaction();
 				transaction.begin();
-				tissuUsed = em.merge(tissuUsed);
+				photo = em.merge(photo);
 				transaction.commit();
 			} catch (Exception e) {
-				e.printStackTrace();
 				log.error("Erreur lors de l'execution de la methode, Exception : " + e);
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
 				throw new PersistanceException(
-						"Une erreur s'est produite lors de la création de la TissuUsed : [id = " + tissuUsed.getId() +"]");
+						"Une erreur s'est produite lors de la création de la photo : [id = " + photo.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
 			}
 		}
-		return tissuUsed;
+		return photo;
 	}
 
 
-	public boolean delete(TissuUsed tissuUsed) {
+	public boolean delete(Photo photo) {
 		boolean isOk = false;
-		if (tissuUsed != null) {
+		if (photo != null) {
 			try {
 				emf = Persistence.createEntityManagerFactory(persistenceUnit);
 				em = emf.createEntityManager();
 				transaction = em.getTransaction();
 				transaction.begin();
-				tissuUsed = em.find(TissuUsed.class, tissuUsed.getId());
-				em.remove(em.merge(tissuUsed));
+				photo = em.find(Photo.class, photo.getId());
+				em.remove(em.merge(photo));
 				transaction.commit();
-				isOk = em.find(TissuUsed.class, tissuUsed.getId()) == null;
+				isOk = em.find(Photo.class, photo.getId()) == null;
 			} catch (Exception e) {
 				log.error("Erreur lors de l'execution de la methode, Exception : " + e);
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
 				throw new PersistanceException(
-						"Une erreur s'est produite lors de la création de la TissuUsed : [id = " + tissuUsed.getId() +"]");
+						"Une erreur s'est produite lors de la création de la photo : [id = " + photo.getId() +"]");
 
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
@@ -132,66 +121,59 @@ public class TissuUsedDao {
 	}
 
 
-	public TissuUsed findById(Integer id) {
-		TissuUsed tissuUsed = null;
+	public Photo findById(Integer id) {
+		Photo photo = null;
 		try {
 			emf = Persistence.createEntityManagerFactory(persistenceUnit);
 			em = emf.createEntityManager();
-			tissuUsed = em.find(TissuUsed.class, id);
+			photo = em.find(Photo.class, id);
 		} catch (Exception e) {
 			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
 			throw new PersistanceException(
-					"Une erreur s'est produite lors de la création de la TissuUsed : [id = " + tissuUsed.getId() +"]");
+					"Une erreur s'est produite lors de la création de la photo : [id = " + photo.getId() +"]");
 
 		} finally {
 			JPAHelper.closeEntityManagerResources(emf, em);
 		}
-		return tissuUsed;
+		return photo;
 	}
-
-
-	public List<TissuUsed> getTissuUsedByTissuRequis(TissuRequis tr) {
-		List<TissuUsed> tissuUseds = null;
-		try {
-			emf = Persistence.createEntityManagerFactory(persistenceUnit);
-			em = emf.createEntityManager();
-			// tissuUseds = em.createQuery("select tissuUsed from TissuUsed tissuUsed",
-			// TissuUsed.class).getResultList();
-			
-			tissuUseds = em.createQuery("SELECT t FROM TissuUsed t where t.tissuRequis.id =:id ", TissuUsed.class).setParameter("id", tr.getId()).getResultList();
-		} catch (Exception e) {
-			e.printStackTrace();
-
-			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new PersistanceException("Une erreur s'est produite lors de la recupération des TissuUseds.");
-		} finally {
-			JPAHelper.closeEntityManagerResources(emf, em);
-		}
-		log.debug("tissuUseds : " + tissuUseds);
-		return tissuUseds;
-	}
-
-
-	public List<TissuUsed> findByTissu(Tissu t) {
-		List<TissuUsed> tissuUseds = null;
-		try {
-			emf = Persistence.createEntityManagerFactory(persistenceUnit);
-			em = emf.createEntityManager();
-			// tissuUseds = em.createQuery("select tissuUsed from TissuUsed tissuUsed",
-			// TissuUsed.class).getResultList();
-			
-			tissuUseds = em.createQuery("SELECT t FROM TissuUsed t where t.tissu.id =:id ", TissuUsed.class).setParameter("id", t.getId()).getResultList();
-		} catch (Exception e) {
-			e.printStackTrace();
-
-			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new PersistanceException("Une erreur s'est produite lors de la recupération des TissuUseds.");
-		} finally {
-			JPAHelper.closeEntityManagerResources(emf, em);
-		}
-		log.debug("tissuUseds : " + tissuUseds);
-		return tissuUseds;
-	}
-
 	
+	public int count() {
+		int count = 0;
+		try {
+			emf = Persistence.createEntityManagerFactory(persistenceUnit);
+			em = emf.createEntityManager();
+			count = em.createQuery("select Count (*) FROM photo ") .getFirstResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
+			throw new PersistanceException(
+					"Ca a pas compté....");
+
+		} finally {
+			JPAHelper.closeEntityManagerResources(emf, em);
+		}
+		return count;
+	}
+
+
+	public List<Photo> getByTissu(Tissu tissu) {
+		List<Photo> photos = null;
+		try {
+			emf = Persistence.createEntityManagerFactory(persistenceUnit);
+			em = emf.createEntityManager();
+			String query = "SELECT p FROM Photo p WHERE  p.tissu=:tissu";
+			photos = em.createQuery(query, Photo.class).setParameter("tissu", tissu).getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
+			throw new PersistanceException(
+					"Une erreur s'est produite lors de la récupération des photos du tissu : [id = " + tissu.getId() +"]");
+
+		} finally {
+			JPAHelper.closeEntityManagerResources(emf, em);
+		}
+		return photos;		
+	}
+
 }

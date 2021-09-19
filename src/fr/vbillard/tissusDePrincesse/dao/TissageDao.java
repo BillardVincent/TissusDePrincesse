@@ -10,7 +10,7 @@ import javax.persistence.Persistence;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import fr.vbillard.tissusDePrincesse.exception.GestionTissagesException;
+import fr.vbillard.tissusDePrincesse.exception.PersistanceException;
 import fr.vbillard.tissusDePrincesse.model.Tissage;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
 
@@ -34,7 +34,7 @@ public class TissageDao {
 			e.printStackTrace();
 
 			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new GestionTissagesException("Une erreur s'est produite lors de la recupération des Tissages.");
+			throw new PersistanceException("Une erreur s'est produite lors de la recupération des Tissages.");
 		} finally {
 			JPAHelper.closeEntityManagerResources(emf, em);
 		}
@@ -58,7 +58,7 @@ public class TissageDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionTissagesException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création de la Tissage : [id = " + tissage.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
@@ -82,7 +82,7 @@ public class TissageDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionTissagesException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création de la Tissage : [id = " + tissage.getId() +"]");
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);
@@ -109,7 +109,7 @@ public class TissageDao {
 				if (transaction != null && transaction.isActive()) {
 					transaction.rollback();
 				}
-				throw new GestionTissagesException(
+				throw new PersistanceException(
 						"Une erreur s'est produite lors de la création de la Tissage : [id = " + tissage.getId() +"]");
 
 			} finally {
@@ -128,7 +128,7 @@ public class TissageDao {
 			tissage = em.find(Tissage.class, id);
 		} catch (Exception e) {
 			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new GestionTissagesException(
+			throw new PersistanceException(
 					"Une erreur s'est produite lors de la création de la Tissage : [id = " + tissage.getId() +"]");
 
 		} finally {
@@ -146,7 +146,7 @@ public class TissageDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new GestionTissagesException(
+			throw new PersistanceException(
 					"Ca a pas compté....");
 
 		} finally {
