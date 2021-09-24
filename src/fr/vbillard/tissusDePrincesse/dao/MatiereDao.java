@@ -1,6 +1,8 @@
 package fr.vbillard.tissusDePrincesse.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -20,16 +22,19 @@ public class MatiereDao {
 	private EntityManagerFactory emf = null;
 	private EntityManager em = null;
 	private EntityTransaction transaction = null;
-
+	
 	
 	public List<Matiere> findAll() {
 		List<Matiere> matieres = null;
 		try {
-			emf = Persistence.createEntityManagerFactory(persistenceUnit);
+			Map<String, Object> configOverrides = new HashMap<String, Object>();
+		    //configOverrides.put("hibernate.hbm2ddl.auto", "create-drop");
+		
+			emf = Persistence.createEntityManagerFactory(persistenceUnit,configOverrides);
 			em = emf.createEntityManager();
 			// matieres = em.createQuery("select matiere from Matiere matiere",
 			// Matiere.class).getResultList();
-			matieres = em.createQuery("SELECT matiere FROM Matiere matiere") .getResultList();
+			matieres = em.createQuery("SELECT matiere FROM Matiere matiere").getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
 

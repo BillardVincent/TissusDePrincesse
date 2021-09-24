@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
+import java.security.acl.LastOwnerException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,9 +13,12 @@ import javax.swing.filechooser.FileSystemView;
 
 import fr.vbillard.tissusDePrincesse.dtosFx.PatronDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
+import fr.vbillard.tissusDePrincesse.model.Preference;
 import fr.vbillard.tissusDePrincesse.model.enums.ImageFormat;
+import fr.vbillard.tissusDePrincesse.model.images.Photo;
 import fr.vbillard.tissusDePrincesse.services.MatiereService;
 import fr.vbillard.tissusDePrincesse.services.PatronService;
+import fr.vbillard.tissusDePrincesse.services.PreferenceService;
 import fr.vbillard.tissusDePrincesse.services.ProjetService;
 import fr.vbillard.tissusDePrincesse.services.TissageService;
 import fr.vbillard.tissusDePrincesse.services.TissuRequisService;
@@ -26,6 +30,7 @@ import fr.vbillard.tissusDePrincesse.view.GenericTextEditController;
 import fr.vbillard.tissusDePrincesse.view.MainOverviewController;
 import fr.vbillard.tissusDePrincesse.view.MatiereEditController;
 import fr.vbillard.tissusDePrincesse.view.PatronEditDialogController;
+import fr.vbillard.tissusDePrincesse.view.PictureExpended;
 import fr.vbillard.tissusDePrincesse.view.RootLayoutController;
 import fr.vbillard.tissusDePrincesse.view.SetLongueurDialogController;
 import fr.vbillard.tissusDePrincesse.view.TissageEditController;
@@ -60,6 +65,7 @@ public class MainApp extends Application {
     private ProjetService projetService;
     private MainOverviewController tissuOverviewController;
     private ChargementController chargementController;
+    private PreferenceService preferenceService;
     private AnchorPane tissuOverview;
     
     //------------------- test h2 -----------------
@@ -87,6 +93,7 @@ public class MainApp extends Application {
 
         matiereService = new MatiereService();
         projetService = new ProjetService();
+        preferenceService = new PreferenceService();
         //chargementController.setMessage("Chargement en cours : Init");
 
         //chargementController.setMessage("Chargement en cours : Matieres");
@@ -503,10 +510,45 @@ public class MainApp extends Application {
         }
 	}
 	
+	public void showPictureExpended(Photo photo) {
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("view/PictureExpended.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle(photo.getNom());
+            dialogStage.getIcons().add(icon);
+
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            JMetro jMetro = new JMetro(Style.LIGHT);
+            jMetro.setScene(scene);
+            dialogStage.setScene(scene);
+
+            // Set the person into the controller.
+            PictureExpended controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setData(this, photo);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 	
-	public File directoryChooser() {
+	
+	public File directoryChooser(Preference pref) {
 		FileChooser fileChooser = new FileChooser();
-		String path = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+		//String path = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+		pref = preferenceService.getPreferences();
+		String path = pref.getPictureLastUploadPath();
+
 		fileChooser.setInitialDirectory(new File(path));
 		
 		ImageFormat[] values = ImageFormat.values();
@@ -515,7 +557,7 @@ public class MainApp extends Application {
 			extensions[i] = values[i].getExtension();
 		}
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("Images ("+String.join(", ", extensions)+")", extensions));
-	    
+
 		return fileChooser.showOpenDialog(primaryStage);
 	}
 	

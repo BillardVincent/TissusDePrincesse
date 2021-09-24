@@ -9,19 +9,25 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 
+import fr.vbillard.tissusDePrincesse.services.PreferenceService;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
 
 public class JPAHelper {
 	private static final Log log = LogFactory.getLog(JPAHelper.class);
+	private static final String persistenceUnit = Constants.PERSISTENCE_UNIT;
+	private static PreferenceService preferenceService = new PreferenceService();
 
 	public static void closeEntityManagerResources(EntityManagerFactory emf, EntityManager em) {
 		try {
@@ -40,7 +46,19 @@ public class JPAHelper {
 		}
 
 	}
+	/*
+	public static EntityManagerFactory getEntityManagerFactory() {
+		Map<String, Object> configOverrides = new HashMap<String, Object>();
+	    String dbPath = preferenceService.getPreferences().getDataBasePath();
 
+	    if (dbPath.isEmpty()) dbPath =Constants.DATABASE_URL;
+	    configOverrides.put("javax.persistence.jdbc.url", pref.getDbPath);
+	    
+	
+		return Persistence.createEntityManagerFactory(persistenceUnit, configOverrides);
+	}
+	*/
+/*
 	public static void initDataBase() {
 		// Initialiser les données de la base de données
 		//String scriptSqlPath = Constants.SQL_JUNIT_PATH_FILE;
@@ -78,6 +96,7 @@ public class JPAHelper {
 			}
 		}
 	}
+	*/
 
 	public static void closeResources(Connection connection, PreparedStatement preparedStatement, ResultSet result) {
 		String methodName = "closeResources";

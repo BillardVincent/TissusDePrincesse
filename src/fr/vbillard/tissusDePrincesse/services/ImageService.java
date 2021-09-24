@@ -19,4 +19,8 @@ public class ImageService {
 	public void save(Photo image) {
 		dao.create(image);
 	}
+	
+	public void delete(Photo photo) {
+		dao.delete(photo);
+	}
 }

@@ -31,6 +31,7 @@ import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuRequisDto;
 import fr.vbillard.tissusDePrincesse.fxCustomElements.TissuRequisToggleButton;
 import fr.vbillard.tissusDePrincesse.mappers.TissuMapper;
+import fr.vbillard.tissusDePrincesse.model.Preference;
 import fr.vbillard.tissusDePrincesse.model.Projet;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
 import fr.vbillard.tissusDePrincesse.model.TissuUsed;
@@ -41,6 +42,7 @@ import fr.vbillard.tissusDePrincesse.model.images.Photo;
 import fr.vbillard.tissusDePrincesse.services.DevInProgressService;
 import fr.vbillard.tissusDePrincesse.services.ImageService;
 import fr.vbillard.tissusDePrincesse.services.PatronService;
+import fr.vbillard.tissusDePrincesse.services.PreferenceService;
 import fr.vbillard.tissusDePrincesse.services.ProjetService;
 import fr.vbillard.tissusDePrincesse.services.TissuService;
 import fr.vbillard.tissusDePrincesse.services.TissuUsedService;
@@ -50,8 +52,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -66,6 +70,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -76,6 +81,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class MainOverviewController {
 
@@ -274,6 +280,7 @@ public class MainOverviewController {
 	private ProjetService projetService;
 	private ImageService imageService = new ImageService();
 	private final ToggleGroup group = new ToggleGroup();
+	private PreferenceService preferenceService = new PreferenceService();
 	
 	private int photoIndex = 0;
 	private List<Photo> photos = new ArrayList<Photo>();
@@ -545,7 +552,7 @@ public class MainOverviewController {
 			tissageLabel.setText("");
 		}
 		setButtons();
-		setPicturePanel(tissu);
+		setPicturePanel(0);
 	}
 
 	private void showPatronDetails(PatronDto patron) {
@@ -996,13 +1003,14 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 	
 	@FXML
 	private void handleAddTissuPicture() {
-        File file = mainApp.directoryChooser();
+	    Preference pref = preferenceService.getPreferences();
+        File file = mainApp.directoryChooser(pref);
         if (file != null )
         try {
         	String name = file.getName();
         	String extension = name.substring(name.lastIndexOf(".")+1);
         	BufferedImage bufferedImage=ImageIO.read(file);
-        	bufferedImage = Scalr.resize(bufferedImage, 300);
+        	bufferedImage = Scalr.resize(bufferedImage, 900);
         	ByteArrayOutputStream baos=new ByteArrayOutputStream();
         	ImageIO.write(bufferedImage, extension, baos);
         	byte[] data =baos.toByteArray();
@@ -1013,6 +1021,10 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
         	image.setTissu(TissuMapper.map(tissuSelected));
         	imageService.save(image);
         	baos.close();
+        	
+    	    pref.setPictureLastUploadPath(file.getAbsolutePath());
+    	    preferenceService.savePreferences(pref);
+        	setPicturePanel(photos.size());
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -1033,24 +1045,37 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 		
 	}
 	@FXML
-	private void expendPicture() {
-		DevInProgressService.notImplemented(mainApp);
+	private void expendPicture() {      
+		mainApp.showPictureExpended(photos.get(photoIndex));
 
 	}
+	
 	@FXML
 	private void deletePicture() {
-		DevInProgressService.notImplemented(mainApp);
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.initOwner(mainApp.getPrimaryStage());
+		alert.setTitle("Supprimer l'image ?");
+		alert.setHeaderText("Supprimer l'image ?");
+		alert.setContentText(
+				"Souhaitez-vous supprimer cette image ?");
+		Optional<ButtonType> option = alert.showAndWait();
 
+		if (option.get() != null && option.get() == ButtonType.OK) {
+			imageService.delete(photos.get(photoIndex));
+			setPicturePanel(photoIndex -1);
+		}
 	}
+	
 	@FXML
 	private void addPicture() {
-		File file = mainApp.directoryChooser();
+		Preference pref = preferenceService.getPreferences();
+        File file = mainApp.directoryChooser(pref);
         if (file != null )
         try {
         	String name = file.getName();
         	String extension = name.substring(name.lastIndexOf(".")+1);
         	BufferedImage bufferedImage=ImageIO.read(file);
-        	bufferedImage = Scalr.resize(bufferedImage, 300);
+        	bufferedImage = Scalr.resize(bufferedImage, 900);
         	ByteArrayOutputStream baos=new ByteArrayOutputStream();
         	ImageIO.write(bufferedImage, extension, baos);
         	byte[] data =baos.toByteArray();
@@ -1061,12 +1086,15 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
         	image.setTissu(TissuMapper.map(tissuSelected));
         	imageService.save(image);
         	baos.close();
-        	photos = imageService.getImages(TissuMapper.map(tissuSelected));
-        	setPicture();
+        	setPicturePanel(photos.size());
+
+    	    pref.setPictureLastUploadPath(file.getAbsolutePath());
+    	    preferenceService.savePreferences(pref);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 
 	private void setButtons() {
@@ -1098,12 +1126,11 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 		});
 	}
 	
-	private void setPicturePanel(TissuDto tissu) {
-		imagePanel.setVisible(tissu != null);
-		photoIndex = 0;
+	private void setPicturePanel(int index) {
+		imagePanel.setVisible(tissuSelected != null);
+		photoIndex = index <= 0 ? 0 : index;
 		if (tissuSelected != null ) {
-			photos = imageService.getImages(TissuMapper.map(tissu));
-			System.out.println(photos.size());
+			photos = imageService.getImages(TissuMapper.map(tissuSelected));
 			if(!photos.isEmpty()) {
 				setPicture();
 			} else {
