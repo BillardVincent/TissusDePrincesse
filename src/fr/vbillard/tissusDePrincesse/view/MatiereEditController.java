@@ -81,7 +81,8 @@ public class MatiereEditController {
 		} else if (matiereService.validate(newMatiere.getText())) {
 				matiereService.create(new Matiere(newMatiere.getText()));
 				newMatiere.setText("");
-				allMatieres = matiereService.getAllObs();	
+				allMatieres = matiereService.getAllObs();
+				listMatieres.setItems(allMatieres);
 		 } else {
 			 Alert alert = new Alert(AlertType.WARNING);
 	            alert.initOwner(mainApp.getPrimaryStage());
@@ -116,6 +117,7 @@ public void handleEditElement() {
 			matiereService.edit(new Matiere(editMatiere.getText()));
 			editMatiere.setText("");
 			allMatieres = matiereService.getAllObs();
+			listMatieres.setItems(allMatieres);
 			this.editMatiere.setDisable(true);
 
 	 } else {

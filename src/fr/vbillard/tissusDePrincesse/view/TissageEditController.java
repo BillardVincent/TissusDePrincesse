@@ -77,7 +77,9 @@ public class TissageEditController {
 		} else if (tissageService.validate(newTissage.getText())) {
 				tissageService.create(new Tissage(newTissage.getText()));
 				newTissage.setText("");
-				allTissages = tissageService.getAllObs();	
+				allTissages = tissageService.getAllObs();
+				listTissages.setItems(allTissages);
+
 		 } else {
 			 Alert alert = new Alert(AlertType.WARNING);
 	            alert.initOwner(mainApp.getPrimaryStage());
@@ -110,6 +112,8 @@ public void handleEditElement() {
 			tissageService.create(new Tissage(editTissage.getText()));
 			editTissage.setText("");
 			allTissages = tissageService.getAllObs();
+			listTissages.setItems(allTissages);
+
 			this.editTissage.setDisable(true);
 
 	 } else {

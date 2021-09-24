@@ -78,6 +78,8 @@ public class TypeEditController {
 				typeTissuService.create(new TypeTissu(newTypeTissu.getText()));
 				newTypeTissu.setText("");
 				allTypeTissus = typeTissuService.getAllObs();	
+				listTypeTissus.setItems(allTypeTissus);
+
 		 } else {
 			 Alert alert = new Alert(AlertType.WARNING);
 	            alert.initOwner(mainApp.getPrimaryStage());
@@ -110,6 +112,8 @@ public void handleEditElement() {
 			typeTissuService.create(new TypeTissu(editTypeTissu.getText()));
 			editTypeTissu.setText("");
 			allTypeTissus = typeTissuService.getAllObs();
+			listTypeTissus.setItems(allTypeTissus);
+
 			this.editTypeTissu.setDisable(true);
 
 	 } else {

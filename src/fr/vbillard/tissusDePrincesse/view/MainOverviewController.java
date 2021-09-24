@@ -1119,6 +1119,8 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 		deleteProjetPanButton.setDisable(projetPanSelected == null);
 		nextPicture.setDisable(photoIndex >= photos.size()-1);
 		previousPicture.setDisable(photoIndex <= 0);
+		deletePicture.setDisable(photos.size() == 0);
+		expendPicture.setDisable(photos.size() == 0);
 
 		group.getToggles().forEach(toggle -> {
 			Node node = (Node) toggle;

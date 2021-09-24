@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="557.0" prefWidth="920.0" stylesheets="@theme.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="fr.vbillard.tissusDePrincesse.view.PatronEditDialogController">
+<AnchorPane prefHeight="557.0" prefWidth="920.0" stylesheets="@theme.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.vbillard.tissusDePrincesse.view.PatronEditDialogController">
    <children>
       <SplitPane dividerPositions="0.4716898954703832" prefHeight="400.0" prefWidth="733.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -91,7 +91,7 @@
                         <HBox prefHeight="32.0" prefWidth="335.0">
                            <children>
                               <Label prefHeight="26.0" prefWidth="121.0" text="Fournitures" />
-                              <Button fx:id="addFournitureButton" mnemonicParsing="false">
+                              <Button fx:id="addFournitureButton" mnemonicParsing="false" onAction="#handleFournitureListedit">
                                  <HBox.margin>
                                     <Insets />
                                  </HBox.margin>
