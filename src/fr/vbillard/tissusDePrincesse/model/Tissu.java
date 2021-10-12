@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Tissu {
+public class Tissu implements AbstractEntity{
 
 	@Override
 	public String toString() {

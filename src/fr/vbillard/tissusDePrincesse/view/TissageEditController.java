@@ -12,7 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class TissageEditController {
+public class TissageEditController implements IController{
 
 	@FXML
 	private ListView<String> listTissages;

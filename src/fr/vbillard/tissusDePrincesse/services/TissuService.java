@@ -3,6 +3,7 @@ package fr.vbillard.tissusDePrincesse.services;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 
+import fr.vbillard.tissusDePrincesse.dao.AbstractDao;
 import fr.vbillard.tissusDePrincesse.dao.TissuDao;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
 import fr.vbillard.tissusDePrincesse.mappers.TissuMapper;
@@ -10,59 +11,24 @@ import fr.vbillard.tissusDePrincesse.model.Tissu;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class TissuService {
+public class TissuService extends AbstractService<Tissu>{
 	
-	public static ObservableList<TissuDto> tissuData = FXCollections.observableArrayList();
-	private TissuDao tissuDao;
-	
-	
+	private TissuMapper mapper;
+	TissuDao dao;
+
 	public TissuService() {
-
-		tissuDao = new TissuDao();
+		mapper = new TissuMapper();
+		dao = new TissuDao();
 		
 	}
-	//public static List allTissus = new ArrayList() ;
-	
-	public void init() {
-		
-		tissuData = FXCollections.observableArrayList(tissuDao.findAll().stream().map(TissuMapper::map).collect(Collectors.toList()));
-				
-	}
 
-	
-	public void saveOrUpdate(TissuDto tissu) {
-		
-		if (tissu.getId() != 0) {
-			tissuDao.update(TissuMapper.map(tissu));
-			init();
-		}
-		else {
-			tissuDao.create(TissuMapper.map(tissu));
-			init();
-		}
+	public ObservableList<TissuDto> getObservableList(){
+		return mapper.getAsObservable(dao.findAll());
 	}
-	
-	
-	public void delete(TissuDto tissu) {
-		tissuDao.delete(TissuMapper.map(tissu));
-		for (Iterator<TissuDto> i = tissuData.iterator(); i.hasNext();) {
-			TissuDto t = i.next();
-		    if (t.getId() == tissu.getId()) {
-		    	i.remove();
-		    	break;
-		    }  
-		}
-	}
-
-	public ObservableList<TissuDto> getTissuData() {
-		if (tissuData == null || tissuData.size() == 0 ) init();
-		return tissuData;
-	}
-	
 
 	public ObservableList<TissuDto> filter(String text) {
 		ObservableList<TissuDto> result =FXCollections.observableArrayList();
-		for (TissuDto t : tissuData) {
+		for (TissuDto t : mapper.getAsObservable(getAll())) {
 			if (t.getDescription().contains(text) ||
 					t.getLieuAchat().contains(text) ||
 					t.getMatiere().contains(text) ||
@@ -74,7 +40,7 @@ public class TissuService {
 	}
 	public ObservableList<TissuDto> filter(TissuDto tissuDto) {
 		ObservableList<TissuDto> result =FXCollections.observableArrayList();
-		for (TissuDto t : tissuData) {
+		for (TissuDto t : mapper.getAsObservable(getAll())) {
 			if (t.getDescription().contains(tissuDto.getDescription()) ||
 					t.getLieuAchat().contains(tissuDto.getLieuAchat()) ||
 					t.getMatiere().contains(tissuDto.getMatiere()) ||
@@ -86,15 +52,28 @@ public class TissuService {
 	}
 
 	public boolean existByReference(String string) {
-		return tissuDao.existByReference(string);
+		return dao.existByReference(string);
 		
 	}
 
 	public void archive(TissuDto dto) {
-		Tissu t = TissuMapper.map(dto);
+		Tissu t = mapper.map(dto);
 		t.setArchived(true);
-		tissuDao.update(t);
+		dao.update(t);
 		
+	}
+	
+	public void delete(TissuDto dto) {
+		delete(mapper.map(dto));
+	}
+	
+	public void saveOrUpdate(TissuDto dto) {
+		saveOrUpdate(mapper.map(dto));
+	}
+	
+	@Override
+	protected AbstractDao getDao() {
+		return dao;
 	}
 	
 

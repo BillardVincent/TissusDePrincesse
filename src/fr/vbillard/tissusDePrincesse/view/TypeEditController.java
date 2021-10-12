@@ -1,8 +1,12 @@
 package fr.vbillard.tissusDePrincesse.view;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import fr.vbillard.tissusDePrincesse.MainApp;
 import fr.vbillard.tissusDePrincesse.model.TypeTissu;
 import fr.vbillard.tissusDePrincesse.services.TypeTissuService;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -12,11 +16,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class TypeEditController {
+public class TypeEditController implements IController {
 
 	@FXML
 	private ListView<String> listTypeTissus;
-	
+
 	@FXML
 	private TextField newTypeTissu;
 	@FXML
@@ -31,116 +35,114 @@ public class TypeEditController {
 	@FXML
 	private Button fermerButton;
 
-	    
 	private Stage dialogStage;
 	private boolean okClicked = false;
-	
+
 	TypeTissuService typeTissuService;
 	MainApp mainApp;
-	
-	String editedTypeTissu;
-	
-	ObservableList<String> allTypeTissus;
+	TypeTissu typeTissu;
+
+	TypeTissu editedTypeTissu;
+
+	List<TypeTissu> allTypeTissus;
 
 	/**
-	 * Initializes the controller class. This method is automatically called
-	 * after the fxml file has been loaded.
+	 * Initializes the controller class. This method is automatically called after
+	 * the fxml file has been loaded.
 	 */
 	@FXML
 	private void initialize() {
-		listTypeTissus.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> handleSelectElement(newValue));
+		listTypeTissus.getSelectionModel().selectedItemProperty()
+				.addListener((observable, oldValue, newValue) -> handleSelectElement(newValue));
 	}
-	
+
 	public void setDialogStage(Stage dialogStage) {
-        this.dialogStage = dialogStage;
-    }
+		this.dialogStage = dialogStage;
+	}
 
 	public void setData(MainApp mainApp, TypeTissuService typeTissuService) {
 		this.typeTissuService = typeTissuService;
 		this.mainApp = mainApp;
-		allTypeTissus = typeTissuService.allTypeTissusValues;
-		listTypeTissus.setItems(allTypeTissus);
-		
+		allTypeTissus = typeTissuService.getAll();
+		listTypeTissus.setItems(FXCollections
+				.observableArrayList(allTypeTissus.stream().map(tt -> tt.getType()).collect(Collectors.toList())));
+
 	}
-	
+
 	public void handleAddElement() {
-		
 		if (newTypeTissu.getText().trim().equals("")) {
-			 Alert alert = new Alert(AlertType.WARNING);
-	            alert.initOwner(mainApp.getPrimaryStage());
-	            alert.setTitle("Pas de valeur");
-	            alert.setHeaderText("Pas de valeur");
-	            alert.setContentText("Veuillez remplir une valeur");
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.initOwner(mainApp.getPrimaryStage());
+			alert.setTitle("Pas de valeur");
+			alert.setHeaderText("Pas de valeur");
+			alert.setContentText("Veuillez remplir une valeur");
 
-	            alert.showAndWait();
+			alert.showAndWait();
 		} else if (typeTissuService.validate(newTypeTissu.getText())) {
-				typeTissuService.create(new TypeTissu(newTypeTissu.getText()));
-				newTypeTissu.setText("");
-				allTypeTissus = typeTissuService.getAllObs();	
-				listTypeTissus.setItems(allTypeTissus);
+			typeTissuService.create(new TypeTissu(newTypeTissu.getText()));
+			newTypeTissu.setText("");
+			allTypeTissus = typeTissuService.getAll();
+			listTypeTissus.setItems(FXCollections
+					.observableArrayList(allTypeTissus.stream().map(tt -> tt.getType()).collect(Collectors.toList())));
 
-		 } else {
-			 Alert alert = new Alert(AlertType.WARNING);
-	            alert.initOwner(mainApp.getPrimaryStage());
-	            alert.setTitle("Duplicat");
-	            alert.setHeaderText("Matière déja existante");
-	            alert.setContentText("Cette matière existe déjà");
+		} else {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.initOwner(mainApp.getPrimaryStage());
+			alert.setTitle("Duplicat");
+			alert.setHeaderText("Matière déja existante");
+			alert.setContentText("Cette matière existe déjà");
 
-	            alert.showAndWait();
-		 }
-	
-
+			alert.showAndWait();
+		}
 	}
-	
+
 	public void handleSelectElement(String typeTissu) {
-		this.editedTypeTissu = typeTissu;
+		this.editedTypeTissu = allTypeTissus.stream().filter(tt -> tt.getType().equals(typeTissu)).findFirst().get();
 		this.editTypeTissu.setText(typeTissu);
 		this.editTypeTissu.setDisable(false);
 	}
-	
-public void handleEditElement() {
-	if (newTypeTissu.getText().trim().equals("")) {
-		 Alert alert = new Alert(AlertType.WARNING);
-           alert.initOwner(mainApp.getPrimaryStage());
-           alert.setTitle("Pas de valeur");
-           alert.setHeaderText("Pas de valeur");
-           alert.setContentText("Veuillez remplir une valeur");
 
-           alert.showAndWait();
-	} else if (typeTissuService.validate(editTypeTissu.getText())) {
-			typeTissuService.create(new TypeTissu(editTypeTissu.getText()));
+	public void handleEditElement() {
+		if (editTypeTissu.getText().trim().equals("")) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.initOwner(mainApp.getPrimaryStage());
+			alert.setTitle("Pas de valeur");
+			alert.setHeaderText("Pas de valeur");
+			alert.setContentText("Veuillez remplir une valeur");
+
+			alert.showAndWait();
+		} else if (typeTissuService.validate(editTypeTissu.getText())) {
+			typeTissuService.update(editedTypeTissu);
 			editTypeTissu.setText("");
-			allTypeTissus = typeTissuService.getAllObs();
-			listTypeTissus.setItems(allTypeTissus);
+			allTypeTissus = typeTissuService.getAll();
+			listTypeTissus.setItems(FXCollections
+					.observableArrayList(allTypeTissus.stream().map(tt -> tt.getType()).collect(Collectors.toList())));
 
 			this.editTypeTissu.setDisable(true);
 
-	 } else {
-		 Alert alert = new Alert(AlertType.WARNING);
-           alert.initOwner(mainApp.getPrimaryStage());
-           alert.setTitle("Duplicat");
-           alert.setHeaderText("Matière déja existante");
-           alert.setContentText("Cette matière existe déjà");
+		} else {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.initOwner(mainApp.getPrimaryStage());
+			alert.setTitle("Duplicat");
+			alert.setHeaderText("Matière déja existante");
+			alert.setContentText("Cette matière existe déjà");
 
-           alert.showAndWait();
-	 }
+			alert.showAndWait();
+		}
 	}
 
-public void handleSuppressElement() {
-	
-}
-	
+	public void handleSuppressElement() {
+
+	}
+
 	public void handleClose() {
-		 okClicked = true;
-         dialogStage.close();
+		okClicked = true;
+		dialogStage.close();
 	}
 
 	public boolean isOkClicked() {
-		
+
 		return okClicked;
 	}
 
-
-	    
 }

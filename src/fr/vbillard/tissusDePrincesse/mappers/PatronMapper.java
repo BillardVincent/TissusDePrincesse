@@ -4,8 +4,6 @@ import fr.vbillard.tissusDePrincesse.dtosFx.PatronDto;
 import fr.vbillard.tissusDePrincesse.model.Patron;
 
 public class PatronMapper {
-
-	
 	
 	public static  Patron map(PatronDto dto) {
 		Patron patron = new Patron();

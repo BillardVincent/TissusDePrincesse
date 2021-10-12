@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class TissuVariant {
+public class TissuVariant implements AbstractEntity{
 	
 	@Override
 	public String toString() {

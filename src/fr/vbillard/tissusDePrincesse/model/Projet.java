@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Projet {
+public class Projet implements AbstractEntity{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

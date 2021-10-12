@@ -32,16 +32,11 @@ public class TypeTissuService {
 	}
 
 public TypeTissu findTypeTissu(String typeTissu) {
-		
 		return allTypeTissus.stream().filter(t-> t.getType().equals(typeTissu)).findFirst().orElse(null);
 	}
 
 	public List<TypeTissu> getAll() {
 		return typeTissuDao.findAll();
-	}
-	
-	public ObservableList<String> getAllObs() {
-		return allTypeTissusValues;
 	}
 
 	public void create(TypeTissu typeTissu) {
@@ -52,7 +47,9 @@ public TypeTissu findTypeTissu(String typeTissu) {
 	public boolean validate(String text) {
 		return ! allTypeTissusValues.contains(text) ;		
 	}
-	
+	public void update(TypeTissu typeTissu) {
+		typeTissuDao.update(typeTissu);
+	}
 	
 	
 

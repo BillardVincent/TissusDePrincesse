@@ -12,140 +12,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import fr.vbillard.tissusDePrincesse.exception.PersistanceException;
+import fr.vbillard.tissusDePrincesse.model.Tissage;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
 import fr.vbillard.tissusDePrincesse.model.TypeTissu;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
 
 
 
-public class TissuDao {
-
-	private static final Log log = LogFactory.getLog(TissuDao.class);
-	private final String persistenceUnit = Constants.PERSISTENCE_UNIT;
-	private EntityManagerFactory emf = null;
-	private EntityManager em = null;
-	private EntityTransaction transaction = null;
-
+public class TissuDao extends AbstractDao<Tissu>{
 	
-	public List<Tissu> findAll() {
-		List<Tissu> tissus = null;
-		try {
-			emf = Persistence.createEntityManagerFactory(persistenceUnit);
-			em = emf.createEntityManager();
-			// tissus = em.createQuery("select tissu from Tissu tissu",
-			// Tissu.class).getResultList();
-			tissus = em.createQuery("SELECT t FROM Tissu t ").getResultList();
-		} catch (Exception e) {
-			e.printStackTrace();
-
-			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new PersistanceException("Une erreur s'est produite lors de la recupération des Tissus.");
-		} finally {
-			JPAHelper.closeEntityManagerResources(emf, em);
-		}
-		log.debug("tissus : " + tissus);
-		return tissus;
+	public TissuDao () {
+		tableName = Tissu.class.getCanonicalName();
 	}
-
-
-	public Tissu create(Tissu tissu) {
-		if (tissu != null) {
-			try {
-				emf = Persistence.createEntityManagerFactory(persistenceUnit);
-				em = emf.createEntityManager();
-				transaction = em.getTransaction();
-				transaction.begin();
-				TypeTissu ts = em.find(TypeTissu.class, tissu.getTypeTissu().getId());
-				tissu.setTypeTissu(ts);
-				em.persist(tissu);
-				transaction.commit();
-			} catch (Exception e) {
-				e.printStackTrace();
-				log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-				if (transaction != null && transaction.isActive()) {
-					transaction.rollback();
-				}
-				throw new PersistanceException(
-						"Une erreur s'est produite lors de la création de la Tissu : [id = " + tissu.getId() +"]");
-			} finally {
-				JPAHelper.closeEntityManagerResources(emf, em);
-			}
-		}
-		return tissu;
-	}
-
-
-	public Tissu update(Tissu tissu) {
-		if (tissu != null) {
-			try {
-				emf = Persistence.createEntityManagerFactory(persistenceUnit);
-				em = emf.createEntityManager();
-				transaction = em.getTransaction();
-				transaction.begin();
-				tissu = em.merge(tissu);
-				transaction.commit();
-			} catch (Exception e) {
-				e.printStackTrace();
-				log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-				if (transaction != null && transaction.isActive()) {
-					transaction.rollback();
-				}
-				throw new PersistanceException(
-						"Une erreur s'est produite lors de la création de la Tissu : [id = " + tissu.getId() +"]");
-			} finally {
-				JPAHelper.closeEntityManagerResources(emf, em);
-			}
-		}
-		return tissu;
-	}
-
-
-	public boolean delete(Tissu tissu) {
-		boolean isOk = false;
-		if (tissu != null) {
-			try {
-				emf = Persistence.createEntityManagerFactory(persistenceUnit);
-				em = emf.createEntityManager();
-				transaction = em.getTransaction();
-				transaction.begin();
-				tissu = em.find(Tissu.class, tissu.getId());
-				em.remove(em.merge(tissu));
-				transaction.commit();
-				isOk = em.find(Tissu.class, tissu.getId()) == null;
-			} catch (Exception e) {
-				log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-				if (transaction != null && transaction.isActive()) {
-					transaction.rollback();
-				}
-				throw new PersistanceException(
-						"Une erreur s'est produite lors de la création de la Tissu : [id = " + tissu.getId() +"]");
-
-			} finally {
-				JPAHelper.closeEntityManagerResources(emf, em);
-			}
-		}
-		return isOk;
-	}
-
-
-	public Tissu findById(Integer id) {
-		Tissu tissu = null;
-		try {
-			emf = Persistence.createEntityManagerFactory(persistenceUnit);
-			em = emf.createEntityManager();
-			tissu = em.find(Tissu.class, id);
-		} catch (Exception e) {
-			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new PersistanceException(
-					"Une erreur s'est produite lors de la création de la Tissu : [id = " + tissu.getId() +"]");
-
-		} finally {
-			JPAHelper.closeEntityManagerResources(emf, em);
-		}
-		return tissu;
-	}
-
-
+	
 	public boolean existByReference(String ref) {
 		boolean exists;
 		try {

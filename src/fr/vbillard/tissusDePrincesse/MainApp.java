@@ -3,13 +3,7 @@ package fr.vbillard.tissusDePrincesse;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Path;
-import java.security.acl.LastOwnerException;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.swing.filechooser.FileSystemView;
 
 import fr.vbillard.tissusDePrincesse.dtosFx.PatronDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
@@ -42,7 +36,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
@@ -82,24 +75,14 @@ public class MainApp extends Application {
         
         this.primaryStage.setTitle("Les Tissus de Princesse");
         tissageService = new TissageService();
-
         tissuService = new TissuService();
-        
         tissuRequisService = new TissuRequisService();
-
         patronService = new PatronService();
-
         typeTissuService = new TypeTissuService();
-
         matiereService = new MatiereService();
         projetService = new ProjetService();
         preferenceService = new PreferenceService();
-        //chargementController.setMessage("Chargement en cours : Init");
-
-        //chargementController.setMessage("Chargement en cours : Matieres");
-
-        matiereService.init();
-        //chargementController.setMessage("Chargement en cours : Tissage");
+        
 
         tissageService.init();
         //chargementController.setMessage("Chargement en cours : Types");
@@ -162,13 +145,11 @@ public class MainApp extends Application {
      */
     public void initRootLayout() {
     	try {
-            // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class
                     .getResource("view/RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
 
-            // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             
             JMetro jMetro = new JMetro(Style.LIGHT);
@@ -176,7 +157,6 @@ public class MainApp extends Application {
             
             primaryStage.setScene(scene);
 
-            // Give the controller access to the main app.
             RootLayoutController controller = loader.getController();
             controller.setMainApp(tissuService, patronService, tissuOverviewController, this);
 
@@ -190,12 +170,10 @@ public class MainApp extends Application {
     
     public boolean showTissuEditDialog(TissuDto tissu) {
         try {
-            // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/TissuEditDialog.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
-            // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Modification Tissu");
             dialogStage.getIcons().add(icon);
@@ -207,14 +185,11 @@ public class MainApp extends Application {
             jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
-            // Set the person into the controller.
             TissuEditDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
-            //System.out.println("showPersonEditDialog : " + tissu.toString());
             if (tissu != null)
             controller.setTissu(tissu, tissuService, typeTissuService, matiereService, tissageService, this);
 
-            // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
 
             return controller.isOkClicked();
@@ -225,12 +200,10 @@ public class MainApp extends Application {
     }
     public boolean showTissuEditDialog(Map<TissuDto, Integer> mapTissu) {
         try {
-            // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/TissuEditDialog.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
-            // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Validation de fin de projet");
             dialogStage.getIcons().add(icon);
@@ -242,15 +215,12 @@ public class MainApp extends Application {
             jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
-            // Set the person into the controller.
             TissuEditDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
-            //System.out.println("showPersonEditDialog : " + tissu.toString());
            
             if (mapTissu != null)
                 controller.setMapTissu(mapTissu, tissuService, typeTissuService, matiereService, tissageService, this);
 
-            // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
 
             return controller.isOkClicked();
@@ -262,12 +232,10 @@ public class MainApp extends Application {
     
     public boolean showPatronEditDialog(PatronDto patron) {
         try {
-            // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/PatronEditDialog.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
-            // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Modification de patron");
             dialogStage.getIcons().add(icon);
@@ -279,13 +247,10 @@ public class MainApp extends Application {
             jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
-            // Set the person into the controller.
             PatronEditDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
-            //System.out.println("showPersonEditDialog : " + tissu.toString());
             controller.setPatron(patron, this, patronService, tissuRequisService, typeTissuService, tissageService, matiereService);
 
-            // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
 
             return controller.isOkClicked();
@@ -297,12 +262,10 @@ public class MainApp extends Application {
     
     public boolean showMatiereEditDialog() {
         try {
-            // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/MatiereEdit.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
-            // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Matieres");
             dialogStage.getIcons().add(icon);
@@ -314,12 +277,10 @@ public class MainApp extends Application {
             jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
-            // Set the person into the controller.
             MatiereEditController controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.setData(this, matiereService);
 
-            // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
 
             return controller.isOkClicked();
@@ -331,12 +292,10 @@ public class MainApp extends Application {
     
     public boolean showTypeTissuEditDialog() {
         try {
-            // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/TypeEdit.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
-            // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Types de tissu");
             dialogStage.getIcons().add(icon);
@@ -348,12 +307,10 @@ public class MainApp extends Application {
             jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
-            // Set the person into the controller.
             TypeEditController controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.setData(this, typeTissuService);
 
-            // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
 
             return controller.isOkClicked();
@@ -365,12 +322,10 @@ public class MainApp extends Application {
     
     public boolean showTissageEditDialog() {
 		try {
-            // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/TissageEdit.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
-            // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Tissages");
             dialogStage.getIcons().add(icon);
@@ -382,12 +337,10 @@ public class MainApp extends Application {
             jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
-            // Set the person into the controller.
             TissageEditController controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.setData(this, tissageService);
 
-            // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
 
             return controller.isOkClicked();
@@ -399,12 +352,10 @@ public class MainApp extends Application {
     
     public String showTextEditDialog(String value, String fieldName) {
 		try {
-            // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/GenericTextEdit.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
-            // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Modification : "+fieldName);
             dialogStage.getIcons().add(icon);
@@ -416,12 +367,10 @@ public class MainApp extends Application {
             jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
-            // Set the person into the controller.
             GenericTextEditController controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.setData(this, value);
 
-            // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
 
             return controller.result();
@@ -433,14 +382,10 @@ public class MainApp extends Application {
     
     public <T extends Enum>  String showChoiceBoxEditDialog(String value, Class<T> class1) {
 		try {
-            // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/GenericChoiceBoxEdit.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
             
-            String s = class1.getSimpleName();
-           System.out.println(s);
-            // Create the dialog Stage.
             Stage dialogStage = new Stage();
 			Class<?>[] parameterType = new Class[] {};
             dialogStage.setTitle("Modification : "+ (String) class1.getMethod("displayClassName", parameterType).invoke(null, new Object[] {}));
@@ -453,12 +398,10 @@ public class MainApp extends Application {
             jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
-            // Set the person into the controller.
             GenericChoiceBoxEditController controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.setData(this, value, class1);
 
-            // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
 
             return controller.result();
@@ -476,14 +419,12 @@ public class MainApp extends Application {
         launch(args);
     }
 
-	public int showSetLongueurDialog(int required, int  available) {
+	public int showSetLongueurDialog(int required, TissuDto  available) {
 		try {
-            // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/SetLongueurDialog.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
-            // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Longueur de tissu allouée");
             dialogStage.getIcons().add(icon);
@@ -495,12 +436,10 @@ public class MainApp extends Application {
             jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
-            // Set the person into the controller.
             SetLongueurDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
-            controller.setData(this, required, available);
+            controller.setData(this, required, available.getLongueur());
 
-            // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
 
             return controller.result();
@@ -510,14 +449,13 @@ public class MainApp extends Application {
         }
 	}
 	
+	
 	public void showPictureExpended(Photo photo) {
         try {
-            // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/PictureExpended.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
-            // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle(photo.getNom());
             dialogStage.getIcons().add(icon);
@@ -529,12 +467,10 @@ public class MainApp extends Application {
             jMetro.setScene(scene);
             dialogStage.setScene(scene);
 
-            // Set the person into the controller.
             PictureExpended controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.setData(this, photo);
 
-            // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
 
         } catch (IOException e) {
@@ -560,6 +496,72 @@ public class MainApp extends Application {
 
 		return fileChooser.showOpenDialog(primaryStage);
 	}
+	
+	/*
+	 public int showSetLongueurDialog(int required, TissuDto  available) {
+		try {
+			// Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("view/SetLongueurDialog.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Longueur de tissu allouée");
+            dialogStage.getIcons().add(icon);
+
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            JMetro jMetro = new JMetro(Style.LIGHT);
+            jMetro.setScene(scene);
+            dialogStage.setScene(scene);
+
+            // Set the person into the controller.
+            SetLongueurDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setData(this, required, available.getLongueur());
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+            return controller.result();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1;
+        }
+	}
+	
+	private<T extends IController> T setDialogStage(String title) throws Exception {
+		
+		FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource(resource));
+        AnchorPane page;
+		page = (AnchorPane) loader.load();
+
+        // Create the dialog Stage.
+        Stage dialogStage = new Stage();
+        dialogStage.setTitle(title);
+        dialogStage.getIcons().add(icon);
+
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        dialogStage.initOwner(primaryStage);
+        Scene scene = new Scene(page);
+        JMetro jMetro = new JMetro(Style.LIGHT);
+        jMetro.setScene(scene);
+        dialogStage.setScene(scene);
+
+        // Set the person into the controller.
+        T controller = loader.getController();
+        controller.setDialogStage(dialogStage);
+
+        // Show the dialog and wait until the user closes it
+        dialogStage.showAndWait();
+        
+        return controller;
+	}
+	
+	*/ 
 	
 	
 }

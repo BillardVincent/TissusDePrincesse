@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class TissuRequis {
+public class TissuRequis implements AbstractEntity{
 	
 
 	@Id

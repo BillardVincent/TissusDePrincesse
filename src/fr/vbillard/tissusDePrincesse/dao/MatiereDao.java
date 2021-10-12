@@ -8,156 +8,58 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import fr.vbillard.tissusDePrincesse.exception.PersistanceException;
 import fr.vbillard.tissusDePrincesse.model.Matiere;
+import fr.vbillard.tissusDePrincesse.model.Tissu;
+import fr.vbillard.tissusDePrincesse.model.images.Photo;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
 
-public class MatiereDao {
-	private static final Log log = LogFactory.getLog(MatiereDao.class);
-	private final String persistenceUnit = Constants.PERSISTENCE_UNIT;
-	private EntityManagerFactory emf = null;
-	private EntityManager em = null;
-	private EntityTransaction transaction = null;
-	
-	
-	public List<Matiere> findAll() {
-		List<Matiere> matieres = null;
-		try {
-			Map<String, Object> configOverrides = new HashMap<String, Object>();
-		    //configOverrides.put("hibernate.hbm2ddl.auto", "create-drop");
-		
-			emf = Persistence.createEntityManagerFactory(persistenceUnit,configOverrides);
-			em = emf.createEntityManager();
-			// matieres = em.createQuery("select matiere from Matiere matiere",
-			// Matiere.class).getResultList();
-			matieres = em.createQuery("SELECT matiere FROM Matiere matiere").getResultList();
-		} catch (Exception e) {
-			e.printStackTrace();
+public class MatiereDao extends AbstractDao<Matiere>{
 
-			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new PersistanceException("Une erreur s'est produite lors de la recupération des Matieres.");
-		} finally {
-			JPAHelper.closeEntityManagerResources(emf, em);
-		}
-		log.debug("matieres : " + matieres);
-		return matieres;
+	public MatiereDao() {
+		tableName = Matiere.class.getCanonicalName();
 	}
 
-
-	public Matiere create(Matiere matiere) {
-		if (matiere != null) {
-			try {
-				emf = Persistence.createEntityManagerFactory(persistenceUnit);
-				em = emf.createEntityManager();
-				transaction = em.getTransaction();
-				transaction.begin();
-				em.persist(matiere);
-				transaction.commit();
-			} catch (Exception e) {
-				e.printStackTrace();
-				log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-				if (transaction != null && transaction.isActive()) {
-					transaction.rollback();
-				}
-				throw new PersistanceException(
-						"Une erreur s'est produite lors de la création de la Matiere : [id = " + matiere.getId() +"]");
-			} finally {
-				JPAHelper.closeEntityManagerResources(emf, em);
-			}
-		}
-		return matiere;
-	}
-
-
-	public Matiere update(Matiere matiere) {
-		if (matiere != null) {
-			try {
-				emf = Persistence.createEntityManagerFactory(persistenceUnit);
-				em = emf.createEntityManager();
-				transaction = em.getTransaction();
-				transaction.begin();
-				matiere = em.merge(matiere);
-				transaction.commit();
-			} catch (Exception e) {
-				log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-				if (transaction != null && transaction.isActive()) {
-					transaction.rollback();
-				}
-				throw new PersistanceException(
-						"Une erreur s'est produite lors de la création de la Matiere : [id = " + matiere.getId() +"]");
-			} finally {
-				JPAHelper.closeEntityManagerResources(emf, em);
-			}
-		}
-		return matiere;
-	}
-
-
-	public boolean delete(Matiere matiere) {
-		boolean isOk = false;
-		if (matiere != null) {
-			try {
-				emf = Persistence.createEntityManagerFactory(persistenceUnit);
-				em = emf.createEntityManager();
-				transaction = em.getTransaction();
-				transaction.begin();
-				matiere = em.find(Matiere.class, matiere.getId());
-				em.remove(em.merge(matiere));
-				transaction.commit();
-				isOk = em.find(Matiere.class, matiere.getId()) == null;
-			} catch (Exception e) {
-				log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-				if (transaction != null && transaction.isActive()) {
-					transaction.rollback();
-				}
-				throw new PersistanceException(
-						"Une erreur s'est produite lors de la création de la Matiere : [id = " + matiere.getId() +"]");
-
-			} finally {
-				JPAHelper.closeEntityManagerResources(emf, em);
-			}
-		}
-		return isOk;
-	}
-
-
-	public Matiere findById(Integer id) {
+	public Matiere findByMatiere(String matiereName) {
+		// TODO Auto-generated method stub
 		Matiere matiere = null;
 		try {
 			emf = Persistence.createEntityManagerFactory(persistenceUnit);
 			em = emf.createEntityManager();
-			matiere = em.find(Matiere.class, id);
-		} catch (Exception e) {
-			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
-			throw new PersistanceException(
-					"Une erreur s'est produite lors de la création de la Matiere : [id = " + matiere.getId() +"]");
-
-		} finally {
-			JPAHelper.closeEntityManagerResources(emf, em);
-		}
-		return matiere;
-	}
-	
-	public int count() {
-		int count = 0;
-		try {
-			emf = Persistence.createEntityManagerFactory(persistenceUnit);
-			em = emf.createEntityManager();
-			count = em.createQuery("select Count (*) FROM Matiere ") .getFirstResult();
+			String query = "SELECT m FROM Matiere m WHERE  m.matiere=:matiereName";
+			matiere = em.createQuery(query, Matiere.class).setParameter("matiereName", matiereName).getSingleResult();
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("Erreur lors de l'execution de la methode, Exception : " + e);
 			throw new PersistanceException(
-					"Ca a pas compté....");
+					"Une erreur s'est produite lors de la récupération de la metiere : " + matiere.getMatiere() +"]");
 
 		} finally {
 			JPAHelper.closeEntityManagerResources(emf, em);
 		}
-		return count;
+		return matiere;		
+	}
+
+	public boolean existsByMatiere(String value) {
+		boolean exists;
+		try {
+			emf = Persistence.createEntityManagerFactory(persistenceUnit);
+			em = emf.createEntityManager();
+			String query = "select case when (count(*) > 0) then true else false end from Matiere m where m.matiere=:value";
+			TypedQuery<Boolean> booleanQuery = em.createQuery(query, Boolean.class).setParameter("value", value);
+			exists = booleanQuery.getSingleResult();		} catch (Exception e) {
+			throw new PersistanceException(
+					"Une erreur s'est produite lors de la recherche de référence");
+
+		} finally {
+			JPAHelper.closeEntityManagerResources(emf, em);
+		}
+		return exists;
 	}
 
 }

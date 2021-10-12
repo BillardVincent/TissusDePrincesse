@@ -12,7 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class MatiereEditController {
+public class MatiereEditController implements IController{
 
 	@FXML
 	private ListView<String> listMatieres;
@@ -63,7 +63,7 @@ public class MatiereEditController {
 	public void setData(MainApp mainApp, MatiereService matiereService) {
 		this.matiereService = matiereService;
 		this.mainApp = mainApp;
-		allMatieres = matiereService.getAllObs();
+		allMatieres = matiereService.getAllMatieresValues();
 		listMatieres.setItems(allMatieres);
 		
 	}
@@ -79,9 +79,9 @@ public class MatiereEditController {
 
 	            alert.showAndWait();
 		} else if (matiereService.validate(newMatiere.getText())) {
-				matiereService.create(new Matiere(newMatiere.getText()));
+				matiereService.saveOrUpdate(new Matiere(newMatiere.getText()));
 				newMatiere.setText("");
-				allMatieres = matiereService.getAllObs();
+				allMatieres = matiereService.getAllMatieresValues();
 				listMatieres.setItems(allMatieres);
 		 } else {
 			 Alert alert = new Alert(AlertType.WARNING);
@@ -114,9 +114,9 @@ public void handleEditElement() {
 
            alert.showAndWait();
 	} else if (matiereService.validate(editMatiere.getText())) {
-			matiereService.edit(new Matiere(editMatiere.getText()));
+			matiereService.saveOrUpdate(new Matiere(editMatiere.getText()));
 			editMatiere.setText("");
-			allMatieres = matiereService.getAllObs();
+			allMatieres = matiereService.getAllMatieresValues();
 			listMatieres.setItems(allMatieres);
 			this.editMatiere.setDisable(true);
 

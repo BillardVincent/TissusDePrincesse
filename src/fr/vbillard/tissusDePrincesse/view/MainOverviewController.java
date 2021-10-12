@@ -3,10 +3,7 @@ package fr.vbillard.tissusDePrincesse.view;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.Console;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,8 +14,6 @@ import java.util.Optional;
 import javax.imageio.ImageIO;
 
 import org.imgscalr.Scalr;
-
-import com.sun.javafx.tk.FileChooserType;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -52,10 +47,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -70,7 +63,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -81,7 +73,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 public class MainOverviewController {
 
@@ -243,7 +234,7 @@ public class MainOverviewController {
 	private Button filtrePatronPanButton;
 	@FXML
 	private Button filtreResetPatronPanButton;
-	
+
 	// ------------ FXML Photo Panels
 	@FXML
 	private Pane imagePanel;
@@ -281,29 +272,21 @@ public class MainOverviewController {
 	private ImageService imageService = new ImageService();
 	private final ToggleGroup group = new ToggleGroup();
 	private PreferenceService preferenceService = new PreferenceService();
-	
+	private TissuMapper tissuMapper;
+
 	private int photoIndex = 0;
 	private List<Photo> photos = new ArrayList<Photo>();
 
-	/**
-	 * The constructor. The constructor is called before the initialize() method.
-	 */
+
 	public MainOverviewController() {
 	}
 
-	/**
-	 * Initializes the controller class. This method is automatically called after
-	 * the fxml file has been loaded.
-	 * 
-	 * Chargement des listes (tissus, patron, ...) Initialisation des boutons
-	 * (icones, tooltips)
-	 * 
-	 */
+
 	@FXML
 	private void initialize() {
 		tissuUsedService = new TissuUsedService();
+		tissuMapper = new TissuMapper();
 		String iconeSize = "1.5em";
-		// Initialize the person table with the two columns.
 		imagePanel.setVisible(true);
 
 		descriptionColonne.setCellValueFactory(cellData -> cellData.getValue().getDescriptionProperty());
@@ -316,7 +299,6 @@ public class MainOverviewController {
 		statutProjetColonne.setCellValueFactory(cellData -> cellData.getValue().getProjectStatusProperty());
 		modeleProjetColonne.setCellValueFactory(cellData -> cellData.getValue().getPatron().getModeleProperty());
 
-		// Clear tissu details.
 		showTissuDetails(null);
 		showPatronDetails(null);
 		showProjetDetails(null);
@@ -403,21 +385,21 @@ public class MainOverviewController {
 		FontAwesomeIconView warningIcone = new FontAwesomeIconView(FontAwesomeIcon.EXCLAMATION_TRIANGLE);
 		warningIcone.setSize("2em");
 		warningIcone.setFill(Constants.colorWarning);
-		
+
 		FontAwesomeIconView pictureIcone = new FontAwesomeIconView(FontAwesomeIcon.PICTURE_ALT);
 		createProjectIcone.setSize(iconeSize);
-		
+
 		FontAwesomeIconView previousPictureIcone = new FontAwesomeIconView(FontAwesomeIcon.ARROW_CIRCLE_ALT_LEFT);
 		previousPictureIcone.setSize("4em");
 		previousPictureIcone.setFill(Constants.colorAccent);
 
 		FontAwesomeIconView nextPictureIcone = new FontAwesomeIconView(FontAwesomeIcon.ARROW_CIRCLE_ALT_RIGHT);
-		nextPictureIcone.setSize("4em"); 
+		nextPictureIcone.setSize("4em");
 		nextPictureIcone.setFill(Constants.colorAccent);
-		
+
 		FontAwesomeIconView expandPictureIcone = new FontAwesomeIconView(FontAwesomeIcon.EXPAND);
 		expandPictureIcone.setSize(iconeSize);
-		
+
 		FontAwesomeIconView addPictureIcone = new FontAwesomeIconView(FontAwesomeIcon.PLUS_CIRCLE);
 		addPictureIcone.setFill(Constants.colorAdd);
 		addPictureIcone.setSize(iconeSize);
@@ -425,7 +407,7 @@ public class MainOverviewController {
 		FontAwesomeIconView suppressPictureIcone = new FontAwesomeIconView(FontAwesomeIcon.TIMES_CIRCLE);
 		suppressPictureIcone.setFill(Constants.colorDelete);
 		suppressPictureIcone.setSize(iconeSize);
-		
+
 		selectProjetPanButton.setGraphic(selectProjectIcone);
 		deleteProjetPanButton.setGraphic(suppressIcon7);
 		filtrePatronPanButton.setGraphic(searchIcon4);
@@ -467,7 +449,8 @@ public class MainOverviewController {
 		expendPicture.setGraphic(expandPictureIcone);
 		setButtons();
 
-		//robeImage.setImage(new Image(getClass().getResourceAsStream("/images/depositphotos_111281678-stock-illustration-dummy-dress-hand-drawing-illustration.png")));
+		// robeImage.setImage(new
+		// Image(getClass().getResourceAsStream("/images/depositphotos_111281678-stock-illustration-dummy-dress-hand-drawing-illustration.png")));
 	}
 
 	private void showProjetPanDetails(ProjetDto projetDto) {
@@ -480,10 +463,7 @@ public class MainOverviewController {
 			typeVetementPanProjetLabel.setText(projetDto.getPatron().getTypeVetement());
 			projetStatusPanLabel.setText(projetDto.getProjectStatus());
 
-			// TODO: We need a way to convert the birthday into a String!
-			// birthdayLabel.setText(...);
 		} else {
-			// Person is null, remove all the text.
 			descriptionProjetPanLabel.setText("");
 			marqueProjetPanLabel.setText("");
 			modelProjePantLabel.setText("");
@@ -494,11 +474,7 @@ public class MainOverviewController {
 
 	}
 
-	/**
-	 * Is called by the main application to give a reference back to itself.
-	 * 
-	 * @param mainApp
-	 */
+
 	public void setMainApp(TissuService tissuService, PatronService patronService, ProjetService projetService,
 			MainApp mainApp) {
 		this.tissuService = tissuService;
@@ -506,11 +482,9 @@ public class MainOverviewController {
 		this.projetService = projetService;
 		this.mainApp = mainApp;
 
-		// Add observable list data to the table
-		// new TypeTissuService().init();
-		tissuTable.setItems(tissuService.getTissuData());
+		tissuTable.setItems(tissuService.getObservableList());
 		patronTable.setItems(patronService.getPatronData());
-		projetTable.setItems(projetService.getProjetData());
+		projetTable.setItems(projetService.getObservableList());
 		setButtons();
 
 	}
@@ -518,7 +492,6 @@ public class MainOverviewController {
 	private void showTissuDetails(TissuDto tissu) {
 		if (tissu != null) {
 			tissuSelected = tissu;
-			// Fill the labels with info from the person object.
 			referenceLabel.setText(tissu.getReference());
 			longueurLabel.setText(Integer.toString(tissu.getLongueur()));
 			longueurRestanteLabel.setText(Integer.toString(tissu.getLongueurRestante()));
@@ -533,10 +506,7 @@ public class MainOverviewController {
 			chuteLabel.setText(tissu.isChute() ? "oui" : "non");
 			tissageLabel.setText(tissu.getTissage());
 
-			// TODO: We need a way to convert the birthday into a String!
-			// birthdayLabel.setText(...);
 		} else {
-			// Person is null, remove all the text.
 			referenceLabel.setText("");
 			longueurLabel.setText("");
 			longueurRestanteLabel.setText("");
@@ -558,17 +528,13 @@ public class MainOverviewController {
 	private void showPatronDetails(PatronDto patron) {
 		patronSelected = patron;
 		if (patron != null) {
-			// Fill the labels with info from the person object.
 			referencePatronLabel.setText(patron.getReference());
 
 			marquePatronLabel.setText(patron.getMarque());
 			modelPatronLabel.setText(patron.getModele());
 			typeVetementPatronLabel.setText(patron.getTypeVetement());
 
-			// TODO: We need a way to convert the birthday into a String!
-			// birthdayLabel.setText(...);
 		} else {
-			// Person is null, remove all the text.
 			referencePatronLabel.setText("");
 
 			marquePatronLabel.setText("");
@@ -608,13 +574,12 @@ public class MainOverviewController {
 			if (option.get() == ButtonType.OK) {
 				TissuDto selected = tissuTable.getSelectionModel().getSelectedItem();
 				tissuService.delete(selected);
-				tissuTable.setItems(tissuService.getTissuData());
+				tissuTable.setItems(tissuService.getObservableList());
 			} else if (option.get() == ButtonType.CANCEL) {
 
 			}
 
 		} else {
-			// Nothing selected.
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initOwner(mainApp.getPrimaryStage());
 			alert.setTitle("Pas de selection");
@@ -633,15 +598,11 @@ public class MainOverviewController {
 				new Tissu(0, "", 0, 0, "", null, null, 0, UnitePoids.NON_RENSEIGNE, false, "", null, false));
 		boolean okClicked = mainApp.showTissuEditDialog(tempTissu);
 		if (okClicked) {
-			tissuTable.setItems(TissuService.tissuData);
+			tissuTable.setItems(tissuService.getObservableList());
 		}
 		setButtons();
 	}
 
-	/**
-	 * Called when the user clicks the edit button. Opens a dialog to edit details
-	 * for the selected person.
-	 */
 	@FXML
 	private void handleEditTissu() {
 		tissuSelected = tissuTable.getSelectionModel().getSelectedItem();
@@ -656,7 +617,6 @@ public class MainOverviewController {
 				e.printStackTrace();
 			}
 		} else {
-			// Nothing selected.
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initOwner(mainApp.getPrimaryStage());
 			alert.setTitle("No Selection");
@@ -682,20 +642,17 @@ public class MainOverviewController {
 	@FXML
 	private void handleAddInProject() {
 		int longueurRequiseRestante = tissuRequisSelected.getLongueur();
-if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tissuRequisSelected)!=null) {
-	for (int id : projetSelected.getTissuUsed().get(tissuRequisSelected)) {
-		longueurRequiseRestante -= tissuUsedService.getTissuUsedById(id).getLongueur();
-	}
-}
-			
-		int longueur = mainApp.showSetLongueurDialog(longueurRequiseRestante, tissuSelected.getLongueur());
+		if (projetSelected.getTissuUsed() != null && projetSelected.getTissuUsed().get(tissuRequisSelected) != null) {
+			for (int id : projetSelected.getTissuUsed().get(tissuRequisSelected)) {
+				longueurRequiseRestante -= tissuUsedService.getTissuUsedById(id).getLongueur();
+			}
+		}
+
+		int longueur = mainApp.showSetLongueurDialog(longueurRequiseRestante, tissuSelected);
 
 		// TissuUsedService.create( newTissuUsed(......));
 		tissuUsedService.saveOrUpdate(new TissuUsed(tissuRequisSelected, projetSelected, tissuSelected, longueur));
 
-		// System.out.println(tu);
-
-		// DevInProgressService.notImplemented(mainApp);
 	}
 
 	@FXML
@@ -711,11 +668,11 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 	@FXML
 	private void handleFilterResetTissu() {
 		filtreTissuTxt.setText("");
-		tissuTable.setItems(tissuService.getTissuData());
+		tissuTable.setItems(tissuService.getObservableList());
 	}
 
 	public void refreshList() {
-		tissuTable.setItems(tissuService.getTissuData());
+		tissuTable.setItems(tissuService.getObservableList());
 		patronTable.setItems(patronService.getPatronData());
 	}
 
@@ -749,7 +706,6 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 			}
 
 		} else {
-			// Nothing selected.
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initOwner(mainApp.getPrimaryStage());
 			alert.setTitle("No Selection");
@@ -781,7 +737,6 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 			}
 
 		} else {
-			// Nothing selected.
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initOwner(mainApp.getPrimaryStage());
 			alert.setTitle("Pas de selection");
@@ -889,14 +844,15 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 					rb1.setToggleGroup(group);
 					rb1.setGraphic(plusOne);
 					rb1.setUserData(tr);
-					
+
 					Button filter = new Button();
 					filter.setOnAction(new EventHandler<ActionEvent>() {
-					    @Override public void handle(ActionEvent e) {
-					        filterTissusByTissuRequis(tr);
-					    }
+						@Override
+						public void handle(ActionEvent e) {
+							filterTissusByTissuRequis(tr);
+						}
 					});
-					filter.setGraphic( new FontAwesomeIconView(FontAwesomeIcon.SEARCH));
+					filter.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.SEARCH));
 
 					HBox hb = new HBox(rb1, filter);
 					vb.getChildren().addAll(tp, vbox, hb);
@@ -908,7 +864,6 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 			// projetTissusUsedPanel.getChildren().add(new Label("EN COURS !!!!!"));
 
 		} else {
-			// Person is null, remove all the text.
 			descriptionProjetLabel.setText("");
 			marqueProjetLabel.setText("");
 			modelProjetLabel.setText("");
@@ -918,11 +873,12 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 		}
 		setButtons();
 	}
-	
+
 	private void filterTissusByTissuRequis(TissuRequisDto tr) {
 		DevInProgressService.notImplemented(mainApp);
-		
-		//tissuTable.setItems(tissuService.getTissuData().stream().map(t ->  ).collect(Collectors.toList()));
+
+		// tissuTable.setItems(tissuService.getTissuData().stream().map(t ->
+		// ).collect(Collectors.toList()));
 	}
 
 	@FXML
@@ -931,7 +887,7 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 
 		projetSelected.setDescription(newData);
 		if (!projetStatusLabel.getText().equals(Constants.NON_ENREGISTRE))
-			projetService.create(projetSelected);
+			projetService.saveOrUpdate(projetSelected);
 		descriptionProjetLabel.setText(newData);
 		setButtons();
 	}
@@ -939,7 +895,6 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 	@FXML
 	private void handleEditProjectStatus() {
 		String newData = mainApp.showChoiceBoxEditDialog(projetStatusLabel.getText(), ProjectStatus.class);
-		
 
 		if (newData.equals(ProjectStatus.EN_COURS.label)) {
 			if (!istissuUsedValid()) {
@@ -954,32 +909,32 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 				if (option.get() != null && option.get() == ButtonType.OK) {
 					projetStatusLabel.setText(newData);
 					projetSelected.setProjectStatus(newData);
-					projetSelected = projetService.create(projetSelected);
+					projetSelected = projetService.saveOrUpdate(projetSelected);
 					warningUnregistredLabel.setVisible(false);
 					setButtons();
 				}
 			}
-		}else if(newData.equals(ProjectStatus.TERMINE.label)) {
+		} else if (newData.equals(ProjectStatus.TERMINE.label)) {
 			System.out.println("ici");
 			Map<TissuDto, Integer> tissusToChange = new HashMap<TissuDto, Integer>();
 
 			projetSelected.getTissuUsed().values().forEach(lst -> {
 				lst.forEach(val -> {
-				TissuUsed tu = tissuUsedService.getTissuUsedById(val);
-				Tissu tissu = tu.getTissu();
-				int oldValue = tissu.getLongueur();
-				tissu.setLongueur(tissu.getLongueur() - tu.getLongueur());
-				tissusToChange.put(TissuMapper.map(tissu), oldValue);
+					TissuUsed tu = tissuUsedService.getTissuUsedById(val);
+					Tissu tissu = tu.getTissu();
+					int oldValue = tissu.getLongueur();
+					tissu.setLongueur(tissu.getLongueur() - tu.getLongueur());
+					tissusToChange.put(tissuMapper.map(tissu), oldValue);
 				});
 			});
 			mainApp.showTissuEditDialog(tissusToChange);
-			
+
 		}
 		if (!newData.equals(Constants.NON_ENREGISTRE)) {
-				warningUnregistredLabel.setVisible(false);
+			warningUnregistredLabel.setVisible(false);
 			projetStatusLabel.setText(newData);
 			projetSelected.setProjectStatus(newData);
-			projetSelected = projetService.create(projetSelected);
+			projetSelected = projetService.saveOrUpdate(projetSelected);
 			setButtons();
 
 		}
@@ -1000,101 +955,100 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 		DevInProgressService.notImplemented(mainApp);
 
 	}
-	
+
 	@FXML
 	private void handleAddTissuPicture() {
-	    Preference pref = preferenceService.getPreferences();
-        File file = mainApp.directoryChooser(pref);
-        if (file != null )
-        try {
-        	String name = file.getName();
-        	String extension = name.substring(name.lastIndexOf(".")+1);
-        	BufferedImage bufferedImage=ImageIO.read(file);
-        	bufferedImage = Scalr.resize(bufferedImage, 900);
-        	ByteArrayOutputStream baos=new ByteArrayOutputStream();
-        	ImageIO.write(bufferedImage, extension, baos);
-        	byte[] data =baos.toByteArray();
-        	Photo image = new Photo();
-        	image.setData(data);
-        	image.setNom(name);
-        	image.setFormat(ImageFormat.valueOf(extension.toUpperCase()));
-        	image.setTissu(TissuMapper.map(tissuSelected));
-        	imageService.save(image);
-        	baos.close();
-        	
-    	    pref.setPictureLastUploadPath(file.getAbsolutePath());
-    	    preferenceService.savePreferences(pref);
-        	setPicturePanel(photos.size());
+		Preference pref = preferenceService.getPreferences();
+		File file = mainApp.directoryChooser(pref);
+		if (file != null)
+			try {
+				String name = file.getName();
+				String extension = name.substring(name.lastIndexOf(".") + 1);
+				BufferedImage bufferedImage = ImageIO.read(file);
+				bufferedImage = Scalr.resize(bufferedImage, 900);
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ImageIO.write(bufferedImage, extension, baos);
+				byte[] data = baos.toByteArray();
+				Photo image = new Photo();
+				image.setData(data);
+				image.setNom(name);
+				image.setFormat(ImageFormat.valueOf(extension.toUpperCase()));
+				image.setTissu(tissuMapper.map(tissuSelected));
+				imageService.saveOrUpdate(image);
+				baos.close();
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
+				pref.setPictureLastUploadPath(file.getAbsolutePath());
+				preferenceService.savePreferences(pref);
+				setPicturePanel(photos.size());
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 	}
-	
+
 	@FXML
 	private void previousPicture() {
-		photoIndex --;
+		photoIndex--;
 		setPicture();
 	}
+
 	@FXML
 	private void nextPicture() {
-		photoIndex ++;
+		photoIndex++;
 		setPicture();
-		
+
 	}
+
 	@FXML
-	private void expendPicture() {      
+	private void expendPicture() {
 		mainApp.showPictureExpended(photos.get(photoIndex));
 
 	}
-	
+
 	@FXML
 	private void deletePicture() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.initOwner(mainApp.getPrimaryStage());
 		alert.setTitle("Supprimer l'image ?");
 		alert.setHeaderText("Supprimer l'image ?");
-		alert.setContentText(
-				"Souhaitez-vous supprimer cette image ?");
+		alert.setContentText("Souhaitez-vous supprimer cette image ?");
 		Optional<ButtonType> option = alert.showAndWait();
 
 		if (option.get() != null && option.get() == ButtonType.OK) {
 			imageService.delete(photos.get(photoIndex));
-			setPicturePanel(photoIndex -1);
+			setPicturePanel(photoIndex - 1);
 		}
 	}
-	
+
 	@FXML
 	private void addPicture() {
 		Preference pref = preferenceService.getPreferences();
-        File file = mainApp.directoryChooser(pref);
-        if (file != null )
-        try {
-        	String name = file.getName();
-        	String extension = name.substring(name.lastIndexOf(".")+1);
-        	BufferedImage bufferedImage=ImageIO.read(file);
-        	bufferedImage = Scalr.resize(bufferedImage, 900);
-        	ByteArrayOutputStream baos=new ByteArrayOutputStream();
-        	ImageIO.write(bufferedImage, extension, baos);
-        	byte[] data =baos.toByteArray();
-        	Photo image = new Photo();
-        	image.setData(data);
-        	image.setNom(name);
-        	image.setFormat(ImageFormat.valueOf(extension.toUpperCase()));
-        	image.setTissu(TissuMapper.map(tissuSelected));
-        	imageService.save(image);
-        	baos.close();
-        	setPicturePanel(photos.size());
+		File file = mainApp.directoryChooser(pref);
+		if (file != null)
+			try {
+				String name = file.getName();
+				String extension = name.substring(name.lastIndexOf(".") + 1);
+				BufferedImage bufferedImage = ImageIO.read(file);
+				bufferedImage = Scalr.resize(bufferedImage, 900);
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ImageIO.write(bufferedImage, extension, baos);
+				byte[] data = baos.toByteArray();
+				Photo image = new Photo();
+				image.setData(data);
+				image.setNom(name);
+				image.setFormat(ImageFormat.valueOf(extension.toUpperCase()));
+				image.setTissu(tissuMapper.map(tissuSelected));
+				imageService.saveOrUpdate(image);
+				baos.close();
+				setPicturePanel(photos.size());
 
-    	    pref.setPictureLastUploadPath(file.getAbsolutePath());
-    	    preferenceService.savePreferences(pref);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+				pref.setPictureLastUploadPath(file.getAbsolutePath());
+				preferenceService.savePreferences(pref);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 	}
 
 	private void setButtons() {
@@ -1117,7 +1071,7 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 		editProjetStatus.setDisable(false);
 		selectProjetPanButton.setDisable(projetPanSelected == null);
 		deleteProjetPanButton.setDisable(projetPanSelected == null);
-		nextPicture.setDisable(photoIndex >= photos.size()-1);
+		nextPicture.setDisable(photoIndex >= photos.size() - 1);
 		previousPicture.setDisable(photoIndex <= 0);
 		deletePicture.setDisable(photos.size() == 0);
 		expendPicture.setDisable(photos.size() == 0);
@@ -1127,13 +1081,13 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 			node.setDisable(projetSelected == null || projetSelected.getId() == 0);
 		});
 	}
-	
+
 	private void setPicturePanel(int index) {
 		imagePanel.setVisible(tissuSelected != null);
 		photoIndex = index <= 0 ? 0 : index;
-		if (tissuSelected != null ) {
-			photos = imageService.getImages(TissuMapper.map(tissuSelected));
-			if(!photos.isEmpty()) {
+		if (tissuSelected != null) {
+			photos = imageService.getImages(tissuMapper.map(tissuSelected));
+			if (!photos.isEmpty()) {
 				setPicture();
 			} else {
 				imageView.setImage(null);
@@ -1142,7 +1096,7 @@ if (projetSelected.getTissuUsed()!=null && projetSelected.getTissuUsed().get(tis
 			photos = new ArrayList<Photo>();
 		}
 	}
-	
+
 	private void setPicture() {
 		imageView.setImage(new Image(new ByteArrayInputStream(photos.get(photoIndex).getData())));
 		setButtons();

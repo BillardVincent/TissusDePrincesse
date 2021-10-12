@@ -35,7 +35,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 
-public class TissuEditDialogController {
+public class TissuEditDialogController implements IController{
 
 	@FXML
 	private RowConstraints ancienneValeurRow;

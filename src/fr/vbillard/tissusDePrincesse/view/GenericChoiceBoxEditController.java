@@ -12,7 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 
-public class GenericChoiceBoxEditController {
+public class GenericChoiceBoxEditController implements IController{
 	private Stage dialogStage;
 	private String newData;
 	private Class<?> enumerated;

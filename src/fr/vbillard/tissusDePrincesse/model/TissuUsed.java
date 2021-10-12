@@ -20,7 +20,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class TissuUsed {
+public class TissuUsed implements AbstractEntity{
 
 	
 	@Id
@@ -37,8 +37,8 @@ public class TissuUsed {
 	
 	
 	public TissuUsed(TissuRequisDto tissuRequisSelected, ProjetDto projetSelected, TissuDto tissuSelected, int longueur) {
-this.tissu = TissuMapper.map(tissuSelected);
-this.projet = ProjetMapper.map(projetSelected);
+this.tissu = new TissuMapper().map(tissuSelected);
+this.projet = new ProjetMapper().map(projetSelected);
 this.tissuRequis = TissuRequisMapper.map(tissuRequisSelected);
 this.longueur = longueur;
 	

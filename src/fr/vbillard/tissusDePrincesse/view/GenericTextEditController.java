@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
-public class GenericTextEditController {
+public class GenericTextEditController implements IController{
 	private Stage dialogStage;
 	private String oldData;
 	private String result;

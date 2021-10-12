@@ -44,7 +44,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class PatronEditDialogController {
+public class PatronEditDialogController implements IController{
 
 	@FXML
 	private TextField marqueField;

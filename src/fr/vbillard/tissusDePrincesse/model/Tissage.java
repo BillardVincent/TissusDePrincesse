@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Tissage {
+public class Tissage implements AbstractEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;

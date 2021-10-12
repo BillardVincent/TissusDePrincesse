@@ -20,7 +20,9 @@ public class PreferenceService {
 	}
 	
 	private String normalizePath(String path) {
-		if (!path.equals(FileSystemView.getFileSystemView().getDefaultDirectory().getPath()) && !path.contains("\\\\")) {
+		if (!path.equals(FileSystemView.getFileSystemView().getDefaultDirectory().getPath()) &&
+				path.contains("\\") &&
+				!path.contains("\\\\")) {
 			path =  path.substring(0, path.lastIndexOf("\\")).replace("\\", "\\\\");
 		}
 		return path;

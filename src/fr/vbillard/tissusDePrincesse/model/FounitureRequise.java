@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class FounitureRequise {
+public class FounitureRequise implements AbstractEntity{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

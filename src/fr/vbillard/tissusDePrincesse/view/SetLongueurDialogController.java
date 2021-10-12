@@ -10,7 +10,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.stage.Stage;
 
-public class SetLongueurDialogController {
+public class SetLongueurDialogController implements IController{
 	private Stage dialogStage;
 	private int required;
 	private int available;
@@ -82,13 +82,12 @@ public class SetLongueurDialogController {
 	public void setData(MainApp mainApp, int required, int available) {
 		this.mainApp = mainApp;
 		this.result = 0;
+		this.required = required;
+		this.available = available;
 		requisLabel.setText(required + "cm");
 		dispoLabel.setText(available + "cm");
 		
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
-
-		
-
 		
 	}
 

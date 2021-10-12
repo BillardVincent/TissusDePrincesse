@@ -6,14 +6,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@Entity
-public class Fourniture implements AbstractEntity{
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
 
+public interface AbstractEntity {
+
+int getId();
 }

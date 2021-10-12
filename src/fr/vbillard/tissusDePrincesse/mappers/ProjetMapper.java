@@ -19,10 +19,10 @@ import fr.vbillard.tissusDePrincesse.services.TissuRequisService;
 import fr.vbillard.tissusDePrincesse.services.TissuUsedService;
 import fr.vbillard.tissusDePrincesse.services.TypeTissuService;
 
-public class ProjetMapper {
+public class ProjetMapper implements IMapper<Projet, ProjetDto>{
 
 	
-	public static  Projet map(ProjetDto dto) {
+	public Projet map(ProjetDto dto) {
 		Projet projet = new Projet();
 		projet.setId(dto.getId());
 		projet.setDescription(dto.getDescription());
@@ -31,7 +31,7 @@ public class ProjetMapper {
 		return projet;
 	}
 	
-	public static  ProjetDto map(Projet projet) {
+	public ProjetDto map(Projet projet) {
 		TissuRequisService trs = new TissuRequisService();
 		TissuUsedService tus = new TissuUsedService();
 		ProjetDto dto = new ProjetDto();

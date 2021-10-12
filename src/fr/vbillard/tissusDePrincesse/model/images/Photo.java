@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
+import fr.vbillard.tissusDePrincesse.model.AbstractEntity;
 import fr.vbillard.tissusDePrincesse.model.Patron;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
 import fr.vbillard.tissusDePrincesse.model.enums.ImageFormat;
@@ -18,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Photo {
+public class Photo implements AbstractEntity{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
