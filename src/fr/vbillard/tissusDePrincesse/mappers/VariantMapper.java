@@ -7,19 +7,19 @@ import fr.vbillard.tissusDePrincesse.services.TissageService;
 import fr.vbillard.tissusDePrincesse.services.TissuRequisService;
 import fr.vbillard.tissusDePrincesse.services.TypeTissuService;
 
-public class VariantMapper {
+public class VariantMapper implements IMapper<TissuVariant, TissuVariantDto>{
 
-	public static TissuVariantDto map(TissuVariant v) {
+	public TissuVariantDto map(TissuVariant v) {
 		TissuVariantDto dto = new TissuVariantDto();
 		dto.setId(v.getId());
-		dto.setMatiere(v.getMatiere() == null ? "" : v.getMatiere().getMatiere());
-		dto.setTissage(v.getTissage() == null ? "" :  v.getTissage().getTissage());
+		dto.setMatiere(v.getMatiere() == null ? "" : v.getMatiere().getValue());
+		dto.setTissage(v.getTissage() == null ? "" :  v.getTissage().getValue());
 		dto.setTissuRequisId(v.getTissuRequis());
-		dto.setType(v.getTypeTissu() == null ? "" :  v.getTypeTissu().getType());
+		dto.setType(v.getTypeTissu() == null ? "" :  v.getTypeTissu().getValue());
 		return dto;
 	}
 	
-	public static TissuVariant map(TissuVariantDto dto) {
+	public TissuVariant map(TissuVariantDto dto) {
 		TissuRequisService trs = new TissuRequisService();
 		TypeTissuService tts = new TypeTissuService();
 		MatiereService ms = new MatiereService();

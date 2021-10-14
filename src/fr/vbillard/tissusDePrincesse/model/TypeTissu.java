@@ -13,21 +13,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class TypeTissu implements AbstractEntity{
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	private String type;
+public class TypeTissu extends AbstractSimpleValueEntity{
 
 	
 	public TypeTissu(int id, String type) {
 		this.id = id;
-		this.type = type;
+		this.value = type;
 	}
 	
 	public TypeTissu(String type) {
-		this.type = type;
+		this.value = type;
 	}
 
 

@@ -14,15 +14,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class TissuVariant implements AbstractEntity{
+public class TissuVariant extends AbstractEntity{
 	
 	@Override
 	public String toString() {
 		return "matiere : "+matiere+", type : "+typeTissu+", tissage : "+tissage;
 	}
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+
 	@ManyToOne
 	private TissuRequis tissuRequis;
 	@ManyToOne

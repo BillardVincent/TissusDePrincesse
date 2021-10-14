@@ -17,16 +17,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Tissu implements AbstractEntity{
+public class Tissu extends AbstractEntity{
 
 	@Override
 	public String toString() {
 		return "Tissu [description=" + description + ", matiere=" + matiere + "]";
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+
 	protected int longueur;
 	protected int laize;
 	@ManyToOne

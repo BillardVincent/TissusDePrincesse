@@ -22,11 +22,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Patron implements AbstractEntity{
+public class Patron extends AbstractEntity{
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+
 	private String reference;
 	private String marque;
 	private String modele;

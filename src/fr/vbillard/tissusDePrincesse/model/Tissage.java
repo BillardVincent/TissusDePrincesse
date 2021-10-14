@@ -13,20 +13,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Tissage implements AbstractEntity{
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	private String tissage;
+public class Tissage extends AbstractSimpleValueEntity {
 
 	
 	public Tissage(int id, String tissage) {
 		this.id = id;
-		this.tissage = tissage;
+		this.value = tissage;
 	}
 	
 	public Tissage(String tissage) {
-		this.tissage = tissage;
+		this.value = tissage;
 	}
 
 

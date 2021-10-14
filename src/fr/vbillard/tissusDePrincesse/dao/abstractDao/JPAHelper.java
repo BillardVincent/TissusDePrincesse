@@ -1,4 +1,4 @@
-package fr.vbillard.tissusDePrincesse.dao;
+package fr.vbillard.tissusDePrincesse.dao.abstractDao;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -46,58 +46,7 @@ public class JPAHelper {
 		}
 
 	}
-	/*
-	public static EntityManagerFactory getEntityManagerFactory() {
-		Map<String, Object> configOverrides = new HashMap<String, Object>();
-	    String dbPath = preferenceService.getPreferences().getDataBasePath();
-
-	    if (dbPath.isEmpty()) dbPath =Constants.DATABASE_URL;
-	    configOverrides.put("javax.persistence.jdbc.url", pref.getDbPath);
-	    
 	
-		return Persistence.createEntityManagerFactory(persistenceUnit, configOverrides);
-	}
-	*/
-/*
-	public static void initDataBase() {
-		// Initialiser les données de la base de données
-		//String scriptSqlPath = Constants.SQL_JUNIT_PATH_FILE;
-		Reader reader = null;
-		Connection connection = null;
-		try {
-			// Creer une connexion a la base de données.
-			Class.forName(Constants.JDBC_DRIVER);
-			connection = DriverManager.getConnection(Constants.DATABASE_URL, Constants.DATABASE_USER,
-					Constants.DATABASE_PASSWORD);
-			// Initialiser l'objet ScripRunner
-			ScriptRunner scriptRunner = new ScriptRunner(connection, false, false);
-			// Ouvrir le fichier
-			//reader = new BufferedReader(new FileReader(scriptSqlPath));
-			// Executer le script Sql
-			//scriptRunner.runScript(reader);
-		} catch (Exception e) {
-			//log.error("Erreur lors de l'execution du script : " + scriptSqlPath + " , Exception : " + e);
-		} finally {
-			try {
-				if (reader != null) {
-					reader.close();
-				}
-
-			} catch (IOException io) {
-				log.error("Erreur lors de la fermiture d'un fichier dans la methode, Exception : " + io.getMessage());
-			}
-			try {
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException sqlEx) {
-				log.error("Erreur lors de la fermiture de la connexion dans la methode, Exception : "
-						+ sqlEx.getMessage());
-			}
-		}
-	}
-	*/
-
 	public static void closeResources(Connection connection, PreparedStatement preparedStatement, ResultSet result) {
 		String methodName = "closeResources";
 		if (connection != null) {

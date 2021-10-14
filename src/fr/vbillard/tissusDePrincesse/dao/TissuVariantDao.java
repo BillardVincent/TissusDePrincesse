@@ -7,6 +7,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
+import fr.vbillard.tissusDePrincesse.dao.abstractDao.AbstractDao;
+import fr.vbillard.tissusDePrincesse.dao.abstractDao.JPAHelper;
 import fr.vbillard.tissusDePrincesse.exception.PersistanceException;
 import fr.vbillard.tissusDePrincesse.model.TissuUsed;
 import fr.vbillard.tissusDePrincesse.model.TissuVariant;

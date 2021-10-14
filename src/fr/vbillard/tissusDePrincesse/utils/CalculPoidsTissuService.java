@@ -1,4 +1,4 @@
-package fr.vbillard.tissusDePrincesse.services;
+package fr.vbillard.tissusDePrincesse.utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,6 @@ import fr.vbillard.tissusDePrincesse.model.Tissu;
 import fr.vbillard.tissusDePrincesse.model.enums.GammePoids;
 import fr.vbillard.tissusDePrincesse.model.enums.Recommendation;
 import fr.vbillard.tissusDePrincesse.model.enums.UnitePoids;
-import fr.vbillard.tissusDePrincesse.utils.ConstantesMetier;
 
 public class CalculPoidsTissuService {
 

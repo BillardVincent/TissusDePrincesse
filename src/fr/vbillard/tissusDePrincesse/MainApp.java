@@ -82,15 +82,6 @@ public class MainApp extends Application {
         matiereService = new MatiereService();
         projetService = new ProjetService();
         preferenceService = new PreferenceService();
-        
-
-        tissageService.init();
-        //chargementController.setMessage("Chargement en cours : Types");
-
-        typeTissuService.init();
-        //initDataService.init();
-        //chargementController.setMessage("Chargement en cours : Init OK !");
-
 
         this.primaryStage.getIcons().add(icon);
         this.primaryStage.setMaximized(true);

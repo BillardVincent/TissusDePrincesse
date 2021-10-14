@@ -44,7 +44,7 @@ public class TypeEditController implements IController {
 
 	TypeTissu editedTypeTissu;
 
-	List<TypeTissu> allTypeTissus;
+	ObservableList<String> allTypeTissus;
 
 	/**
 	 * Initializes the controller class. This method is automatically called after
@@ -63,10 +63,8 @@ public class TypeEditController implements IController {
 	public void setData(MainApp mainApp, TypeTissuService typeTissuService) {
 		this.typeTissuService = typeTissuService;
 		this.mainApp = mainApp;
-		allTypeTissus = typeTissuService.getAll();
-		listTypeTissus.setItems(FXCollections
-				.observableArrayList(allTypeTissus.stream().map(tt -> tt.getType()).collect(Collectors.toList())));
-
+		allTypeTissus = typeTissuService.getAllTypeTissuValues();
+		listTypeTissus.setItems(allTypeTissus);
 	}
 
 	public void handleAddElement() {
@@ -79,25 +77,23 @@ public class TypeEditController implements IController {
 
 			alert.showAndWait();
 		} else if (typeTissuService.validate(newTypeTissu.getText())) {
-			typeTissuService.create(new TypeTissu(newTypeTissu.getText()));
+			typeTissuService.saveOrUpdate(new TypeTissu(newTypeTissu.getText()));
 			newTypeTissu.setText("");
-			allTypeTissus = typeTissuService.getAll();
-			listTypeTissus.setItems(FXCollections
-					.observableArrayList(allTypeTissus.stream().map(tt -> tt.getType()).collect(Collectors.toList())));
-
+			allTypeTissus = typeTissuService.getAllTypeTissuValues();
+			listTypeTissus.setItems(allTypeTissus);
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initOwner(mainApp.getPrimaryStage());
 			alert.setTitle("Duplicat");
-			alert.setHeaderText("Matière déja existante");
-			alert.setContentText("Cette matière existe déjà");
+			alert.setHeaderText("Type déja existante");
+			alert.setContentText("Ce type existe déjà");
 
 			alert.showAndWait();
 		}
 	}
 
 	public void handleSelectElement(String typeTissu) {
-		this.editedTypeTissu = allTypeTissus.stream().filter(tt -> tt.getType().equals(typeTissu)).findFirst().get();
+		this.editedTypeTissu = typeTissuService.findTypeTissu(typeTissu);
 		this.editTypeTissu.setText(typeTissu);
 		this.editTypeTissu.setDisable(false);
 	}
@@ -112,27 +108,32 @@ public class TypeEditController implements IController {
 
 			alert.showAndWait();
 		} else if (typeTissuService.validate(editTypeTissu.getText())) {
-			typeTissuService.update(editedTypeTissu);
+			editedTypeTissu.setValue(editTypeTissu.getText());
+			typeTissuService.saveOrUpdate(editedTypeTissu);
 			editTypeTissu.setText("");
-			allTypeTissus = typeTissuService.getAll();
-			listTypeTissus.setItems(FXCollections
-					.observableArrayList(allTypeTissus.stream().map(tt -> tt.getType()).collect(Collectors.toList())));
-
+			allTypeTissus = typeTissuService.getAllTypeTissuValues();
+			listTypeTissus.setItems(allTypeTissus);
 			this.editTypeTissu.setDisable(true);
 
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initOwner(mainApp.getPrimaryStage());
 			alert.setTitle("Duplicat");
-			alert.setHeaderText("Matière déja existante");
-			alert.setContentText("Cette matière existe déjà");
+			alert.setHeaderText("Type déja existante");
+			alert.setContentText("Ce type existe déjà");
 
 			alert.showAndWait();
 		}
 	}
 
 	public void handleSuppressElement() {
-
+		typeTissuService.delete(editTypeTissu.getText());
+		allTypeTissus = typeTissuService.getAllTypeTissuValues();
+		listTypeTissus.setItems(allTypeTissus);
+		this.editedTypeTissu = null;
+		this.editTypeTissu.setText("");
+		this.editTypeTissu.setDisable(true);
+		this.editerButton.setDisable(true);
 	}
 
 	public void handleClose() {

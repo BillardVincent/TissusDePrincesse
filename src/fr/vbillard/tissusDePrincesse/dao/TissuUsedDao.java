@@ -10,6 +10,8 @@ import javax.persistence.Persistence;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import fr.vbillard.tissusDePrincesse.dao.abstractDao.AbstractDao;
+import fr.vbillard.tissusDePrincesse.dao.abstractDao.JPAHelper;
 import fr.vbillard.tissusDePrincesse.exception.PersistanceException;
 import fr.vbillard.tissusDePrincesse.model.Projet;
 import fr.vbillard.tissusDePrincesse.model.Tissu;

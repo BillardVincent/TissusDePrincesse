@@ -9,7 +9,7 @@ import fr.vbillard.tissusDePrincesse.model.TissuRequis;
 import fr.vbillard.tissusDePrincesse.model.enums.GammePoids;
 import fr.vbillard.tissusDePrincesse.services.TissuVariantService;
 
-public class TissuRequisMapper {
+public class TissuRequisMapper implements IMapper<TissuRequis, TissuRequisDto>{
 
 	public static TissuRequis map(TissuRequisDto dto, Patron p) {
 		TissuRequis tr = new TissuRequis();
@@ -21,7 +21,7 @@ public class TissuRequisMapper {
 		return tr;
 	}
 
-	public static TissuRequis map(TissuRequisDto dto) {
+	public TissuRequis map(TissuRequisDto dto) {
 		TissuRequis tr = new TissuRequis();
 		tr.setId(dto.getId());
 		tr.setLaize(dto.getLaize());
@@ -30,7 +30,7 @@ public class TissuRequisMapper {
 		return tr;
 	}
 
-	public static TissuRequisDto map(TissuRequis tr) {
+	public TissuRequisDto map(TissuRequis tr) {
 		TissuRequisDto dto = new TissuRequisDto();
 		TissuVariantService tvs = new TissuVariantService();
 		dto.setId(tr.getId());

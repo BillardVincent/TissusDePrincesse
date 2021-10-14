@@ -75,7 +75,7 @@ public class TissageEditController implements IController{
 
 	            alert.showAndWait();
 		} else if (tissageService.validate(newTissage.getText())) {
-				tissageService.create(new Tissage(newTissage.getText()));
+				tissageService.saveOrUpdate(new Tissage(newTissage.getText()));
 				newTissage.setText("");
 				allTissages = tissageService.getAllObs();
 				listTissages.setItems(allTissages);
@@ -109,7 +109,7 @@ public void handleEditElement() {
 
            alert.showAndWait();
 	} else if (tissageService.validate(editTissage.getText())) {
-			tissageService.create(new Tissage(editTissage.getText()));
+			tissageService.saveOrUpdate(new Tissage(editTissage.getText()));
 			editTissage.setText("");
 			allTissages = tissageService.getAllObs();
 			listTissages.setItems(allTissages);

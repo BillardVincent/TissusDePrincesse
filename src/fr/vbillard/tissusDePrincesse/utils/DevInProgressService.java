@@ -1,4 +1,4 @@
-package fr.vbillard.tissusDePrincesse.services;
+package fr.vbillard.tissusDePrincesse.utils;
 
 import fr.vbillard.tissusDePrincesse.MainApp;
 import javafx.scene.control.Alert;

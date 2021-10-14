@@ -8,47 +8,34 @@ import java.util.stream.Collectors;
 
 import fr.vbillard.tissusDePrincesse.dao.TissageDao;
 import fr.vbillard.tissusDePrincesse.dao.TypeTissuDao;
+import fr.vbillard.tissusDePrincesse.dao.abstractDao.AbstractDao;
 import fr.vbillard.tissusDePrincesse.model.Tissage;
 import fr.vbillard.tissusDePrincesse.model.TypeTissu;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class TissageService {
-	TissageDao tissageDao;
+public class TissageService extends AbstractService<Tissage>{
+	TissageDao dao;
 	
 	public TissageService(){
-		this.tissageDao = new TissageDao();
-	}
-	public static ObservableList<Tissage> allTissages = FXCollections.observableArrayList();
-	public static ObservableList<String> allTissagesValues = FXCollections.observableArrayList();
-
-	public void init() {
-
-		List<Tissage> lst = tissageDao.findAll();
-		allTissages = FXCollections.observableArrayList(lst);
-		allTissagesValues = FXCollections.observableArrayList(lst.stream().map(t -> t.getTissage()).collect(Collectors.toList()));	
+		this.dao = new TissageDao();
 	}
 
-	public Tissage findTissage(String tissage) {
-		
-		return allTissages.stream().filter(t-> t.getTissage().equals(tissage)).findFirst().orElse(null);
-	}
-
-	public List<Tissage> getAll() {
-		return tissageDao.findAll();
+	public Tissage findTissage(String value) {
+		return dao.findByValue(value);
 	}
 	
 	public ObservableList<String> getAllObs() {
-		return allTissagesValues;
+		return FXCollections.observableArrayList(getAll().stream().map(t -> t.getValue()).collect(Collectors.toList()));
 	}
 
-	public void create(Tissage tissage) {
-		Tissage m = tissageDao.create(tissage);
-		init();
+	public boolean validate(String value) {
+		return !dao.existsByValue(value);		
 	}
 
-	public boolean validate(String text) {
-		return ! allTissagesValues.contains(text) ;		
+	@Override
+	protected AbstractDao getDao() {
+		return dao;
 	}
 	
 	

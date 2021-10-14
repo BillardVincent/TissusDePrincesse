@@ -2,8 +2,8 @@ package fr.vbillard.tissusDePrincesse.services;
 
 import java.util.List;
 
-import fr.vbillard.tissusDePrincesse.dao.AbstractDao;
 import fr.vbillard.tissusDePrincesse.dao.PhotoDao;
+import fr.vbillard.tissusDePrincesse.dao.abstractDao.AbstractDao;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
 import fr.vbillard.tissusDePrincesse.model.images.Photo;
 

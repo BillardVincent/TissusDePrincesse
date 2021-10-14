@@ -12,7 +12,6 @@ import fr.vbillard.tissusDePrincesse.dtosFx.TissuVariantDto;
 import fr.vbillard.tissusDePrincesse.mappers.PatronMapper;
 import fr.vbillard.tissusDePrincesse.model.Patron;
 import fr.vbillard.tissusDePrincesse.model.enums.GammePoids;
-import fr.vbillard.tissusDePrincesse.services.DevInProgressService;
 import fr.vbillard.tissusDePrincesse.services.MatiereService;
 import fr.vbillard.tissusDePrincesse.services.PatronService;
 import fr.vbillard.tissusDePrincesse.services.TissageService;
@@ -20,6 +19,7 @@ import fr.vbillard.tissusDePrincesse.services.TissuRequisService;
 import fr.vbillard.tissusDePrincesse.services.TissuVariantService;
 import fr.vbillard.tissusDePrincesse.services.TypeTissuService;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
+import fr.vbillard.tissusDePrincesse.utils.DevInProgressService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -67,29 +67,30 @@ public class PatronEditDialogController implements IController{
 
 	private Stage dialogStage;
 	private PatronDto patron;
-	private TissuRequisDto tissuRequisDto;
+	//private TissuRequisDto tissuRequisDto;
 	private TissuRequisService tissuRequisService;
 	private TissuVariantService tissuVariantService;
 	private MatiereService matiereService;
 	private TissageService tissageService;
 	private TypeTissuService typeTissuService;
+	private PatronMapper patronMapper;
 	private boolean okClicked = false;
 	private MainApp mainApp;
-	private ObservableList<TissuRequisDto> listTissuRequis;
+	//private ObservableList<TissuRequisDto> listTissuRequis;
 	private boolean unregistredPatron;
 	private PatronService patronService;
 	private int longueur;
 	private int laize;
-	private HBox tissuRequisDisplayHbox;
+	//private HBox tissuRequisDisplayHbox;
 	private TissuVariantDto variantSelected;
 	boolean editingVariant = false;
 	private ObservableList<TissuVariantDto> tvList;
 	private VBox bottomRightVbox;
 
-	/**
-	 * Initializes the controller class. This method is automatically called after
-	 * the fxml file has been loaded.
-	 */
+	public PatronEditDialogController() {
+		patronMapper = new PatronMapper();
+	}
+	
 	@FXML
 	private void initialize() {
 		FontAwesomeIconView addIcon1 = new FontAwesomeIconView(FontAwesomeIcon.PLUS_CIRCLE);
@@ -111,27 +112,10 @@ public class PatronEditDialogController implements IController{
 		addFournitureButton.setDisable(unregistredPatron);
 	}
 
-	/**
-	 * Sets the stage of this dialog.
-	 *
-	 * @param dialogStage
-	 */
 	public void setDialogStage(Stage dialogStage) {
 		this.dialogStage = dialogStage;
 	}
 
-	/**
-	 * Initialise les services nécéssaire carge le patron à éditer (null si
-	 * création)
-	 * 
-	 * @param patron
-	 * @param mainApp
-	 * @param patronService
-	 * @param tissuRequisService
-	 * @param typeTissuService
-	 * @param tissageService
-	 * @param matiereService
-	 */
 	public void setPatron(PatronDto patron, MainApp mainApp, PatronService patronService,
 			TissuRequisService tissuRequisService, TypeTissuService typeTissuService, TissageService tissageService,
 			MatiereService matiereService) {
@@ -146,7 +130,7 @@ public class PatronEditDialogController implements IController{
 		this.mainApp = mainApp;
 
 		if (patron.getMarque() == null) {
-			patron = PatronMapper.map(new Patron(0, "", "", "", "", "", null));
+			patron = patronMapper.map(new Patron("", "", "", "", "", null));
 		}
 
 		setDisabledButton();
@@ -163,13 +147,12 @@ public class PatronEditDialogController implements IController{
 	}
 
 	/**
-	 * Charge les tissusRequis, en fonction du patron sélectionné grille sous le
-	 * patron : tissusRequis.toString() - boutons
+	 * Charge les tissusRequis, en fonction du patron sélectionné.
+	 * tableau sous le patron : tissusRequis.toString() - boutons
 	 */
 	private void loadTissuRequisForPatron() {
 		tissusPatronListGrid.getChildren().clear();
-		patron.setTissusRequis(
-				TissuRequisService.listToFxCollection(tissuRequisService.getAllTissuRequisByPatron(patron.getId())));
+		patron.setTissusRequis(tissuRequisService.getAsObservableAllTissuRequisByPatron(patron.getId()));
 
 		if (patron.getTissusRequisProperty() != null && patron.getTissusRequis() != null) {
 
@@ -376,17 +359,17 @@ public class PatronEditDialogController implements IController{
 
 			ChoiceBox<String> typeField = new ChoiceBox<String>();
 			typeField.setItems(FXCollections.observableArrayList(
-					typeTissuService.getAll().stream().map(tt -> tt.getType()).collect(Collectors.toList())));
+					typeTissuService.getAll().stream().map(tt -> tt.getValue()).collect(Collectors.toList())));
 			typeField.setValue(variantSelected.getTypeTissuProperty() == null ? "" : variantSelected.getTypeTissu());
 
 			ChoiceBox<String> matiereField = new ChoiceBox<String>();
 			matiereField.setItems(FXCollections.observableArrayList(
-					matiereService.getAll().stream().map(m -> m.getMatiere()).collect(Collectors.toList())));
+					matiereService.getAll().stream().map(m -> m.getValue()).collect(Collectors.toList())));
 			matiereField.setValue(variantSelected.getMatiereProperty() == null ? "" : variantSelected.getMatiere());
 
 			ChoiceBox<String> tissageField = new ChoiceBox<String>();
 			tissageField.setItems(FXCollections.observableArrayList(
-					tissageService.getAll().stream().map(t -> t.getTissage()).collect(Collectors.toList())));
+					tissageService.getAll().stream().map(t -> t.getValue()).collect(Collectors.toList())));
 			tissageField.setValue(variantSelected.getTissageProperty() == null ? "" : variantSelected.getTissage());
 
 			Button addTvBtn = new Button();
@@ -473,9 +456,6 @@ public class PatronEditDialogController implements IController{
 		}
 	}
 
-	/**
-	 * Called when the user clicks cancel.
-	 */
 	@FXML
 	private void handleCancel() {
 		dialogStage.close();

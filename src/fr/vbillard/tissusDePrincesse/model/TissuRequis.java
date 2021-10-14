@@ -17,12 +17,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class TissuRequis implements AbstractEntity{
+public class TissuRequis extends AbstractEntity{
 	
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
 	@ManyToOne
 	private Patron patron;
 	private int longueur;

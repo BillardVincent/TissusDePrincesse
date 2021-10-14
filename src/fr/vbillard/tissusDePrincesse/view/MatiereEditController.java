@@ -12,11 +12,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class MatiereEditController implements IController{
+public class MatiereEditController implements IController {
 
 	@FXML
 	private ListView<String> listMatieres;
-	
+
 	@FXML
 	private TextField newMatiere;
 	@FXML
@@ -31,71 +31,69 @@ public class MatiereEditController implements IController{
 	@FXML
 	private Button fermerButton;
 
-	    
 	private Stage dialogStage;
 	private boolean okClicked = false;
-	
+
 	MatiereService matiereService;
 	MainApp mainApp;
-	
+
 	String editedMatiere;
-	
+
 	ObservableList<String> allMatieres;
 
 	/**
-	 * Initializes the controller class. This method is automatically called
-	 * after the fxml file has been loaded.
+	 * Initializes the controller class. This method is automatically called after
+	 * the fxml file has been loaded.
 	 */
 	@FXML
 	private void initialize() {
-		listMatieres.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> handleSelectElement(newValue));
-	
-	this.editMatiere.setDisable(true);
-	this.editerButton.setDisable(true);
-	
+		listMatieres.getSelectionModel().selectedItemProperty()
+				.addListener((observable, oldValue, newValue) -> handleSelectElement(newValue));
+
+		this.editMatiere.setDisable(true);
+		this.editerButton.setDisable(true);
+
 	}
-	
+
 	public void setDialogStage(Stage dialogStage) {
-        this.dialogStage = dialogStage;
-    }
+		this.dialogStage = dialogStage;
+	}
 
 	public void setData(MainApp mainApp, MatiereService matiereService) {
 		this.matiereService = matiereService;
 		this.mainApp = mainApp;
 		allMatieres = matiereService.getAllMatieresValues();
 		listMatieres.setItems(allMatieres);
-		
+
 	}
-	
+
 	public void handleAddElement() {
-		
+
 		if (newMatiere.getText().trim().equals("")) {
-			 Alert alert = new Alert(AlertType.WARNING);
-	            alert.initOwner(mainApp.getPrimaryStage());
-	            alert.setTitle("Pas de valeur");
-	            alert.setHeaderText("Pas de valeur");
-	            alert.setContentText("Veuillez remplir une valeur");
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.initOwner(mainApp.getPrimaryStage());
+			alert.setTitle("Pas de valeur");
+			alert.setHeaderText("Pas de valeur");
+			alert.setContentText("Veuillez remplir une valeur");
 
-	            alert.showAndWait();
+			alert.showAndWait();
 		} else if (matiereService.validate(newMatiere.getText())) {
-				matiereService.saveOrUpdate(new Matiere(newMatiere.getText()));
-				newMatiere.setText("");
-				allMatieres = matiereService.getAllMatieresValues();
-				listMatieres.setItems(allMatieres);
-		 } else {
-			 Alert alert = new Alert(AlertType.WARNING);
-	            alert.initOwner(mainApp.getPrimaryStage());
-	            alert.setTitle("Duplicat");
-	            alert.setHeaderText("Matière déja existante");
-	            alert.setContentText("Cette matière existe déjà");
+			matiereService.saveOrUpdate(new Matiere(newMatiere.getText()));
+			newMatiere.setText("");
+			allMatieres = matiereService.getAllMatieresValues();
+			listMatieres.setItems(allMatieres);
+		} else {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.initOwner(mainApp.getPrimaryStage());
+			alert.setTitle("Duplicat");
+			alert.setHeaderText("Matière déja existante");
+			alert.setContentText("Cette matière existe déjà");
 
-	            alert.showAndWait();
-		 }
-	
+			alert.showAndWait();
+		}
 
 	}
-	
+
 	public void handleSelectElement(String matiere) {
 		this.editedMatiere = matiere;
 		this.editMatiere.setText(matiere);
@@ -103,49 +101,54 @@ public class MatiereEditController implements IController{
 		this.editerButton.setDisable(false);
 
 	}
-	
-public void handleEditElement() {
-	if (editMatiere.getText().trim().equals("")) {
-		 Alert alert = new Alert(AlertType.WARNING);
-           alert.initOwner(mainApp.getPrimaryStage());
-           alert.setTitle("Pas de valeur");
-           alert.setHeaderText("Pas de valeur");
-           alert.setContentText("Veuillez remplir une valeur");
 
-           alert.showAndWait();
-	} else if (matiereService.validate(editMatiere.getText())) {
-			matiereService.saveOrUpdate(new Matiere(editMatiere.getText()));
+	public void handleEditElement() {
+		if (editMatiere.getText().trim().equals("")) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.initOwner(mainApp.getPrimaryStage());
+			alert.setTitle("Pas de valeur");
+			alert.setHeaderText("Pas de valeur");
+			alert.setContentText("Veuillez remplir une valeur");
+
+			alert.showAndWait();
+		} else if (matiereService.validate(editMatiere.getText())) {
+			Matiere m = matiereService.findMatiere(editedMatiere);
+			m.setValue(editMatiere.getText());
+			matiereService.saveOrUpdate(m);
 			editMatiere.setText("");
 			allMatieres = matiereService.getAllMatieresValues();
 			listMatieres.setItems(allMatieres);
 			this.editMatiere.setDisable(true);
 
-	 } else {
-		 Alert alert = new Alert(AlertType.WARNING);
-           alert.initOwner(mainApp.getPrimaryStage());
-           alert.setTitle("Duplicat");
-           alert.setHeaderText("Matière déja existante");
-           alert.setContentText("Cette matière existe déjà");
+		} else {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.initOwner(mainApp.getPrimaryStage());
+			alert.setTitle("Duplicat");
+			alert.setHeaderText("Matière déja existante");
+			alert.setContentText("Cette matière existe déjà");
 
-           alert.showAndWait();
-	 }
+			alert.showAndWait();
+		}
 	}
 
-public void handleSuppressElement() {
-	matiereService.delete(editMatiere.getText());
-	
-}
-	
+	public void handleSuppressElement() {
+		matiereService.delete(editMatiere.getText());
+		allMatieres = matiereService.getAllMatieresValues();
+		listMatieres.setItems(allMatieres);
+		this.editedMatiere = null;
+		this.editMatiere.setText("");
+		this.editMatiere.setDisable(true);
+		this.editerButton.setDisable(true);
+	}
+
 	public void handleClose() {
-		 okClicked = true;
-         dialogStage.close();
+		okClicked = true;
+		dialogStage.close();
 	}
 
 	public boolean isOkClicked() {
-		
+
 		return okClicked;
 	}
 
-
-	    
 }

@@ -63,15 +63,15 @@ public class TissuDto {
 		this.longueur = new SimpleIntegerProperty(tissu.getLongueur());
 		this.laize = new SimpleIntegerProperty(tissu.getLaize());
 		this.description = new SimpleStringProperty(tissu.getDescription());
-		this.matiere = new SimpleStringProperty(tissu.getMatiere() == null ? "" : tissu.getMatiere().getMatiere());
-		this.type = new SimpleStringProperty(tissu.getTypeTissu() == null ? "" : tissu.getTypeTissu().getType());
+		this.matiere = new SimpleStringProperty(tissu.getMatiere() == null ? "" : tissu.getMatiere().getValue());
+		this.type = new SimpleStringProperty(tissu.getTypeTissu() == null ? "" : tissu.getTypeTissu().getValue());
 		this.laize = new SimpleIntegerProperty(tissu.getLaize());
 		this.poids = new SimpleIntegerProperty(tissu.getPoids());
 		this.lieuAchat = new SimpleStringProperty(tissu.getLieuAchat());
 		this.decati = new SimpleBooleanProperty(tissu.isDecati());
 		this.unitePoids = new SimpleStringProperty(tissu.getUnitePoids().label);
 		//this.unitePoidsDisplay = new SimpleStringProperty(tissu.getUnitePoids().label);
-		this.tissage = new SimpleStringProperty(tissu.getTissage() == null ? "" : tissu.getTissage().getTissage() );
+		this.tissage = new SimpleStringProperty(tissu.getTissage() == null ? "" : tissu.getTissage().getValue() );
 		this.chute = new SimpleBooleanProperty(tissu.isChute());
 		this.longueurRestante = new SimpleIntegerProperty();
 

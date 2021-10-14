@@ -13,21 +13,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Matiere implements AbstractEntity{
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	private String matiere;
-
+public class Matiere extends AbstractSimpleValueEntity {
 	
-	public Matiere(int id, String matiere) {
+
+	public Matiere(int id, String value) {
 		this.id = id;
-		this.matiere = matiere;
+		this.value = value;
 	}
 	
-	public Matiere(String matiere) {
-		this.matiere = matiere;
+	public Matiere(String value) {
+		this.value = value;
 	}
-
 
 }

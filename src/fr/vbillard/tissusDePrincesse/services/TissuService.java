@@ -3,8 +3,8 @@ package fr.vbillard.tissusDePrincesse.services;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 
-import fr.vbillard.tissusDePrincesse.dao.AbstractDao;
 import fr.vbillard.tissusDePrincesse.dao.TissuDao;
+import fr.vbillard.tissusDePrincesse.dao.abstractDao.AbstractDao;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
 import fr.vbillard.tissusDePrincesse.mappers.TissuMapper;
 import fr.vbillard.tissusDePrincesse.model.Tissu;

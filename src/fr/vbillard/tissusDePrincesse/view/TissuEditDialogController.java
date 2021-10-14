@@ -174,7 +174,7 @@ public class TissuEditDialogController implements IController{
 		this.tissu = tissu;
 
 		if (tissu == null || tissu.getChuteProperty() == null) {
-			tissu = new TissuDto(new Tissu(0, "", 0, 0, "", null, TypeTissuService.allTypeTissus.get(0), 0,
+			tissu = new TissuDto(new Tissu(0, "", 0, 0, "", null, typeTissuService.getAll().get(0), 0,
 					UnitePoids.NON_RENSEIGNE, false, "", null, false));
 		}
 
@@ -195,15 +195,15 @@ public class TissuEditDialogController implements IController{
 				tissu.getUnitePoidsProperty() == null ? UnitePoids.NON_RENSEIGNE.label : tissu.getUnitePoids());
 
 		typeField.setItems(FXCollections.observableArrayList(
-				typeTissuService.getAll().stream().map(tt -> tt.getType()).collect(Collectors.toList())));
+				typeTissuService.getAll().stream().map(tt -> tt.getValue()).collect(Collectors.toList())));
 		typeField.setValue(tissu.getTypeProperty() == null ? "" : tissu.getType());
 
 		matiereField.setItems(FXCollections.observableArrayList(
-				matiereService.getAll().stream().map(m -> m.getMatiere()).collect(Collectors.toList())));
+				matiereService.getAll().stream().map(m -> m.getValue()).collect(Collectors.toList())));
 		matiereField.setValue(tissu.getMatiereProperty() == null ? "" : tissu.getMatiere());
 
 		tissageField.setItems(FXCollections.observableArrayList(
-				tissageService.getAll().stream().map(t -> t.getTissage()).collect(Collectors.toList())));
+				tissageService.getAll().stream().map(t -> t.getValue()).collect(Collectors.toList())));
 		tissageField.setValue(tissu.getTissageProperty() == null ? "" : tissu.getTissage());
 
 		longueur = longueurField.getValue();
@@ -229,7 +229,7 @@ public class TissuEditDialogController implements IController{
 	private void handleOk() {
 		if (isInputValid()) {
 			if (tissu.getChuteProperty() == null) {
-				tissu = new TissuDto(new Tissu(0, "", 0, 0, "", null, TypeTissuService.allTypeTissus.get(0), 0,
+				tissu = new TissuDto(new Tissu(0, "", 0, 0, "", null, typeTissuService.getAll().get(0), 0,
 						UnitePoids.NON_RENSEIGNE, false, "", null, false));
 			}
 			tissu.setReference(referenceField.getText());

@@ -34,7 +34,6 @@ import fr.vbillard.tissusDePrincesse.model.enums.ImageFormat;
 import fr.vbillard.tissusDePrincesse.model.enums.ProjectStatus;
 import fr.vbillard.tissusDePrincesse.model.enums.UnitePoids;
 import fr.vbillard.tissusDePrincesse.model.images.Photo;
-import fr.vbillard.tissusDePrincesse.services.DevInProgressService;
 import fr.vbillard.tissusDePrincesse.services.ImageService;
 import fr.vbillard.tissusDePrincesse.services.PatronService;
 import fr.vbillard.tissusDePrincesse.services.PreferenceService;
@@ -42,6 +41,7 @@ import fr.vbillard.tissusDePrincesse.services.ProjetService;
 import fr.vbillard.tissusDePrincesse.services.TissuService;
 import fr.vbillard.tissusDePrincesse.services.TissuUsedService;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
+import fr.vbillard.tissusDePrincesse.utils.DevInProgressService;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -483,7 +483,7 @@ public class MainOverviewController {
 		this.mainApp = mainApp;
 
 		tissuTable.setItems(tissuService.getObservableList());
-		patronTable.setItems(patronService.getPatronData());
+		patronTable.setItems(patronService.getObservableList());
 		projetTable.setItems(projetService.getObservableList());
 		setButtons();
 
@@ -644,7 +644,7 @@ public class MainOverviewController {
 		int longueurRequiseRestante = tissuRequisSelected.getLongueur();
 		if (projetSelected.getTissuUsed() != null && projetSelected.getTissuUsed().get(tissuRequisSelected) != null) {
 			for (int id : projetSelected.getTissuUsed().get(tissuRequisSelected)) {
-				longueurRequiseRestante -= tissuUsedService.getTissuUsedById(id).getLongueur();
+				longueurRequiseRestante -= tissuUsedService.getById(id).getLongueur();
 			}
 		}
 
@@ -673,7 +673,7 @@ public class MainOverviewController {
 
 	public void refreshList() {
 		tissuTable.setItems(tissuService.getObservableList());
-		patronTable.setItems(patronService.getPatronData());
+		patronTable.setItems(patronService.getObservableList());
 	}
 
 	public void projetPanelConfig(Projet projet) {
@@ -687,7 +687,7 @@ public class MainOverviewController {
 
 		boolean okClicked = mainApp.showPatronEditDialog(tempPatron);
 		if (okClicked) {
-			patronTable.setItems(patronService.getPatronData());
+			patronTable.setItems(patronService.getObservableList());
 		}
 		setButtons();
 	}
@@ -731,7 +731,7 @@ public class MainOverviewController {
 			if (option.get() == ButtonType.OK) {
 				PatronDto selected = patronTable.getSelectionModel().getSelectedItem();
 				patronService.delete(selected);
-				patronTable.setItems(patronService.getPatronData());
+				patronTable.setItems(patronService.getObservableList());
 			} else if (option.get() == ButtonType.CANCEL) {
 
 			}
@@ -826,7 +826,7 @@ public class MainOverviewController {
 					int longueurFinale = 0;
 					// TODO !!!!!
 					for (Integer id : projet.getTissuUsed().get(tr)) {
-						TissuUsed tissuUsed = tissuUsedService.getTissuUsedById(id);
+						TissuUsed tissuUsed = tissuUsedService.getById(id);
 						vbox.getChildren().addAll(new Label(tissuUsed.getTissu().getDescription()),
 								new Label(tissuUsed.getLongueur() + " cm"));
 						longueurFinale += tissuUsed.getLongueur();
@@ -920,7 +920,7 @@ public class MainOverviewController {
 
 			projetSelected.getTissuUsed().values().forEach(lst -> {
 				lst.forEach(val -> {
-					TissuUsed tu = tissuUsedService.getTissuUsedById(val);
+					TissuUsed tu = tissuUsedService.getById(val);
 					Tissu tissu = tu.getTissu();
 					int oldValue = tissu.getLongueur();
 					tissu.setLongueur(tissu.getLongueur() - tu.getLongueur());
@@ -1108,7 +1108,7 @@ public class MainOverviewController {
 		for (TissuRequisDto tr : projetSelected.getTissuUsed().keySet()) {
 			int longueur = tr.getLongueur();
 			for (int id : projetSelected.getTissuUsed().get(tr)) {
-				longueur -= tissuUsedService.getTissuUsedById(id).getLongueur();
+				longueur -= tissuUsedService.getById(id).getLongueur();
 			}
 			if (longueur > 0)
 				return false;

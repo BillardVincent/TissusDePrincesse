@@ -1,55 +1,28 @@
 package fr.vbillard.tissusDePrincesse.services;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import fr.vbillard.tissusDePrincesse.dao.PatronDao;
 import fr.vbillard.tissusDePrincesse.dao.TissusRequisDao;
+import fr.vbillard.tissusDePrincesse.dao.abstractDao.AbstractDao;
 import fr.vbillard.tissusDePrincesse.dtosFx.PatronDto;
-import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
+import fr.vbillard.tissusDePrincesse.dtosFx.ProjetDto;
 import fr.vbillard.tissusDePrincesse.mappers.PatronMapper;
-import fr.vbillard.tissusDePrincesse.mappers.TissuMapper;
-import fr.vbillard.tissusDePrincesse.model.FounitureRequise;
 import fr.vbillard.tissusDePrincesse.model.Patron;
 import fr.vbillard.tissusDePrincesse.model.TissuRequis;
-import fr.vbillard.tissusDePrincesse.model.TypeTissu;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class PatronService {
+public class PatronService extends AbstractService<Patron>{
 	
 	PatronDao patronDao;
+	PatronMapper mapper;
 	
 	public PatronService() {
 		patronDao = new PatronDao();
-		init();
-	}
-
-	public static ObservableList<PatronDto> patronData = FXCollections.observableArrayList();
-	public static int lastPatronId;
-	
-	public void init() {
-		patronData = FXCollections.observableArrayList(patronDao.findAll().stream().map(PatronMapper::map).collect(Collectors.toList()));
-
-	}
-	
-	public ObservableList<PatronDto> getPatronData() {
-		if (patronData == null || patronData.size() == 0 ) init();
-		return patronData;
+		mapper = new PatronMapper();
 	}
 
 	public PatronDto create(PatronDto patron) {
-		Patron p = PatronMapper.map(patron);
-		PatronDto dto = new PatronDto();
-		if (p.getId() == 0) {
-			dto = PatronMapper.map(patronDao.create(p ));
-		}
-		else {
-			dto = PatronMapper.map(patronDao.update(p ));
-		}
-		init();
-		return dto;
+		Patron p = mapper.map(patron);
+		return mapper.map(saveOrUpdate(p));
 	}
 
 	public boolean existByReference(String string) {
@@ -62,7 +35,15 @@ public class PatronService {
 		for (TissuRequis tr : tissuRequisDao.getAllTissuRequisByPatron(selected.getId())) {
 			tissuRequisService.delete(tr);
 		}
-		patronDao.delete(PatronMapper.map(selected));
-		init();
+		delete(mapper.map(selected));
+	}
+
+	public ObservableList<PatronDto> getObservableList(){
+		return mapper.getAsObservable(getDao().findAll());
+	}
+
+	@Override
+	protected AbstractDao<Patron> getDao() {
+		return patronDao;
 	}
 }

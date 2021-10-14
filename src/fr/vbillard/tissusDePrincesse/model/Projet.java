@@ -17,12 +17,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Projet implements AbstractEntity{
+public class Projet extends AbstractEntity{
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	
 	private String description;
 	
 	@ManyToOne

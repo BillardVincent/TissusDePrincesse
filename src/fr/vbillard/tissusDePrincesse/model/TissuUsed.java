@@ -20,12 +20,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class TissuUsed implements AbstractEntity{
+public class TissuUsed extends AbstractEntity {
 
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
 	protected int longueur;
 
 	@ManyToOne
@@ -34,14 +30,14 @@ public class TissuUsed implements AbstractEntity{
 	Projet projet;
 	@ManyToOne
 	TissuRequis tissuRequis;
-	
-	
-	public TissuUsed(TissuRequisDto tissuRequisSelected, ProjetDto projetSelected, TissuDto tissuSelected, int longueur) {
-this.tissu = new TissuMapper().map(tissuSelected);
-this.projet = new ProjetMapper().map(projetSelected);
-this.tissuRequis = TissuRequisMapper.map(tissuRequisSelected);
-this.longueur = longueur;
-	
+
+	public TissuUsed(TissuRequisDto tissuRequisSelected, ProjetDto projetSelected, TissuDto tissuSelected,
+			int longueur) {
+		this.tissu = new TissuMapper().map(tissuSelected);
+		this.projet = new ProjetMapper().map(projetSelected);
+		this.tissuRequis = new TissuRequisMapper().map(tissuRequisSelected);
+		this.longueur = longueur;
+
 	}
-	
+
 }

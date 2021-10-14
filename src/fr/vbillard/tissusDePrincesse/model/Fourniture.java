@@ -11,9 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Fourniture implements AbstractEntity{
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+public class Fourniture extends AbstractEntity{
+
 
 }

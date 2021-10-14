@@ -17,24 +17,24 @@ import javafx.collections.ObservableList;
 public class TissuRequisService {
 
 	private TissusRequisDao tissuRequisDao;
+	private PatronMapper patronMapper;
+	private TissuRequisMapper tissuRequisMapper;
 	
 	public TissuRequisService(){
 		this.tissuRequisDao = new TissusRequisDao();
+		patronMapper = new PatronMapper();
+		tissuRequisMapper= new TissuRequisMapper();
 	}
 	
 	public List<TissuRequis> getAllTissuRequisByPatron(int id){
 		return tissuRequisDao.getAllTissuRequisByPatron(id);
 	}
 	
-	public static ObservableList<TissuRequisDto> listToFxCollection(List<TissuRequis> lst){
-		return FXCollections.observableArrayList(lst.stream().map(tr -> TissuRequisMapper.map(tr)).collect(Collectors.toList()));
-	}
-
 	public TissuRequisDto createOrUpdate(TissuRequisDto tissu, PatronDto patron) {
-		TissuRequis t = TissuRequisMapper.map(tissu, PatronMapper.map(patron));
+		TissuRequis t = TissuRequisMapper.map(tissu, patronMapper.map(patron));
 		if (t.getId() == 0)
-		 return TissuRequisMapper.map(tissuRequisDao.create(t));
-		else return TissuRequisMapper.map(tissuRequisDao.update(t));
+		 return tissuRequisMapper.map(tissuRequisDao.create(t));
+		else return tissuRequisMapper.map(tissuRequisDao.update(t));
 
 	}
 
@@ -44,12 +44,16 @@ public class TissuRequisService {
 	}
 
 	public void delete(TissuRequisDto tissu) {
-		tissuRequisDao.delete(TissuRequisMapper.map(tissu));
+		tissuRequisDao.delete(tissuRequisMapper.map(tissu));
 		
 	}
 	public void delete(TissuRequis tissu) {
 		tissuRequisDao.delete(tissu);
 		
+	}
+
+	public List<TissuRequisDto> getAsObservableAllTissuRequisByPatron(int id) {
+		return tissuRequisMapper.getAsObservable(getAllTissuRequisByPatron(id));
 	}
 	
 	

@@ -1,4 +1,4 @@
-package fr.vbillard.tissusDePrincesse.dao;
+package fr.vbillard.tissusDePrincesse.dao.abstractDao;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +17,7 @@ import fr.vbillard.tissusDePrincesse.model.AbstractEntity;
 import fr.vbillard.tissusDePrincesse.model.Matiere;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
 
-public abstract class AbstractDao<T extends AbstractEntity> implements IDao{
+public abstract class AbstractDao<T extends AbstractEntity> {
 
 		protected static final Log log = LogFactory.getLog(AbstractDao.class);
 		protected final String persistenceUnit = Constants.PERSISTENCE_UNIT;
@@ -124,16 +124,17 @@ public abstract class AbstractDao<T extends AbstractEntity> implements IDao{
 		}
 
 
+		@SuppressWarnings("unchecked")
 		public T findById(Integer id) {
 			T entity = null;
 			try {
 				emf = Persistence.createEntityManagerFactory(persistenceUnit);
 				em = emf.createEntityManager();
-				entity = (T) em.find(entity.getClass(), entity.getId());
+				entity = (T) em.createQuery("SELECT t FROM "+ tableName +" t WHERE t.id=:id").setParameter("id", id).getSingleResult();
 			} catch (Exception e) {
 				log.error("Erreur lors de l'execution de la methode, Exception : " + e);
 				throw new PersistanceException(
-						"Une erreur s'est produite lors de la récupération de "+ entity.getClass().getName() +"  : [id = " + entity.getId() +"]");
+						"Une erreur s'est produite lors de la récupération de "+ tableName +"  : [id = " + id +"]");
 
 			} finally {
 				JPAHelper.closeEntityManagerResources(emf, em);

@@ -2,8 +2,8 @@ package fr.vbillard.tissusDePrincesse.services;
 
 import java.util.stream.Collectors;
 
-import fr.vbillard.tissusDePrincesse.dao.AbstractDao;
 import fr.vbillard.tissusDePrincesse.dao.ProjetDao;
+import fr.vbillard.tissusDePrincesse.dao.abstractDao.AbstractDao;
 import fr.vbillard.tissusDePrincesse.dtosFx.PatronDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.ProjetDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
@@ -16,11 +16,13 @@ import javafx.collections.ObservableList;
 
 public class ProjetService extends AbstractService<Projet>{
 ProjetMapper mapper;
+PatronMapper patronMapper;
 ProjetDao dao;
 	
 	public ProjetService() {
 		dao = new ProjetDao();
 		mapper = new ProjetMapper();
+		patronMapper = new PatronMapper();
 	}
 	
 	@Override
@@ -38,9 +40,10 @@ ProjetDao dao;
 
 	public ProjetDto newProjetDto(PatronDto selectedPatron) {
 		Projet p = new Projet();
-		p.setPatron(PatronMapper.map(selectedPatron));
+		p.setPatron(patronMapper.map(selectedPatron));
 		
 		return mapper.map(p);
 	}
+
 
 }

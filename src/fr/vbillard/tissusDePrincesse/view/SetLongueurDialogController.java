@@ -54,7 +54,7 @@ public class SetLongueurDialogController implements IController{
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initOwner(mainApp.getPrimaryStage());
 			alert.setTitle("Consommé > en stock");
-			alert.setHeaderText("Valaur supérieur au stock");
+			alert.setHeaderText("Valeur supérieur au stock");
 			alert.setContentText("On ne coud pas des tissus qu'on ne possède pas");
 			alert.showAndWait();
 		}
@@ -76,7 +76,6 @@ public class SetLongueurDialogController implements IController{
 	}
 	
 	public int result() {
-		// TODO Auto-generated method stub
 		return result;
 	}
 	public void setData(MainApp mainApp, int required, int available) {

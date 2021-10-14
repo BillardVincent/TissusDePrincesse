@@ -1,56 +1,45 @@
 package fr.vbillard.tissusDePrincesse.services;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import fr.vbillard.tissusDePrincesse.dao.TypeTissuDao;
-import fr.vbillard.tissusDePrincesse.model.Matiere;
-import fr.vbillard.tissusDePrincesse.model.Tissu;
+import fr.vbillard.tissusDePrincesse.dao.abstractDao.AbstractDao;
 import fr.vbillard.tissusDePrincesse.model.TypeTissu;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class TypeTissuService {
+public class TypeTissuService extends AbstractService<TypeTissu> {
 	TypeTissuDao typeTissuDao;
-	
-	public TypeTissuService(){
+
+	public TypeTissuService() {
 		this.typeTissuDao = new TypeTissuDao();
-		init();
-		}
-	public static ObservableList<TypeTissu> allTypeTissus = FXCollections.observableArrayList();
-	public static ObservableList<String> allTypeTissusValues = FXCollections.observableArrayList();	
-	
-	public void init() {
-
-		List<TypeTissu> lst = typeTissuDao.findAll();
-		allTypeTissus = FXCollections.observableArrayList(lst);
-		allTypeTissusValues = FXCollections.observableArrayList(lst.stream().map(m -> m.getType()).collect(Collectors.toList()));
-		
-				
 	}
 
-public TypeTissu findTypeTissu(String typeTissu) {
-		return allTypeTissus.stream().filter(t-> t.getType().equals(typeTissu)).findFirst().orElse(null);
+	public TypeTissu findTypeTissu(String typeTissu) {
+		return typeTissuDao.findByValue(typeTissu);
 	}
 
-	public List<TypeTissu> getAll() {
-		return typeTissuDao.findAll();
-	}
-
-	public void create(TypeTissu typeTissu) {
-		TypeTissu tt = typeTissuDao.create(typeTissu);
-		init();
+	public ObservableList<TypeTissu> getAllAsObservable() {
+		return FXCollections.observableArrayList(getAll());
 	}
 
 	public boolean validate(String text) {
-		return ! allTypeTissusValues.contains(text) ;		
+		return !typeTissuDao.existsByValue(text);
 	}
-	public void update(TypeTissu typeTissu) {
-		typeTissuDao.update(typeTissu);
+
+	public void delete(String text) {
+		delete(findTypeTissu(text));
+
 	}
-	
-	
+
+	public ObservableList<String> getAllTypeTissuValues() {
+		return FXCollections
+				.observableArrayList(getAll().stream().map(tt -> tt.getValue()).collect(Collectors.toList()));
+	}
+
+	@Override
+	protected AbstractDao getDao() {
+		return typeTissuDao;
+	}
 
 }

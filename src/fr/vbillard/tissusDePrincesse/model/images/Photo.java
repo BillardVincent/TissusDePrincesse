@@ -19,11 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Photo implements AbstractEntity{
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+public class Photo extends AbstractEntity{
 	
 	private String nom;
 	
