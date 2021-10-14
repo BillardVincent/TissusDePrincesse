@@ -25,6 +25,7 @@ import fr.vbillard.tissusDePrincesse.dtosFx.ProjetDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuRequisDto;
 import fr.vbillard.tissusDePrincesse.fxCustomElements.TissuRequisToggleButton;
+import fr.vbillard.tissusDePrincesse.mappers.ProjetMapper;
 import fr.vbillard.tissusDePrincesse.mappers.TissuMapper;
 import fr.vbillard.tissusDePrincesse.model.Preference;
 import fr.vbillard.tissusDePrincesse.model.Projet;
@@ -650,9 +651,11 @@ public class MainOverviewController {
 
 		int longueur = mainApp.showSetLongueurDialog(longueurRequiseRestante, tissuSelected);
 
-		// TissuUsedService.create( newTissuUsed(......));
 		tissuUsedService.saveOrUpdate(new TissuUsed(tissuRequisSelected, projetSelected, tissuSelected, longueur));
 
+		projetSelected = new ProjetMapper().map(projetService.getById(projetSelected.getId()));
+		showProjetDetails(projetSelected);
+		
 	}
 
 	@FXML
@@ -819,6 +822,7 @@ public class MainOverviewController {
 						String variant = tr.getVariant().get(i);
 						content.getChildren().add(new Label(i + 1 + "- " + variant));
 					}
+					
 					tp.setExpanded(false);
 					VBox vbox = new VBox();
 

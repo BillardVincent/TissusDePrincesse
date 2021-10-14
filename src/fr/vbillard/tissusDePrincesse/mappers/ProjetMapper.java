@@ -27,7 +27,6 @@ public class ProjetMapper implements IMapper<Projet, ProjetDto>{
 		patronMapper = new PatronMapper();
 		tissuRequisMapper = new TissuRequisMapper();
 	}
-
 	
 	public Projet map(ProjetDto dto) {
 		Projet projet = new Projet();
@@ -42,7 +41,6 @@ public class ProjetMapper implements IMapper<Projet, ProjetDto>{
 		TissuRequisService trs = new TissuRequisService();
 		TissuUsedService tus = new TissuUsedService();
 		ProjetDto dto = new ProjetDto();
-		// TODO
 		dto.setId(projet.getId());
 		dto.setDescription(projet.getDescription());
 		dto.setPatron(patronMapper.map(projet.getPatron()));
@@ -50,7 +48,7 @@ public class ProjetMapper implements IMapper<Projet, ProjetDto>{
 		Map<TissuRequisDto, List<Integer>> tuMap = new HashMap<TissuRequisDto, List<Integer>>();
 		List<TissuRequis> trLst = trs.getAllTissuRequisByPatron(projet.getPatron().getId());
 		for (TissuRequis tr : trLst) {
-			List<TissuUsed> tu = tus.getTissuUsedByTissuRequis(tr);
+			List<TissuUsed> tu = tus.getTissuUsedByTissuRequisAndProjet(tr, projet);
 			tuMap.put(tissuRequisMapper.map(tr), tu == null ? new ArrayList<Integer>() : tu.stream().map(t -> t.getId()).collect(Collectors.toList()));
 		}
 		

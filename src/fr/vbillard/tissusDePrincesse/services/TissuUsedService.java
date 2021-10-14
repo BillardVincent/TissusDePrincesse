@@ -4,6 +4,7 @@ import java.util.List;
 
 import fr.vbillard.tissusDePrincesse.dao.TissuUsedDao;
 import fr.vbillard.tissusDePrincesse.dao.abstractDao.AbstractDao;
+import fr.vbillard.tissusDePrincesse.model.Projet;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
 import fr.vbillard.tissusDePrincesse.model.TissuRequis;
 import fr.vbillard.tissusDePrincesse.model.TissuUsed;
@@ -15,8 +16,8 @@ public class TissuUsedService extends AbstractService<TissuUsed>{
 		dao = new TissuUsedDao();
 	}
 
-	public List<TissuUsed> getTissuUsedByTissuRequis(TissuRequis tr) {
-		return dao.getTissuUsedByTissuRequis(tr);
+	public List<TissuUsed> getTissuUsedByTissuRequisAndProjet(TissuRequis tr, Projet p) {
+		return dao.getTissuUsedByTissuRequisAndProjet(tr, p);
 	}
 
 	public List<TissuUsed> getByTissu(Tissu t) {
