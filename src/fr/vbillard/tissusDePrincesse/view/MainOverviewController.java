@@ -524,8 +524,9 @@ public class MainOverviewController {
 			chuteLabel.setText("");
 			tissageLabel.setText("");
 		}
-		setButtons();
 		setPicturePanel(0);
+		setButtons();
+
 	}
 
 	private void showPatronDetails(PatronDto patron) {

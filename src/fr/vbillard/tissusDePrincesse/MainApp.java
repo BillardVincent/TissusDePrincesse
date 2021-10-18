@@ -53,8 +53,6 @@ public class MainApp extends Application {
 
 	private static Stage primaryStage;
 	private BorderPane rootLayout;
-	private Stage chargementStage;
-	private AnchorPane chargement;
 	private TissuService tissuService;
 	private PatronService patronService;
 	private TypeTissuService typeTissuService;
@@ -63,12 +61,9 @@ public class MainApp extends Application {
 	private TissuRequisService tissuRequisService;
 	private ProjetService projetService;
 	private MainOverviewController tissuOverviewController;
-	private ChargementController chargementController;
 	private PreferenceService preferenceService;
 	private AnchorPane tissuOverview;
 
-	// ------------------- test h2 -----------------
-	// private static final String persistenceUnit = "persistUnit";
 	private Image icon = new Image("file:resources/images/cut-cloth-red.png");
 	JMetro jMetro;
 
@@ -107,21 +102,6 @@ public class MainApp extends Application {
 		rootLayout.setCenter(tissuOverview);
 
 	}
-	/*
-	 * private void chargement() { // TODO Auto-generated method stub try { // Load
-	 * root layout from fxml file. FXMLLoader loader = new FXMLLoader();
-	 * loader.setLocation(MainApp.class .getResource("view/Chargement.fxml"));
-	 * chargement = (AnchorPane) loader.load();
-	 * 
-	 * // Show the scene containing the root layout. Scene scene = new
-	 * Scene(chargement); chargementStage = new Stage(StageStyle.UNIFIED);
-	 * chargementStage.setScene(scene);
-	 * 
-	 * // Give the controller access to the main app. chargementController =
-	 * loader.getController(); chargementController.setMainApp(this);
-	 * chargementController.setMessage(""); chargementStage.show(); } catch
-	 * (IOException e) { e.printStackTrace(); } }
-	 */
 
 	public Stage getPrimaryStage() {
 		return primaryStage;
@@ -157,7 +137,7 @@ public class MainApp extends Application {
 
 	public boolean showTissuEditDialog(TissuDto tissu) {
 		try {
-			ControlerHolder holder = setPane(FxmlPath.TISSU_EDIT_DIALOG, "Modification Tissu");
+			ControlerHolder holder = setStageAndLoader(FxmlPath.TISSU_EDIT_DIALOG, "Modification Tissu");
 			
 			TissuEditDialogController controller = holder.loader.getController();
 			controller.setDialogStage(holder.dialogStage);
@@ -175,7 +155,7 @@ public class MainApp extends Application {
 
 	public boolean showTissuEditDialog(Map<TissuDto, Integer> mapTissu) {
 		try {
-			ControlerHolder holder = setPane(FxmlPath.TISSU_EDIT_DIALOG, "Validation de fin de projet");
+			ControlerHolder holder = setStageAndLoader(FxmlPath.TISSU_EDIT_DIALOG, "Validation de fin de projet");
 			
 			TissuEditDialogController controller = holder.loader.getController();
 			controller.setDialogStage(holder.dialogStage);
@@ -193,7 +173,7 @@ public class MainApp extends Application {
 
 	public boolean showPatronEditDialog(PatronDto patron) {
 		try {
-			ControlerHolder holder = setPane(FxmlPath.PATRON_EDIT_DIALOG, "Modification de patron");
+			ControlerHolder holder = setStageAndLoader(FxmlPath.PATRON_EDIT_DIALOG, "Modification de patron");
 			
 			PatronEditDialogController controller = holder.loader.getController();
 			controller.setDialogStage(holder.dialogStage);
@@ -211,7 +191,7 @@ public class MainApp extends Application {
 
 	public boolean showMatiereEditDialog() {
 		try {
-			ControlerHolder holder = setPane(FxmlPath.MATIERE_EDIT, "Matieres");
+			ControlerHolder holder = setStageAndLoader(FxmlPath.MATIERE_EDIT, "Matieres");
 			
 			MatiereEditController controller = holder.loader.getController();
 			controller.setDialogStage(holder.dialogStage);
@@ -229,7 +209,7 @@ public class MainApp extends Application {
 
 	public boolean showTypeTissuEditDialog() {
 		try {
-			ControlerHolder holder = setPane(FxmlPath.TYPE_EDIT, "Types de tissu");
+			ControlerHolder holder = setStageAndLoader(FxmlPath.TYPE_EDIT, "Types de tissu");
 			
 			TypeEditController controller = holder.loader.getController();
 			controller.setDialogStage(holder.dialogStage);
@@ -246,7 +226,7 @@ public class MainApp extends Application {
 
 	public boolean showTissageEditDialog() {
 		try {
-			ControlerHolder holder = setPane(FxmlPath.TISSAGE_EDIT, "Tissages");
+			ControlerHolder holder = setStageAndLoader(FxmlPath.TISSAGE_EDIT, "Tissages");
 			
 			TissageEditController controller = holder.loader.getController();
 			controller.setDialogStage(holder.dialogStage);
@@ -263,7 +243,7 @@ public class MainApp extends Application {
 
 	public String showTextEditDialog(String value, String fieldName) {
 		try {
-			ControlerHolder holder = setPane(FxmlPath.GENERIC_TEXT_EDIT, "Modification");
+			ControlerHolder holder = setStageAndLoader(FxmlPath.GENERIC_TEXT_EDIT, "Modification");
 			
 			GenericTextEditController controller = holder.loader.getController();
 			controller.setDialogStage(holder.dialogStage);
@@ -283,7 +263,7 @@ public class MainApp extends Application {
 			Class<?>[] parameterType = new Class[] {};
 			String title = "Modification : "
 					+ (String) class1.getMethod("displayClassName", parameterType).invoke(null, new Object[] {});
-			ControlerHolder holder = setPane(FxmlPath.GENERIC_CHOICE_BOX_EDIT, title);
+			ControlerHolder holder = setStageAndLoader(FxmlPath.GENERIC_CHOICE_BOX_EDIT, title);
 			
 			GenericChoiceBoxEditController controller = holder.loader.getController();
 			controller.setDialogStage(holder.dialogStage);
@@ -303,7 +283,7 @@ public class MainApp extends Application {
 
 	public int showSetLongueurDialog(int required, TissuDto available) {
 		try {
-			ControlerHolder holder = setPane(FxmlPath.SET_LONGUEUR, "Longueur de tissu à allouer");
+			ControlerHolder holder = setStageAndLoader(FxmlPath.SET_LONGUEUR, "Longueur de tissu à allouer");
 			
 			SetLongueurDialogController controller = holder.loader.getController();
 			controller.setDialogStage(holder.dialogStage);
@@ -320,7 +300,7 @@ public class MainApp extends Application {
 
 	public void showPictureExpended(Photo photo) {
 		try {
-			ControlerHolder holder = setPane(FxmlPath.PICTURE_EXPENDED, photo.getNom());
+			ControlerHolder holder = setStageAndLoader(FxmlPath.PICTURE_EXPENDED, photo.getNom());
 		
 			PictureExpended controller = holder.loader.getController();
 			controller.setDialogStage(holder.dialogStage);
@@ -364,9 +344,9 @@ public class MainApp extends Application {
 			} else {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.initOwner(primaryStage);
-				alert.setTitle("Erreur innatendue");
+				alert.setTitle("Erreur inatendue");
 				alert.setHeaderText("Une erreur est survenue");
-				alert.setContentText("Veuillez nous excuser de la gene occasionnée");
+				alert.setContentText("Veuillez nous excuser de la gène occasionnée. Contactez nous si le problème se répète");
 				alert.showAndWait();
 			}
 
@@ -376,7 +356,7 @@ public class MainApp extends Application {
 		}
 	}
 	
-	private ControlerHolder setPane(String path, String title) throws IOException {
+	private ControlerHolder setStageAndLoader(String path, String title) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(MainApp.class.getResource(path));
 		AnchorPane page = (AnchorPane) loader.load();
@@ -391,66 +371,13 @@ public class MainApp extends Application {
 		jMetro.setScene(scene);
 		dialogStage.setScene(scene);
 		
-		return new ControlerHolder(page, scene, dialogStage, loader);
+		return new ControlerHolder(dialogStage, loader);
 	}
 	
 	@AllArgsConstructor
 	private class ControlerHolder{
-		AnchorPane page;
-		Scene scene;
 		Stage dialogStage;
 		FXMLLoader loader;
 	}
-
-	/*
-	 * public int showSetLongueurDialog(int required, TissuDto available) { try { //
-	 * Load the fxml file and create a new stage for the popup dialog. FXMLLoader
-	 * loader = new FXMLLoader();
-	 * loader.setLocation(MainApp.class.getResource("view/SetLongueurDialog.fxml"));
-	 * AnchorPane page = (AnchorPane) loader.load();
-	 * 
-	 * // Create the dialog Stage. Stage dialogStage = new Stage();
-	 * dialogStage.setTitle("Longueur de tissu allouée");
-	 * dialogStage.getIcons().add(icon);
-	 * 
-	 * dialogStage.initModality(Modality.WINDOW_MODAL);
-	 * dialogStage.initOwner(primaryStage); Scene scene = new Scene(page); JMetro
-	 * jMetro = new JMetro(Style.LIGHT); jMetro.setScene(scene);
-	 * dialogStage.setScene(scene);
-	 * 
-	 * // Set the person into the controller. SetLongueurDialogController controller
-	 * = loader.getController(); controller.setDialogStage(dialogStage);
-	 * controller.setData(this, required, available.getLongueur());
-	 * 
-	 * // Show the dialog and wait until the user closes it
-	 * dialogStage.showAndWait();
-	 * 
-	 * return controller.result(); } catch (IOException e) { e.printStackTrace();
-	 * return -1; } }
-	 * 
-	 * private<T extends IController> T setDialogStage(String title) throws
-	 * Exception {
-	 * 
-	 * FXMLLoader loader = new FXMLLoader();
-	 * loader.setLocation(MainApp.class.getResource(resource)); AnchorPane page;
-	 * page = (AnchorPane) loader.load();
-	 * 
-	 * // Create the dialog Stage. Stage dialogStage = new Stage();
-	 * dialogStage.setTitle(title); dialogStage.getIcons().add(icon);
-	 * 
-	 * dialogStage.initModality(Modality.WINDOW_MODAL);
-	 * dialogStage.initOwner(primaryStage); Scene scene = new Scene(page); JMetro
-	 * jMetro = new JMetro(Style.LIGHT); jMetro.setScene(scene);
-	 * dialogStage.setScene(scene);
-	 * 
-	 * // Set the person into the controller. T controller = loader.getController();
-	 * controller.setDialogStage(dialogStage);
-	 * 
-	 * // Show the dialog and wait until the user closes it
-	 * dialogStage.showAndWait();
-	 * 
-	 * return controller; }
-	 * 
-	 */
 
 }
