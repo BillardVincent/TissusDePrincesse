@@ -79,7 +79,6 @@ public class SetLongueurDialogController {
 	}
 	
 	public int result() {
-		// TODO Auto-generated method stub
 		return result;
 	}
 	public void setData(MainApp mainApp, int required, int available) {

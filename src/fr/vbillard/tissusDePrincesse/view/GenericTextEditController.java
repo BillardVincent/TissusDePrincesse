@@ -41,7 +41,6 @@ public class GenericTextEditController implements IController{
 	}
 	
 	public String result() {
-		// TODO Auto-generated method stub
 		return result;
 	}
 	public void setData(MainApp mainApp, String value) {

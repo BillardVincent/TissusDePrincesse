@@ -25,7 +25,6 @@ public class MatiereService extends AbstractService<Matiere>{
 	
 	@Override
 	protected AbstractDao getDao() {
-		// TODO Auto-generated method stub
 		return dao;
 	}
 	

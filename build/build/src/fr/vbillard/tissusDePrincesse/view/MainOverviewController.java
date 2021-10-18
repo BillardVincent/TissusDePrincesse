@@ -278,7 +278,6 @@ public class MainOverviewController {
 		projetTable.getSelectionModel().selectedItemProperty()
 				.addListener((observable, oldValue, newValue) -> showProjetPanDetails(newValue));
 
-		// TODO !!!!!!!!!!!!!!!!
 		group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 			public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
 				if (new_toggle != null) {
@@ -392,17 +391,13 @@ public class MainOverviewController {
 	private void showProjetPanDetails(ProjetDto projetDto) {
 		if (projetDto != null) {
 			projetPanSelected = projetDto;
-			// Fill the labels with info from the person object.
 			descriptionProjetPanLabel.setText(projetDto.getDescription());
 			marqueProjetPanLabel.setText(projetDto.getPatron().getMarque());
 			modelProjePantLabel.setText(projetDto.getPatron().getModele());
 			typeVetementPanProjetLabel.setText(projetDto.getPatron().getTypeVetement());
 			projetStatusPanLabel.setText(projetDto.getProjectStatus());
 
-			// TODO: We need a way to convert the birthday into a String!
-			// birthdayLabel.setText(...);
 		} else {
-			// Person is null, remove all the text.
 			descriptionProjetPanLabel.setText("");
 			marqueProjetPanLabel.setText("");
 			modelProjePantLabel.setText("");
@@ -424,9 +419,6 @@ public class MainOverviewController {
 		this.patronService = patronService;
 		this.projetService = projetService;
 		this.mainApp = mainApp;
-
-		// Add observable list data to the table
-		// new TypeTissuService().init();
 		tissuTable.setItems(tissuService.getTissuData());
 		patronTable.setItems(patronService.getPatronData());
 		projetTable.setItems(projetService.getProjetData());
@@ -437,7 +429,6 @@ public class MainOverviewController {
 	private void showTissuDetails(TissuDto tissu) {
 		if (tissu != null) {
 			tissuSelected = tissu;
-			// Fill the labels with info from the person object.
 			referenceLabel.setText(tissu.getReference());
 			longueurLabel.setText(Integer.toString(tissu.getLongueur()));
 			longueurRestanteLabel.setText(Integer.toString(tissu.getLongueurRestante()));
@@ -452,10 +443,7 @@ public class MainOverviewController {
 			chuteLabel.setText(tissu.isChute() ? "oui" : "non");
 			tissageLabel.setText(tissu.getTissage());
 
-			// TODO: We need a way to convert the birthday into a String!
-			// birthdayLabel.setText(...);
 		} else {
-			// Person is null, remove all the text.
 			referenceLabel.setText("");
 			longueurLabel.setText("");
 			longueurRestanteLabel.setText("");
@@ -477,17 +465,12 @@ public class MainOverviewController {
 	private void showPatronDetails(PatronDto patron) {
 		patronSelected = patron;
 		if (patron != null) {
-			// Fill the labels with info from the person object.
 			referencePatronLabel.setText(patron.getReference());
-
 			marquePatronLabel.setText(patron.getMarque());
 			modelPatronLabel.setText(patron.getModele());
 			typeVetementPatronLabel.setText(patron.getTypeVetement());
 
-			// TODO: We need a way to convert the birthday into a String!
-			// birthdayLabel.setText(...);
 		} else {
-			// Person is null, remove all the text.
 			referencePatronLabel.setText("");
 
 			marquePatronLabel.setText("");
@@ -557,10 +540,6 @@ public class MainOverviewController {
 
 	}
 
-	/**
-	 * Called when the user clicks the edit button. Opens a dialog to edit details
-	 * for the selected person.
-	 */
 	@FXML
 	private void handleEditTissu() {
 		tissuSelected = tissuTable.getSelectionModel().getSelectedItem();
@@ -600,8 +579,6 @@ public class MainOverviewController {
 
 	@FXML
 	private void handleAddInProject() {
-		// TODO pop up pour choisir la longueur (base = tissu requis)
-
 		int longueurRequiseRestante = tissuRequisSelected.getLongueur();
 
 			for (int id : projetSelected.getTissuUsed().get(tissuRequisSelected)) {
@@ -611,12 +588,7 @@ public class MainOverviewController {
 		
 		int longueur = mainApp.showSetLongueurDialog(longueurRequiseRestante, tissuSelected.getLongueur());
 
-		// TissuUsedService.create( newTissuUsed(......));
 		tissuUsedService.saveOrUpdate(new TissuUsed(tissuRequisSelected, projetSelected, tissuSelected, longueur));
-
-		// System.out.println(tu);
-
-		// DevInProgressService.notImplemented(mainApp);
 	}
 
 	@FXML
@@ -762,7 +734,6 @@ public class MainOverviewController {
 
 					int longueurInitiale = tr.getLongueur();
 					int longueurFinale = 0;
-					// TODO !!!!!
 					for (Integer id : projet.getTissuUsed().get(tr)) {
 						TissuUsed tissuUsed = tissuUsedService.getTissuUsedById(id);
 						vbox.getChildren().addAll(new Label(tissuUsed.getTissu().getDescription()),
@@ -801,7 +772,6 @@ public class MainOverviewController {
 			// projetTissusUsedPanel.getChildren().add(new Label("EN COURS !!!!!"));
 
 		} else {
-			// Person is null, remove all the text.
 			descriptionProjetLabel.setText("");
 			marqueProjetLabel.setText("");
 			modelProjetLabel.setText("");

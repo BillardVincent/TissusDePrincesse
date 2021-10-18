@@ -35,7 +35,6 @@ public class ProjetMapper {
 		TissuRequisService trs = new TissuRequisService();
 		TissuUsedService tus = new TissuUsedService();
 		ProjetDto dto = new ProjetDto();
-		// TODO
 		dto.setId(projet.getId());
 		dto.setDescription(projet.getDescription());
 		dto.setPatron(PatronMapper.map(projet.getPatron()));

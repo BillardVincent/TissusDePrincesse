@@ -30,7 +30,6 @@ public class PictureExpended implements IController{
 	}
 
 	public boolean isOkClicked() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	

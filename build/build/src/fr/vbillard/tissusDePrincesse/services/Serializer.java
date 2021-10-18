@@ -37,17 +37,6 @@ private static TissuService tissuService = new TissuService();
 		dh.setFilePath(filePath);
 		
 	
-		/*
-		String json = new Gson().toJson(allTissus);
-		System.out.println("json : " + json);
-		System.out.println("list : " + allTissus);
-		
-		try (FileWriter file = new FileWriter(filePath)){
-			file.write(json);
-			
-		}
-		*/
-		
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		try {
@@ -55,13 +44,10 @@ private static TissuService tissuService = new TissuService();
 			objectMapper.writeValue(new File(defaultFilePath), dh);
 
 		} catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -78,15 +64,11 @@ private static TissuService tissuService = new TissuService();
 		TypeTissuService.lastTypeTissuId = dh.getLastTypeTissuId();
 		PatronService.lastPatronId = dh.getLastPatronId();
 		filePath =dh.getFilePath();
-		} catch (JsonParseException e) {
-			
-			// TODO Auto-generated catch block
+		} catch (JsonParseException e) {	
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		 

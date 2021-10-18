@@ -35,12 +35,10 @@ public void saveOrUpdate(TissuUsed tissuUsed) {
 	}
 
 	public TissuUsed getTissuUsedById(int id) {
-		// TODO Auto-generated method stub
 		return tissuUsedDao.findById(id);
 	}
 
 	public List<TissuUsed> getByTissu(Tissu t) {
-		// TODO Auto-generated method stub
 		return tissuUsedDao.findByTissu(t);
 	}
 

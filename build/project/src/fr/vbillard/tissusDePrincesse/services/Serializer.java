@@ -55,13 +55,10 @@ private static TissuService tissuService = new TissuService();
 			objectMapper.writeValue(new File(defaultFilePath), dh);
 
 		} catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -79,14 +76,10 @@ private static TissuService tissuService = new TissuService();
 		PatronService.lastPatronId = dh.getLastPatronId();
 		filePath =dh.getFilePath();
 		} catch (JsonParseException e) {
-			
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		 

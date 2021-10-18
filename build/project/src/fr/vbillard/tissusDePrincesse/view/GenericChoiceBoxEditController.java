@@ -74,7 +74,6 @@ public class GenericChoiceBoxEditController {
 	}
 	
 	public String result() {
-		// TODO Auto-generated method stub
 		return result;
 	}
 

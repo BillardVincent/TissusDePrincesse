@@ -142,11 +142,6 @@ public abstract class AbstractDao<T extends AbstractEntity> {
 			return entity;
 		}
 
-
-		public boolean existByReference(String string) {
-			// TODO Auto-generated method stub
-			return false;
-		}
 		
 	}
 

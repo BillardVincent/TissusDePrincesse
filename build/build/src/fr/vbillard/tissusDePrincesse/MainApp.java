@@ -104,7 +104,6 @@ public class MainApp extends Application {
         try {
 			tissuOverview = (AnchorPane) loader.load();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
@@ -125,7 +124,6 @@ public class MainApp extends Application {
     }
     /*
     private void chargement() {
-		// TODO Auto-generated method stub
     	try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
