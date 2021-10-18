@@ -45,23 +45,23 @@ public class CalculPoidsTissuService {
 			if (poidsGM2 > ConstantesMetier.MAX_POIDS_MOYEN) {
 				return Recommendation.IDEAL;
 			}
-			else if (poidsGM2 > ConstantesMetier.MAX_POIDS_MOYEN + ConstantesMetier.MAX_POIDS_MOYEN * ConstantesMetier.MARGE_ERR_POIDS /100)
-				return Recommendation.POSSSIBLE;
+			else if (poidsGM2 > ConstantesMetier.MAX_POIDS_MOYEN + ConstantesMetier.MAX_POIDS_MOYEN * ConstantesMetier.MARGE_ERR_POIDS)
+				return Recommendation.POSSIBLE;
 			else return Recommendation.NON_RECOMMANDE;
 		case MOYEN:
 			if (poidsGM2 <= ConstantesMetier.MAX_POIDS_MOYEN && poidsGM2 > ConstantesMetier.MIN_POIDS_MOYEN) {
 				return Recommendation.IDEAL;
 			}
-			else if (poidsGM2 > ConstantesMetier.MAX_POIDS_MOYEN + ConstantesMetier.MAX_POIDS_MOYEN * ConstantesMetier.MARGE_ERR_POIDS /100)
-				return Recommendation.POSSSIBLE;
+			else if (poidsGM2 > ConstantesMetier.MAX_POIDS_MOYEN + ConstantesMetier.MAX_POIDS_MOYEN * ConstantesMetier.MARGE_ERR_POIDS)
+				return Recommendation.POSSIBLE;
 			else return Recommendation.NON_RECOMMANDE;
 					
 		case LEGER:
 				if (poidsGM2 > ConstantesMetier.MAX_POIDS_MOYEN) {
 					return Recommendation.IDEAL;
 				}
-				else if (poidsGM2 > ConstantesMetier.MAX_POIDS_MOYEN + ConstantesMetier.MAX_POIDS_MOYEN * ConstantesMetier.MARGE_ERR_POIDS /100)
-					return Recommendation.POSSSIBLE;
+				else if (poidsGM2 > ConstantesMetier.MAX_POIDS_MOYEN + ConstantesMetier.MAX_POIDS_MOYEN * ConstantesMetier.MARGE_ERR_POIDS)
+					return Recommendation.POSSIBLE;
 				else return Recommendation.NON_RECOMMANDE;
 		default:
 			return Recommendation.INCONNU;

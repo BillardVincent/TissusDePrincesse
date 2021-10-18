@@ -3,7 +3,7 @@ package fr.vbillard.tissusDePrincesse.view;
 import java.io.ByteArrayInputStream;
 
 import fr.vbillard.tissusDePrincesse.MainApp;
-import fr.vbillard.tissusDePrincesse.model.images.Photo;
+import fr.vbillard.tissusDePrincesse.model.Photo;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

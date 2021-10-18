@@ -1,4 +1,4 @@
-package fr.vbillard.tissusDePrincesse.model.images;
+package fr.vbillard.tissusDePrincesse.model;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,9 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
-import fr.vbillard.tissusDePrincesse.model.AbstractEntity;
-import fr.vbillard.tissusDePrincesse.model.Patron;
-import fr.vbillard.tissusDePrincesse.model.Tissu;
 import fr.vbillard.tissusDePrincesse.model.enums.ImageFormat;
 import lombok.Getter;
 import lombok.Setter;

@@ -9,7 +9,7 @@ public enum Recommendation {
 	    public String toString() {
 	      return "idéal";
 	}},
-	POSSSIBLE("possible"){
+	POSSIBLE("possible"){
 	    @Override
 	    public String toString() {
 	      return "possible";

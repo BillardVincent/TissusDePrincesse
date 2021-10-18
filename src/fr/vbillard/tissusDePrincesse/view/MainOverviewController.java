@@ -24,9 +24,12 @@ import fr.vbillard.tissusDePrincesse.dtosFx.PatronDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.ProjetDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuDto;
 import fr.vbillard.tissusDePrincesse.dtosFx.TissuRequisDto;
+import fr.vbillard.tissusDePrincesse.exception.NoSelectionException;
 import fr.vbillard.tissusDePrincesse.fxCustomElements.TissuRequisToggleButton;
 import fr.vbillard.tissusDePrincesse.mappers.ProjetMapper;
 import fr.vbillard.tissusDePrincesse.mappers.TissuMapper;
+import fr.vbillard.tissusDePrincesse.model.Patron;
+import fr.vbillard.tissusDePrincesse.model.Photo;
 import fr.vbillard.tissusDePrincesse.model.Preference;
 import fr.vbillard.tissusDePrincesse.model.Projet;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
@@ -34,15 +37,18 @@ import fr.vbillard.tissusDePrincesse.model.TissuUsed;
 import fr.vbillard.tissusDePrincesse.model.enums.ImageFormat;
 import fr.vbillard.tissusDePrincesse.model.enums.ProjectStatus;
 import fr.vbillard.tissusDePrincesse.model.enums.UnitePoids;
-import fr.vbillard.tissusDePrincesse.model.images.Photo;
 import fr.vbillard.tissusDePrincesse.services.ImageService;
 import fr.vbillard.tissusDePrincesse.services.PatronService;
 import fr.vbillard.tissusDePrincesse.services.PreferenceService;
 import fr.vbillard.tissusDePrincesse.services.ProjetService;
 import fr.vbillard.tissusDePrincesse.services.TissuService;
 import fr.vbillard.tissusDePrincesse.services.TissuUsedService;
+import fr.vbillard.tissusDePrincesse.utils.Articles;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
 import fr.vbillard.tissusDePrincesse.utils.DevInProgressService;
+import fr.vbillard.tissusDePrincesse.utils.EntityToString;
+import fr.vbillard.tissusDePrincesse.utils.ModelUtils;
+import fr.vbillard.tissusDePrincesse.utils.ShowAlert;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -305,7 +311,6 @@ public class MainOverviewController {
 		showProjetDetails(null);
 		showProjetPanDetails(null);
 
-		// Listen for selection changes and show the person details when changed.
 		tissuTable.getSelectionModel().selectedItemProperty()
 				.addListener((observable, oldValue, newValue) -> showTissuDetails(newValue));
 		patronTable.getSelectionModel().selectedItemProperty()
@@ -313,7 +318,6 @@ public class MainOverviewController {
 		projetTable.getSelectionModel().selectedItemProperty()
 				.addListener((observable, oldValue, newValue) -> showProjetPanDetails(newValue));
 
-		// TODO !!!!!!!!!!!!!!!!
 		group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 			public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
 				if (new_toggle != null) {
@@ -413,7 +417,6 @@ public class MainOverviewController {
 		deleteProjetPanButton.setGraphic(suppressIcon7);
 		filtrePatronPanButton.setGraphic(searchIcon4);
 		filtreResetPatronPanButton.setGraphic(suppressIcon6);
-		;
 
 		addPatronButton.setGraphic(plusCircle2);
 		editPatronButton.setGraphic(editIcon2);
@@ -457,7 +460,6 @@ public class MainOverviewController {
 	private void showProjetPanDetails(ProjetDto projetDto) {
 		if (projetDto != null) {
 			projetPanSelected = projetDto;
-			// Fill the labels with info from the person object.
 			descriptionProjetPanLabel.setText(projetDto.getDescription());
 			marqueProjetPanLabel.setText(projetDto.getPatron().getMarque());
 			modelProjePantLabel.setText(projetDto.getPatron().getModele());
@@ -537,7 +539,6 @@ public class MainOverviewController {
 
 		} else {
 			referencePatronLabel.setText("");
-
 			marquePatronLabel.setText("");
 			modelPatronLabel.setText("");
 			typeVetementPatronLabel.setText("");
@@ -564,13 +565,8 @@ public class MainOverviewController {
 
 		if (tissuTable.getSelectionModel() != null && tissuTable.getSelectionModel().getSelectedItem() != null
 				&& tissuTable.getSelectionModel().getSelectedItem().getId() >= 0) {
-			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.initOwner(mainApp.getPrimaryStage());
-			alert.setTitle("Suppression");
-			alert.setHeaderText("Voulez vous vraiment supprimer");
-			alert.setContentText("Supprimer le tissu :" + tissuTable.getSelectionModel().getSelectedItem());
-
-			Optional<ButtonType> option = alert.showAndWait();
+			
+			Optional<ButtonType> option =ShowAlert.suppression(mainApp.getPrimaryStage(), EntityToString.TISSU, tissuTable.getSelectionModel().getSelectedItem().toString());
 
 			if (option.get() == ButtonType.OK) {
 				TissuDto selected = tissuTable.getSelectionModel().getSelectedItem();
@@ -581,13 +577,7 @@ public class MainOverviewController {
 			}
 
 		} else {
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.initOwner(mainApp.getPrimaryStage());
-			alert.setTitle("Pas de selection");
-			alert.setHeaderText("Pas de tissu selectionné");
-			alert.setContentText("Selectionnez un tissu dans la table");
-
-			alert.showAndWait();
+			throw new NoSelectionException(Tissu.class, "Selectionnez un tissu dans la table");
 		}
 		setButtons();
 
@@ -618,13 +608,7 @@ public class MainOverviewController {
 				e.printStackTrace();
 			}
 		} else {
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.initOwner(mainApp.getPrimaryStage());
-			alert.setTitle("No Selection");
-			alert.setHeaderText("No Tissu Selected");
-			alert.setContentText("Please select a tissu in the table.");
-
-			alert.showAndWait();
+			throw new NoSelectionException(Tissu.class, "Selectionnez un tissu dans la table");
 		}
 		setButtons();
 
@@ -709,12 +693,8 @@ public class MainOverviewController {
 			}
 
 		} else {
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.initOwner(mainApp.getPrimaryStage());
-			alert.setTitle("No Selection");
-			alert.setHeaderText("No Tissu Selected");
-			alert.setContentText("Please select a tissu in the table.");
-			alert.showAndWait();
+			throw new NoSelectionException(Tissu.class, "Selectionnez un tissu dans la table");
+
 		}
 		setButtons();
 	}
@@ -723,13 +703,7 @@ public class MainOverviewController {
 	private void handleDeletePatron() {
 		if (patronTable.getSelectionModel() != null && patronTable.getSelectionModel().getSelectedItem() != null
 				&& patronTable.getSelectionModel().getSelectedItem().getId() >= 0) {
-			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.initOwner(mainApp.getPrimaryStage());
-			alert.setTitle("Suppression");
-			alert.setHeaderText("Voulez vous vraiment supprimer");
-			alert.setContentText("Supprimer le patron :" + patronTable.getSelectionModel().getSelectedItem());
-
-			Optional<ButtonType> option = alert.showAndWait();
+			Optional<ButtonType> option = ShowAlert.suppression(mainApp.getPrimaryStage(), EntityToString.PATRON, patronTable.getSelectionModel().getSelectedItem().toString());
 
 			if (option.get() == ButtonType.OK) {
 				PatronDto selected = patronTable.getSelectionModel().getSelectedItem();
@@ -740,13 +714,7 @@ public class MainOverviewController {
 			}
 
 		} else {
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.initOwner(mainApp.getPrimaryStage());
-			alert.setTitle("Pas de selection");
-			alert.setHeaderText("Pas de tissu selectionné");
-			alert.setContentText("Selectionnez un tissu dans la table");
-
-			alert.showAndWait();
+			throw new NoSelectionException(Tissu.class, "Selectionnez "+ModelUtils.generateString(EntityToString.TISSU, Articles.INDEFINI)+ " dans la table");
 		}
 		setButtons();
 
@@ -757,12 +725,8 @@ public class MainOverviewController {
 		projetPanel.setVisible(true);
 		warningUnregistredLabel.setVisible(true);
 		if (patronSelected == null) {
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.initOwner(mainApp.getPrimaryStage());
-			alert.setTitle("No Selection");
-			alert.setHeaderText("No patron Selected");
-			alert.setContentText("Please select a patron in the table.");
-			alert.showAndWait();
+			throw new NoSelectionException(Patron.class, "Selectionnez "+ModelUtils.generateString(EntityToString.TISSU, Articles.INDEFINI)+ " dans la table");
+
 		} else {
 			showProjetDetails(projetService.newProjetDto(patronSelected));
 		}
@@ -828,7 +792,6 @@ public class MainOverviewController {
 
 					int longueurInitiale = tr.getLongueur();
 					int longueurFinale = 0;
-					// TODO !!!!!
 					for (Integer id : projet.getTissuUsed().get(tr)) {
 						TissuUsed tissuUsed = tissuUsedService.getById(id);
 						vbox.getChildren().addAll(new Label(tissuUsed.getTissu().getDescription()),
@@ -865,7 +828,6 @@ public class MainOverviewController {
 				projetTissusUsedPanel.getChildren().add(vb);
 				projetTissusUsedPanel.setSpacing(10);
 			}
-			// projetTissusUsedPanel.getChildren().add(new Label("EN COURS !!!!!"));
 
 		} else {
 			descriptionProjetLabel.setText("");
@@ -1012,12 +974,8 @@ public class MainOverviewController {
 
 	@FXML
 	private void deletePicture() {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.initOwner(mainApp.getPrimaryStage());
-		alert.setTitle("Supprimer l'image ?");
-		alert.setHeaderText("Supprimer l'image ?");
-		alert.setContentText("Souhaitez-vous supprimer cette image ?");
-		Optional<ButtonType> option = alert.showAndWait();
+
+		Optional<ButtonType> option =ShowAlert.suppression(mainApp.getPrimaryStage(), EntityToString.IMAGE, "");
 
 		if (option.get() != null && option.get() == ButtonType.OK) {
 			imageService.delete(photos.get(photoIndex));

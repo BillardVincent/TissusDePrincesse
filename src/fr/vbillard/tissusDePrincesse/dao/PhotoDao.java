@@ -14,8 +14,8 @@ import fr.vbillard.tissusDePrincesse.dao.abstractDao.AbstractDao;
 import fr.vbillard.tissusDePrincesse.dao.abstractDao.JPAHelper;
 import fr.vbillard.tissusDePrincesse.exception.PersistanceException;
 import fr.vbillard.tissusDePrincesse.model.Patron;
+import fr.vbillard.tissusDePrincesse.model.Photo;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
-import fr.vbillard.tissusDePrincesse.model.images.Photo;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
 
 public class PhotoDao extends AbstractDao<Photo>{

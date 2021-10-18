@@ -4,8 +4,8 @@ import java.util.List;
 
 import fr.vbillard.tissusDePrincesse.dao.PhotoDao;
 import fr.vbillard.tissusDePrincesse.dao.abstractDao.AbstractDao;
+import fr.vbillard.tissusDePrincesse.model.Photo;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
-import fr.vbillard.tissusDePrincesse.model.images.Photo;
 
 public class ImageService extends AbstractService<Photo>{
 

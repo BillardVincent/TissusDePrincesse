@@ -14,27 +14,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TissuDto {
 
-	/*
 	@Override
 	public String toString() {
-		return "longueur=" + longueur.get() + ", laize=" + laize.get() + ", description=" + description.get()
-				+ ", matiere=" + matiere.get();
+		String unit = unitePoids.get().equals(UnitePoids.NON_RENSEIGNE.label)?"":unitePoids.get();
+		return "tissu [ longueur=" + longueur.get() + "cm, laize=" + laize.get() + "cm, description=" + description.get() +
+				", type=" + type.get() +  ", matiere=" + matiere.get() + ", tissage=" + tissage.get() + 
+				", poids=" + poids.get() + unit + "]";
 	}
-	*/
-	
-	
-	
-	
-
-
-	@Override
-	public String toString() {
-		return "TissuDto [id=" + id + ", longueur=" + longueur + ", laize=" + laize + ", description=" + description
-				+ ", matiere=" + matiere + ", type=" + type + ", unitePoids=" + unitePoids + 
-				", poids=" + poids + ", lieuAchat=" + lieuAchat + ", decati=" + decati
-				+ ", tissage=" + tissage + ", chute=" + chute + "]";
-	}
-
 
 	private IntegerProperty id;
 	private StringProperty  reference;
@@ -45,16 +31,11 @@ public class TissuDto {
 	private StringProperty  matiere;
 	private StringProperty  type;
 	private StringProperty  unitePoids;
-	//private StringProperty  unitePoidsDisplay;
-
 	private IntegerProperty poids;
 	private StringProperty  lieuAchat;
 	private BooleanProperty decati;
 	private StringProperty  tissage;
 	private BooleanProperty chute;
-
-	
-
 	
 	public TissuDto(Tissu tissu){
 		this.id = new SimpleIntegerProperty(tissu.getId());
@@ -70,13 +51,11 @@ public class TissuDto {
 		this.lieuAchat = new SimpleStringProperty(tissu.getLieuAchat());
 		this.decati = new SimpleBooleanProperty(tissu.isDecati());
 		this.unitePoids = new SimpleStringProperty(tissu.getUnitePoids().label);
-		//this.unitePoidsDisplay = new SimpleStringProperty(tissu.getUnitePoids().label);
 		this.tissage = new SimpleStringProperty(tissu.getTissage() == null ? "" : tissu.getTissage().getValue() );
 		this.chute = new SimpleBooleanProperty(tissu.isChute());
 		this.longueurRestante = new SimpleIntegerProperty();
 
 	}
-	
 	
 	public int getId() {
 		return id.get();
@@ -93,17 +72,19 @@ public class TissuDto {
 	public String getReference() {
 		return reference.get();
 	}
+	
 	public StringProperty getReferenceProperty() {
 		return reference;
 	}
 
-
 	public void setReference(String reference) {
 		this.reference.set(reference);
 	}
+	
 	public int getLongueurRestante() {
 		return longueurRestante.get();
 	}
+	
 	public IntegerProperty getLongueurRestanteProperty() {
 		return longueurRestante;
 	}
@@ -120,7 +101,6 @@ public class TissuDto {
 		return longueur;
 	}
 
-
 	public void setLongueur(int longueur) {
 		this.longueur.set(longueur);
 	}
@@ -131,8 +111,6 @@ public class TissuDto {
 	public IntegerProperty getLaizeProperty() {
 		return laize;
 	}
-
-
 
 	public void setLaize(int laize) {
 		this.laize.set(laize);
@@ -151,10 +129,10 @@ public class TissuDto {
 		this.description.set(description);
 	}
 
-
 	public String getMatiere() {
 		return matiere.get();
 	}
+	
 	public StringProperty getMatiereProperty() {
 		return matiere;
 	}
@@ -172,22 +150,21 @@ public class TissuDto {
 		return type;
 	}
 
-
 	public void setType(String type) {
 		this.type.set(type);
 	}
 
-
 	public int getPoids() {
 		return poids.get();
 	}
+	
 	public IntegerProperty getPoidseProperty() {
 		return poids;
 	}
+	
 	public void setPoids(int poids) {
 		this.poids.set(poids);
 	}
-
 
 	public void setUnitePoids(UnitePoids unitePoids) {
 		this.unitePoids.set(unitePoids.label);
@@ -199,52 +176,45 @@ public class TissuDto {
 	public String getUnitePoids() {
 		return unitePoids.get();
 	}
+	
 	public StringProperty getUnitePoidsProperty() {
 		return unitePoids;
 	}
 	
-	/*
-	public String getUnitePoidsDisplay() {
-		return unitePoidsDisplay.get();
-	}
-	public StringProperty getUnitePoidsDisplayProperty() {
-		return unitePoidsDisplay;
-	}
-	*/
-
-
-
-
-
 	public StringProperty getLieuAchatProperty() {
 		return lieuAchat;
 	}
+	
 	public String getLieuAchat() {
 		return lieuAchat.get();
 	}
 
 
 	public void setLieuAchat(String lieuAchat) {
-		this.lieuAchat.set(lieuAchat);;
+		this.lieuAchat.set(lieuAchat);
 	}
-
 
 	public BooleanProperty getDecatiProperty() {
 		return decati;
-	}public boolean isDecati() {
+	}
+	
+	public boolean isDecati() {
 		return decati.get();
 	}
 
 	public void setDecati(boolean decati) {
-		this.decati.set(decati);;
+		this.decati.set(decati);
 	}
+	
 	public void setChute(boolean chute) {
-		this.chute.set(chute);;
+		this.chute.set(chute);
 	}
 	
 	public BooleanProperty getChuteProperty() {
 		return chute;
-	}public boolean isChute() {
+	}
+	
+	public boolean isChute() {
 		return chute.get();
 	}
 	
@@ -255,18 +225,8 @@ public class TissuDto {
 		return tissage.get();
 	}
 
-
 	public void setTissage(String tissage) {
-		this.tissage.set(tissage);;
+		this.tissage.set(tissage);
 	}
 
-
-
-
-
-
-
-
-
-	
 }

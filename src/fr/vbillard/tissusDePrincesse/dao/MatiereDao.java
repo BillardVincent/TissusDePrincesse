@@ -18,8 +18,8 @@ import fr.vbillard.tissusDePrincesse.dao.abstractDao.AbstractSimpleValueDao;
 import fr.vbillard.tissusDePrincesse.dao.abstractDao.JPAHelper;
 import fr.vbillard.tissusDePrincesse.exception.PersistanceException;
 import fr.vbillard.tissusDePrincesse.model.Matiere;
+import fr.vbillard.tissusDePrincesse.model.Photo;
 import fr.vbillard.tissusDePrincesse.model.Tissu;
-import fr.vbillard.tissusDePrincesse.model.images.Photo;
 import fr.vbillard.tissusDePrincesse.utils.Constants;
 
 public class MatiereDao extends AbstractSimpleValueDao<Matiere>{
